@@ -1,0 +1,1660 @@
+Jul 02 06:18:38 cachyos kernel: Linux version 6.18.37-1-cachyos-lts (linux-cachyos-lts@cachyos) (clang version 22.1.6, LLD 22.1.6) #1 SMP PREEMPT_DYNAMIC Sun, 28 Jun 2026 21:09:31 +0000
+Jul 02 06:18:38 cachyos kernel: Command line: nvidia.NVreg_DynamicPowerManagement=0 quiet nowatchdog splash rw rootflags=subvol=/@ root=UUID=fd759822-1930-4fee-a692-d1086c16595e
+Jul 02 06:18:38 cachyos kernel: x86/split lock detection: #AC: crashing the kernel on kernel split_locks and warning on user-space split_locks
+Jul 02 06:18:38 cachyos kernel: BIOS-provided physical RAM map:
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009efff] usable
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000000009f000-0x00000000000fffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x0000000000100000-0x000000003f228fff] usable
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000003f229000-0x000000003fb28fff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000003fb29000-0x000000004193efff] usable
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000004193f000-0x00000000439defff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x00000000439df000-0x000000004698efff] ACPI NVS
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000004698f000-0x0000000046afefff] ACPI data
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x0000000046aff000-0x0000000046afffff] usable
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x0000000046b00000-0x000000004affffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000004b400000-0x000000004b5fffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x000000004c000000-0x00000000527fffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x00000000c0000000-0x00000000cfffffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x00000000fed20000-0x00000000fed7ffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
+Jul 02 06:18:38 cachyos kernel: BIOS-e820: [mem 0x0000000100000000-0x00000010ad7fffff] usable
+Jul 02 06:18:38 cachyos kernel: NX (Execute Disable) protection: active
+Jul 02 06:18:38 cachyos kernel: APIC: Static calls initialized
+Jul 02 06:18:38 cachyos kernel: efi: EFI v2.8 by INSYDE Corp.
+Jul 02 06:18:38 cachyos kernel: efi: ACPI=0x46afe000 ACPI 2.0=0x46afe014 TPMFinalLog=0x468a6000 SMBIOS=0x41fb8000 MEMATTR=0x383d7018 ESRT=0x39344418 
+Jul 02 06:18:38 cachyos kernel: efi: Remove mem76: MMIO range=[0xc0000000-0xcfffffff] (256MB) from e820 map
+Jul 02 06:18:38 cachyos kernel: e820: remove [mem 0xc0000000-0xcfffffff] reserved
+Jul 02 06:18:38 cachyos kernel: efi: Remove mem78: MMIO range=[0xff000000-0xffffffff] (16MB) from e820 map
+Jul 02 06:18:38 cachyos kernel: e820: remove [mem 0xff000000-0xffffffff] reserved
+Jul 02 06:18:38 cachyos kernel: SMBIOS 3.4 present.
+Jul 02 06:18:38 cachyos kernel: DMI: Acer Predator PHN16-71/Compass_RTX, BIOS V1.13 09/07/2023
+Jul 02 06:18:38 cachyos kernel: DMI: Memory slots populated: 2/4
+Jul 02 06:18:38 cachyos kernel: tsc: Detected 2300.000 MHz processor
+Jul 02 06:18:38 cachyos kernel: tsc: Detected 2304.000 MHz TSC
+Jul 02 06:18:38 cachyos kernel: e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+Jul 02 06:18:38 cachyos kernel: e820: remove [mem 0x000a0000-0x000fffff] usable
+Jul 02 06:18:38 cachyos kernel: last_pfn = 0x10ad800 max_arch_pfn = 0x400000000
+Jul 02 06:18:38 cachyos kernel: MTRR map: 5 entries (3 fixed + 2 variable; max 23), built from 10 variable MTRRs
+Jul 02 06:18:38 cachyos kernel: x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+Jul 02 06:18:38 cachyos kernel: last_pfn = 0x46b00 max_arch_pfn = 0x400000000
+Jul 02 06:18:38 cachyos kernel: esrt: Reserving ESRT space from 0x0000000039344418 to 0x0000000039344478.
+Jul 02 06:18:38 cachyos kernel: e820: update [mem 0x39344000-0x39344fff] usable ==> reserved
+Jul 02 06:18:38 cachyos kernel: Using GB pages for direct mapping
+Jul 02 06:18:38 cachyos kernel: Secure boot could not be determined
+Jul 02 06:18:38 cachyos kernel: RAMDISK: [mem 0x0db00000-0x1c299fff]
+Jul 02 06:18:38 cachyos kernel: ACPI: Early table checksum verification disabled
+Jul 02 06:18:38 cachyos kernel: ACPI: RSDP 0x0000000046AFE014 000024 (v02 ACRSYS)
+Jul 02 06:18:38 cachyos kernel: ACPI: XSDT 0x0000000046ADA188 00014C (v01 ACRSYS ACRPRDCT 00000002      01000013)
+Jul 02 06:18:38 cachyos kernel: ACPI: FACP 0x0000000046AFD000 000114 (v06 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: DSDT 0x0000000046A93000 03ACBF (v02 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: FACS 0x0000000046880000 000040
+Jul 02 06:18:38 cachyos kernel: ACPI: UEFI 0x000000004698E000 000236 (v01 ACRSYS ACRPRDCT 00000001 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AF9000 003CBD (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AF8000 00038C (v02 ACRSYS ACRPRDCT 00000001 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AF2000 005D34 (v02 ACRSYS ACRPRDCT 00003000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AEF000 0029EA (v02 ACRSYS ACRPRDCT 00003000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AEB000 003386 (v02 ACRSYS ACRPRDCT 00003000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AEA000 000065 (v01 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AE9000 00077B (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: TPM2 0x0000000046AE8000 00004C (v04 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: MSDM 0x0000000046AE7000 000055 (v03 ACRSYS ACRPRDCT 00000001 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AE4000 002B94 (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AE3000 000065 (v01 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AE1000 00165F (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: LPIT 0x0000000046AE0000 0000CC (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: WSMT 0x0000000046ADF000 000028 (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046ADE000 000A7F (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: DBGP 0x0000000046ADD000 000034 (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: DBG2 0x0000000046ADC000 000054 (v00 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: NHLT 0x0000000046ADB000 000F4E (v00 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046AD1000 00876D (v01 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: HPET 0x0000000046AD0000 000038 (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: APIC 0x0000000046ACF000 0001DC (v04 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: MCFG 0x0000000046ACE000 00003C (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A8A000 0080BA (v02 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: DMAR 0x0000000046A89000 000088 (v02 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A82000 00632F (v01 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: UEFI 0x0000000046839000 00063A (v01 ACRSYS ACRPRDCT 00000000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: UEFI 0x0000000046838000 00005C (v01 ACRSYS ACRPRDCT 00000000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A81000 000B4E (v02 ACRSYS ACRPRDCT 00000000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A7D000 003AEA (v02 ACRSYS ACRPRDCT 00003000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A79000 0039DA (v02 ACRSYS ACRPRDCT 00003000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A78000 000131 (v02 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0x0000000046A77000 0000F8 (v01 ACRSYS ACRPRDCT 00001000 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: FPDT 0x0000000046A76000 000044 (v01 ACRSYS ACRPRDCT 00000002 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: BGRT 0x0000000046A75000 000038 (v01 ACRSYS ACRPRDCT 00000001 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: PHAT 0x0000000046A74000 0005B1 (v01 ACRSYS ACRPRDCT 00000005 1025 00040000)
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving FACP table memory at [mem 0x46afd000-0x46afd113]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving DSDT table memory at [mem 0x46a93000-0x46acdcbe]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving FACS table memory at [mem 0x46880000-0x4688003f]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving UEFI table memory at [mem 0x4698e000-0x4698e235]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46af9000-0x46afccbc]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46af8000-0x46af838b]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46af2000-0x46af7d33]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46aef000-0x46af19e9]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46aeb000-0x46aee385]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46aea000-0x46aea064]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ae9000-0x46ae977a]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving TPM2 table memory at [mem 0x46ae8000-0x46ae804b]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving MSDM table memory at [mem 0x46ae7000-0x46ae7054]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ae4000-0x46ae6b93]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ae3000-0x46ae3064]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ae1000-0x46ae265e]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving LPIT table memory at [mem 0x46ae0000-0x46ae00cb]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving WSMT table memory at [mem 0x46adf000-0x46adf027]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ade000-0x46adea7e]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving DBGP table memory at [mem 0x46add000-0x46add033]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving DBG2 table memory at [mem 0x46adc000-0x46adc053]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving NHLT table memory at [mem 0x46adb000-0x46adbf4d]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46ad1000-0x46ad976c]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving HPET table memory at [mem 0x46ad0000-0x46ad0037]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving APIC table memory at [mem 0x46acf000-0x46acf1db]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving MCFG table memory at [mem 0x46ace000-0x46ace03b]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a8a000-0x46a920b9]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving DMAR table memory at [mem 0x46a89000-0x46a89087]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a82000-0x46a8832e]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving UEFI table memory at [mem 0x46839000-0x46839639]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving UEFI table memory at [mem 0x46838000-0x4683805b]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a81000-0x46a81b4d]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a7d000-0x46a80ae9]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a79000-0x46a7c9d9]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a78000-0x46a78130]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving SSDT table memory at [mem 0x46a77000-0x46a770f7]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving FPDT table memory at [mem 0x46a76000-0x46a76043]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving BGRT table memory at [mem 0x46a75000-0x46a75037]
+Jul 02 06:18:38 cachyos kernel: ACPI: Reserving PHAT table memory at [mem 0x46a74000-0x46a745b0]
+Jul 02 06:18:38 cachyos kernel: No NUMA configuration found
+Jul 02 06:18:38 cachyos kernel: Faking a node at [mem 0x0000000000000000-0x00000010ad7fffff]
+Jul 02 06:18:38 cachyos kernel: NODE_DATA(0) allocated [mem 0x10ad7d5280-0x10ad7fffff]
+Jul 02 06:18:38 cachyos kernel: Zone ranges:
+Jul 02 06:18:38 cachyos kernel:   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+Jul 02 06:18:38 cachyos kernel:   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+Jul 02 06:18:38 cachyos kernel:   Normal   [mem 0x0000000100000000-0x00000010ad7fffff]
+Jul 02 06:18:38 cachyos kernel:   Device   empty
+Jul 02 06:18:38 cachyos kernel: Movable zone start for each node
+Jul 02 06:18:38 cachyos kernel: Early memory node ranges
+Jul 02 06:18:38 cachyos kernel:   node   0: [mem 0x0000000000001000-0x000000000009efff]
+Jul 02 06:18:38 cachyos kernel:   node   0: [mem 0x0000000000100000-0x000000003f228fff]
+Jul 02 06:18:38 cachyos kernel:   node   0: [mem 0x000000003fb29000-0x000000004193efff]
+Jul 02 06:18:38 cachyos kernel:   node   0: [mem 0x0000000046aff000-0x0000000046afffff]
+Jul 02 06:18:38 cachyos kernel:   node   0: [mem 0x0000000100000000-0x00000010ad7fffff]
+Jul 02 06:18:38 cachyos kernel: Initmem setup node 0 [mem 0x0000000000001000-0x00000010ad7fffff]
+Jul 02 06:18:38 cachyos kernel: On node 0, zone DMA: 1 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: On node 0, zone DMA: 97 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: On node 0, zone DMA32: 2304 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: On node 0, zone DMA32: 20928 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: On node 0, zone Normal: 5376 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: On node 0, zone Normal: 10240 pages in unavailable ranges
+Jul 02 06:18:38 cachyos kernel: Reserving Intel graphics memory at [mem 0x4e800000-0x527fffff]
+Jul 02 06:18:38 cachyos kernel: ACPI: PM-Timer IO Port: 0x1808
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x01] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x02] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x03] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x04] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x05] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x06] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x07] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x08] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x09] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0a] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0b] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0c] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0d] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0e] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x0f] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x10] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x11] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x12] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x13] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x14] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x15] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x16] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x17] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: ACPI: LAPIC_NMI (acpi_id[0x00] high edge lint[0x1])
+Jul 02 06:18:38 cachyos kernel: IOAPIC[0]: apic_id 2, version 32, address 0xfec00000, GSI 0-119
+Jul 02 06:18:38 cachyos kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Jul 02 06:18:38 cachyos kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+Jul 02 06:18:38 cachyos kernel: ACPI: Using ACPI (MADT) for SMP configuration information
+Jul 02 06:18:38 cachyos kernel: ACPI: HPET id: 0x8086a201 base: 0xfed00000
+Jul 02 06:18:38 cachyos kernel: e820: update [mem 0x38154000-0x38247fff] usable ==> reserved
+Jul 02 06:18:38 cachyos kernel: TSC deadline timer available
+Jul 02 06:18:38 cachyos kernel: CPU topo: Max. logical packages:   1
+Jul 02 06:18:38 cachyos kernel: CPU topo: Max. logical dies:       1
+Jul 02 06:18:38 cachyos kernel: CPU topo: Max. dies per package:   1
+Jul 02 06:18:38 cachyos kernel: CPU topo: Max. threads per core:   2
+Jul 02 06:18:38 cachyos kernel: CPU topo: Num. cores per package:    16
+Jul 02 06:18:38 cachyos kernel: CPU topo: Num. threads per package:  24
+Jul 02 06:18:38 cachyos kernel: CPU topo: Allowing 24 present CPUs plus 0 hotplug CPUs
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x38154000-0x38247fff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x39344000-0x39344fff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x3f229000-0x3fb28fff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x4193f000-0x46afefff]
+Jul 02 06:18:38 cachyos kernel: PM: hibernation: Registered nosave memory: [mem 0x46b00000-0xffffffff]
+Jul 02 06:18:38 cachyos kernel: [mem 0x52800000-0xfed1ffff] available for PCI devices
+Jul 02 06:18:38 cachyos kernel: Booting paravirtualized kernel on bare hardware
+Jul 02 06:18:38 cachyos kernel: clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+Jul 02 06:18:38 cachyos kernel: setup_percpu: NR_CPUS:8192 nr_cpumask_bits:24 nr_cpu_ids:24 nr_node_ids:1
+Jul 02 06:18:38 cachyos kernel: percpu: Embedded 62 pages/cpu s217088 r8192 d28672 u262144
+Jul 02 06:18:38 cachyos kernel: pcpu-alloc: s217088 r8192 d28672 u262144 alloc=1*2097152
+Jul 02 06:18:38 cachyos kernel: pcpu-alloc: [0] 00 01 02 03 04 05 06 07 [0] 08 09 10 11 12 13 14 15 
+Jul 02 06:18:38 cachyos kernel: pcpu-alloc: [0] 16 17 18 19 20 21 22 23 
+Jul 02 06:18:38 cachyos kernel: Kernel command line: nvidia.NVreg_DynamicPowerManagement=0 quiet nowatchdog splash rw rootflags=subvol=/@ root=UUID=fd759822-1930-4fee-a692-d1086c16595e
+Jul 02 06:18:38 cachyos kernel: Unknown kernel command line parameters "splash", will be passed to user space.
+Jul 02 06:18:38 cachyos kernel: random: crng init done
+Jul 02 06:18:38 cachyos kernel: printk: log_buf_len individual max cpu contribution: 4096 bytes
+Jul 02 06:18:38 cachyos kernel: printk: log_buf_len total cpu_extra contributions: 94208 bytes
+Jul 02 06:18:38 cachyos kernel: printk: log_buf_len min size: 131072 bytes
+Jul 02 06:18:38 cachyos kernel: printk: log buffer data + meta data: 262144 + 917504 = 1179648 bytes
+Jul 02 06:18:38 cachyos kernel: printk: early log buf free: 115872(88%)
+Jul 02 06:18:38 cachyos kernel: Dentry cache hash table entries: 8388608 (order: 14, 67108864 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: Inode-cache hash table entries: 4194304 (order: 13, 33554432 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: software IO TLB: area num 32.
+Jul 02 06:18:38 cachyos kernel: Fallback order for Node 0: 0 
+Jul 02 06:18:38 cachyos kernel: Built 1 zonelists, mobility grouping on.  Total pages: 16705502
+Jul 02 06:18:38 cachyos kernel: Policy zone: Normal
+Jul 02 06:18:38 cachyos kernel: mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+Jul 02 06:18:38 cachyos kernel: SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=24, Nodes=1
+Jul 02 06:18:38 cachyos kernel: ftrace: allocating 57081 entries in 223 pages
+Jul 02 06:18:38 cachyos kernel: ftrace: allocated 223 pages with 7 groups
+Jul 02 06:18:38 cachyos kernel: Dynamic Preempt: full
+Jul 02 06:18:38 cachyos kernel: rcu: Preemptible hierarchical RCU implementation.
+Jul 02 06:18:38 cachyos kernel: rcu:         RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=24.
+Jul 02 06:18:38 cachyos kernel: rcu:         RCU priority boosting: priority 1 delay 500 ms.
+Jul 02 06:18:38 cachyos kernel:         Trampoline variant of Tasks RCU enabled.
+Jul 02 06:18:38 cachyos kernel:         Rude variant of Tasks RCU enabled.
+Jul 02 06:18:38 cachyos kernel:         Tracing variant of Tasks RCU enabled.
+Jul 02 06:18:38 cachyos kernel: rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+Jul 02 06:18:38 cachyos kernel: rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=24
+Jul 02 06:18:38 cachyos kernel: RCU Tasks: Setting shift to 5 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=24.
+Jul 02 06:18:38 cachyos kernel: RCU Tasks Rude: Setting shift to 5 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=24.
+Jul 02 06:18:38 cachyos kernel: RCU Tasks Trace: Setting shift to 5 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=24.
+Jul 02 06:18:38 cachyos kernel: NR_IRQS: 524544, nr_irqs: 2248, preallocated irqs: 16
+Jul 02 06:18:38 cachyos kernel: rcu: srcu_init: Setting srcu_struct sizes based on contention.
+Jul 02 06:18:38 cachyos kernel: kfence: initialized - using 2097152 bytes for 255 objects at 0x(____ptrval____)-0x(____ptrval____)
+Jul 02 06:18:38 cachyos kernel: Console: colour dummy device 80x25
+Jul 02 06:18:38 cachyos kernel: printk: legacy console [tty0] enabled
+Jul 02 06:18:38 cachyos kernel: ACPI: Core revision 20250807
+Jul 02 06:18:38 cachyos kernel: hpet: HPET dysfunctional in PC10. Force disabled.
+Jul 02 06:18:38 cachyos kernel: APIC: Switch to symmetric I/O mode setup
+Jul 02 06:18:38 cachyos kernel: DMAR: Host address width 39
+Jul 02 06:18:38 cachyos kernel: DMAR: DRHD base: 0x000000fed90000 flags: 0x0
+Jul 02 06:18:38 cachyos kernel: DMAR: dmar0: reg_base_addr fed90000 ver 4:0 cap 1c0000c40660462 ecap 29a00f0505e
+Jul 02 06:18:38 cachyos kernel: DMAR: DRHD base: 0x000000fed91000 flags: 0x1
+Jul 02 06:18:38 cachyos kernel: DMAR: dmar1: reg_base_addr fed91000 ver 5:0 cap d2008c40660462 ecap f050da
+Jul 02 06:18:38 cachyos kernel: DMAR: RMRR base: 0x0000004e000000 end: 0x000000527fffff
+Jul 02 06:18:38 cachyos kernel: DMAR-IR: IOAPIC id 2 under DRHD base  0xfed91000 IOMMU 1
+Jul 02 06:18:38 cachyos kernel: DMAR-IR: HPET id 0 under DRHD base 0xfed91000
+Jul 02 06:18:38 cachyos kernel: DMAR-IR: Queued invalidation will be enabled to support x2apic and Intr-remapping.
+Jul 02 06:18:38 cachyos kernel: DMAR-IR: Enabled IRQ remapping in x2apic mode
+Jul 02 06:18:38 cachyos kernel: x2apic enabled
+Jul 02 06:18:38 cachyos kernel: APIC: Switched APIC routing to: cluster x2apic
+Jul 02 06:18:38 cachyos kernel: clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x2135f7c97c8, max_idle_ns: 440795273205 ns
+Jul 02 06:18:38 cachyos kernel: Calibrating delay loop (skipped), value calculated using timer frequency.. 4608.00 BogoMIPS (lpj=2304000)
+Jul 02 06:18:38 cachyos kernel: CPU0: Thermal monitoring enabled (TM1)
+Jul 02 06:18:38 cachyos kernel: x86/cpu: User Mode Instruction Prevention (UMIP) activated
+Jul 02 06:18:38 cachyos kernel: CET detected: Indirect Branch Tracking enabled
+Jul 02 06:18:38 cachyos kernel: Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+Jul 02 06:18:38 cachyos kernel: Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+Jul 02 06:18:38 cachyos kernel: process: using mwait in idle threads
+Jul 02 06:18:38 cachyos kernel: mitigations: Enabled attack vectors: user_kernel, user_user, guest_host, guest_guest, SMT mitigations: auto
+Jul 02 06:18:38 cachyos kernel: Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+Jul 02 06:18:38 cachyos kernel: Spectre V2 : Mitigation: Enhanced / Automatic IBRS
+Jul 02 06:18:38 cachyos kernel: Register File Data Sampling: Mitigation: Clear Register File
+Jul 02 06:18:38 cachyos kernel: VMSCAPE: Mitigation: IBPB before exit to userspace
+Jul 02 06:18:38 cachyos kernel: Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+Jul 02 06:18:38 cachyos kernel: Spectre V2 : Spectre v2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT
+Jul 02 06:18:38 cachyos kernel: Spectre V2 : mitigation: Enabling conditional Indirect Branch Prediction Barrier
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x800: 'Control-flow User registers'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Supporting XSAVE feature 0x1000: 'Control-flow Kernel registers (KVM only)'
+Jul 02 06:18:38 cachyos kernel: x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+Jul 02 06:18:38 cachyos kernel: x86/fpu: xstate_offset[9]:  832, xstate_sizes[9]:    8
+Jul 02 06:18:38 cachyos kernel: x86/fpu: xstate_offset[11]:  840, xstate_sizes[11]:   16
+Jul 02 06:18:38 cachyos kernel: x86/fpu: xstate_offset[12]:  856, xstate_sizes[12]:   24
+Jul 02 06:18:38 cachyos kernel: x86/fpu: Enabled xstate features 0x1a07, context size is 880 bytes, using 'compacted' format.
+Jul 02 06:18:38 cachyos kernel: Freeing SMP alternatives memory: 60K
+Jul 02 06:18:38 cachyos kernel: pid_max: default: 32768 minimum: 301
+Jul 02 06:18:38 cachyos kernel: LSM: initializing lsm=capability,landlock,lockdown,yama,bpf
+Jul 02 06:18:38 cachyos kernel: landlock: Up and running.
+Jul 02 06:18:38 cachyos kernel: Yama: becoming mindful.
+Jul 02 06:18:38 cachyos kernel: LSM support for eBPF active
+Jul 02 06:18:38 cachyos kernel: Mount-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: Mountpoint-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: smpboot: CPU0: 13th Gen Intel(R) Core(TM) i7-13700HX (family: 0x6, model: 0xbf, stepping: 0x2)
+Jul 02 06:18:38 cachyos kernel: Performance Events: XSAVE Architectural LBR, PEBS fmt4+-baseline,  AnyThread deprecated, Alderlake Hybrid events, 32-deep LBR, full-width counters, Intel PMU driver.
+Jul 02 06:18:38 cachyos kernel: core: cpu_core PMU driver: 
+Jul 02 06:18:38 cachyos kernel: ... version:                   5
+Jul 02 06:18:38 cachyos kernel: ... bit width:                 48
+Jul 02 06:18:38 cachyos kernel: ... generic counters:          8
+Jul 02 06:18:38 cachyos kernel: ... generic bitmap:            00000000000000ff
+Jul 02 06:18:38 cachyos kernel: ... fixed-purpose counters:    4
+Jul 02 06:18:38 cachyos kernel: ... fixed-purpose bitmap:      000000000000000f
+Jul 02 06:18:38 cachyos kernel: ... value mask:                0000ffffffffffff
+Jul 02 06:18:38 cachyos kernel: ... max period:                00007fffffffffff
+Jul 02 06:18:38 cachyos kernel: ... global_ctrl mask:          0001000f000000ff
+Jul 02 06:18:38 cachyos kernel: signal: max sigframe size: 3632
+Jul 02 06:18:38 cachyos kernel: Estimated ratio of average max frequency by base frequency (times 1024): 2137
+Jul 02 06:18:38 cachyos kernel: rcu: Hierarchical SRCU implementation.
+Jul 02 06:18:38 cachyos kernel: rcu:         Max phase no-delay instances is 400.
+Jul 02 06:18:38 cachyos kernel: Timer migration: 2 hierarchy levels; 8 children per group; 2 crossnode level
+Jul 02 06:18:38 cachyos kernel: smp: Bringing up secondary CPUs ...
+Jul 02 06:18:38 cachyos kernel: smpboot: x86: Booting SMP configuration:
+Jul 02 06:18:38 cachyos kernel: .... node  #0, CPUs:        #2  #4  #6  #8 #10 #12 #14 #16 #17 #18 #19 #20 #21 #22 #23
+Jul 02 06:18:38 cachyos kernel: core: cpu_atom PMU driver: 
+Jul 02 06:18:38 cachyos kernel: ... version:                   5
+Jul 02 06:18:38 cachyos kernel: ... bit width:                 48
+Jul 02 06:18:38 cachyos kernel: ... generic counters:          6
+Jul 02 06:18:38 cachyos kernel: ... generic bitmap:            000000000000003f
+Jul 02 06:18:38 cachyos kernel: ... fixed-purpose counters:    3
+Jul 02 06:18:38 cachyos kernel: ... fixed-purpose bitmap:      0000000000000007
+Jul 02 06:18:38 cachyos kernel: ... value mask:                0000ffffffffffff
+Jul 02 06:18:38 cachyos kernel: ... max period:                00007fffffffffff
+Jul 02 06:18:38 cachyos kernel: ... global_ctrl mask:          000000070000003f
+Jul 02 06:18:38 cachyos kernel:   #1  #3  #5  #7  #9 #11 #13 #15
+Jul 02 06:18:38 cachyos kernel: smp: Brought up 1 node, 24 CPUs
+Jul 02 06:18:38 cachyos kernel: smpboot: Total of 24 processors activated (110592.00 BogoMIPS)
+Jul 02 06:18:38 cachyos kernel: Memory: 65154884K/66822008K available (21366K kernel code, 2838K rwdata, 16024K rodata, 4628K init, 4768K bss, 1640100K reserved, 0K cma-reserved)
+Jul 02 06:18:38 cachyos kernel: le9 Unofficial (le9uo) working set protection 1.15a by Masahito Suzuki (forked from hakavlad's original le9 patch)
+Jul 02 06:18:38 cachyos kernel: devtmpfs: initialized
+Jul 02 06:18:38 cachyos kernel: x86/mm: Memory block size: 2048MB
+Jul 02 06:18:38 cachyos kernel: ACPI: PM: Registering ACPI NVS region [mem 0x439df000-0x4698efff] (50003968 bytes)
+Jul 02 06:18:38 cachyos kernel: clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+Jul 02 06:18:38 cachyos kernel: posixtimers hash table entries: 16384 (order: 6, 262144 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: futex hash table entries: 8192 (524288 bytes on 1 NUMA nodes, total 512 KiB, linear).
+Jul 02 06:18:38 cachyos kernel: pinctrl core: initialized pinctrl subsystem
+Jul 02 06:18:38 cachyos kernel: PM: RTC time: 00:48:37, date: 2026-07-02
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_NETLINK/PF_ROUTE protocol family
+Jul 02 06:18:38 cachyos kernel: DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allocations
+Jul 02 06:18:38 cachyos kernel: DMA: preallocated 4096 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+Jul 02 06:18:38 cachyos kernel: DMA: preallocated 4096 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+Jul 02 06:18:38 cachyos kernel: audit: initializing netlink subsys (disabled)
+Jul 02 06:18:38 cachyos kernel: audit: type=2000 audit(1782953317.017:1): state=initialized audit_enabled=0 res=1
+Jul 02 06:18:38 cachyos kernel: thermal_sys: Registered thermal governor 'fair_share'
+Jul 02 06:18:38 cachyos kernel: thermal_sys: Registered thermal governor 'bang_bang'
+Jul 02 06:18:38 cachyos kernel: thermal_sys: Registered thermal governor 'step_wise'
+Jul 02 06:18:38 cachyos kernel: thermal_sys: Registered thermal governor 'user_space'
+Jul 02 06:18:38 cachyos kernel: thermal_sys: Registered thermal governor 'power_allocator'
+Jul 02 06:18:38 cachyos kernel: cpuidle: using governor ladder
+Jul 02 06:18:38 cachyos kernel: cpuidle: using governor menu
+Jul 02 06:18:38 cachyos kernel: efi: Freeing EFI boot services memory: 122920K
+Jul 02 06:18:38 cachyos kernel: acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Jul 02 06:18:38 cachyos kernel: PCI: ECAM [mem 0xc0000000-0xce0fffff] (base 0xc0000000) for domain 0000 [bus 00-e0]
+Jul 02 06:18:38 cachyos kernel: PCI: Using configuration type 1 for base access
+Jul 02 06:18:38 cachyos kernel: kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+Jul 02 06:18:38 cachyos kernel: HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+Jul 02 06:18:38 cachyos kernel: HugeTLB: 16380 KiB vmemmap can be freed for a 1.00 GiB page
+Jul 02 06:18:38 cachyos kernel: HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+Jul 02 06:18:38 cachyos kernel: HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+Jul 02 06:18:38 cachyos kernel: raid6: skipped pq benchmark and selected avx2x4
+Jul 02 06:18:38 cachyos kernel: raid6: using avx2x2 recovery algorithm
+Jul 02 06:18:38 cachyos kernel: ACPI: Added _OSI(Module Device)
+Jul 02 06:18:38 cachyos kernel: ACPI: Added _OSI(Processor Device)
+Jul 02 06:18:38 cachyos kernel: ACPI: Added _OSI(Processor Aggregator Device)
+Jul 02 06:18:38 cachyos kernel: ACPI: 19 ACPI AML tables successfully acquired and loaded
+Jul 02 06:18:38 cachyos kernel: ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D888218C400 000394 (v02 PmRef  Cpu0Cst  00003001 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D88823DA800 00051E (v02 PmRef  Cpu0Ist  00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D8882FDF000 0001AB (v02 PmRef  Cpu0Psd  00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D88823DD000 0004B5 (v02 PmRef  Cpu0Hwp  00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D88823E6000 001BAF (v02 PmRef  ApIst    00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D88823E4000 001038 (v02 PmRef  ApHwp    00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D888308E000 001349 (v02 PmRef  ApPsd    00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: Dynamic OEM Table Load:
+Jul 02 06:18:38 cachyos kernel: ACPI: SSDT 0xFFFF8D8881DBA000 000FBB (v02 PmRef  ApCst    00003000 INTL 20200717)
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: EC started
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: interrupt blocked
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.LPCB.EC0_: Boot DSDT EC used to handle transactions
+Jul 02 06:18:38 cachyos kernel: ACPI: Interpreter enabled
+Jul 02 06:18:38 cachyos kernel: ACPI: PM: (supports S0 S3 S4 S5)
+Jul 02 06:18:38 cachyos kernel: ACPI: Using IOAPIC for interrupt routing
+Jul 02 06:18:38 cachyos kernel: PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Jul 02 06:18:38 cachyos kernel: PCI: Ignoring E820 reservations for host bridge windows
+Jul 02 06:18:38 cachyos kernel: ACPI: Enabled 9 GPEs in block 00 to 7F
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.PEG1.PXP_: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.XHCI.RHUB.HS14.BTRT: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.CNVW.WRST: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.RP25.PXP_: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.VMD0.PEG2.NVPR: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.VMD0.VOL0.V0PR: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.VMD0.VOL1.V1PR: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.VMD0.VOL2.V2PR: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.VMD0.VOL3.V3PR: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: \PIN_: New power resource
+Jul 02 06:18:38 cachyos kernel: ACPI: PCI Root Bridge [PC00] (domain 0000 [bus 00-e0])
+Jul 02 06:18:38 cachyos kernel: acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+Jul 02 06:18:38 cachyos kernel: acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME AER PCIeCapability LTR DPC]
+Jul 02 06:18:38 cachyos kernel: PCI host bridge to bus 0000:00
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [mem 0x52800000-0xbfffffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [mem 0x4000000000-0x7fffffffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: root bus resource [bus 00-e0]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:00.0: [8086:4637] type 00 class 0x060000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: [8086:460d] type 01 class 0x060400 PCIe Root Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: PCI bridge to [bus 01]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [io  0x4000-0x4fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [mem 0x86000000-0x870fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [mem 0x6000000000-0x6201ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: PTM enabled (root), 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: [8086:4688] type 00 class 0x030000 PCIe Root Complex Integrated Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: BAR 0 [mem 0x6204000000-0x6204ffffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: BAR 2 [mem 0x4000000000-0x400fffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: BAR 4 [io  0x5000-0x503f]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: DMAR: Skip IOMMU disabling for graphics
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 0 [mem 0x00000000-0x00ffffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 0 [mem 0x00000000-0x06ffffff 64bit]: contains BAR 0 for 7 VFs
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0x1fffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 2 [mem 0x00000000-0xdfffffff 64bit pref]: contains BAR 2 for 7 VFs
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:04.0: [8086:461d] type 00 class 0x118000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:04.0: BAR 0 [mem 0x6205200000-0x620521ffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:08.0: [8086:464f] type 00 class 0x088000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:08.0: BAR 0 [mem 0x6205233000-0x6205233fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:0e.0: [8086:467f] type 00 class 0x010400 PCIe Root Complex Integrated Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:0e.0: BAR 0 [mem 0x6202000000-0x6203ffffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:0e.0: BAR 2 [mem 0x84000000-0x85ffffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:0e.0: BAR 4 [mem 0x6205100000-0x62051fffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.0: [8086:7a60] type 00 class 0x0c0330 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.0: BAR 0 [mem 0x82380000-0x8238ffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.0: PME# supported from D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.2: [8086:7a27] type 00 class 0x050000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.2: BAR 0 [mem 0x6205228000-0x620522bfff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.2: BAR 2 [mem 0x6205232000-0x6205232fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.3: [8086:7a70] type 00 class 0x028000 PCIe Root Complex Integrated Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.3: BAR 0 [mem 0x6205224000-0x6205227fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.3: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.0: [8086:7a4c] type 00 class 0x0c8000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.0: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.3: [8086:7a4f] type 00 class 0x0c8000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.3: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:16.0: [8086:7a68] type 00 class 0x078000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:16.0: BAR 0 [mem 0x620522f000-0x620522ffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:16.0: PME# supported from D3hot
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: [8086:7a48] type 01 class 0x060400 PCIe Root Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: PCI bridge to [bus 02-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0:   bridge window [mem 0x54000000-0x820fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0:   bridge window [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: PTM enabled (root), 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: [8086:7a3c] type 01 class 0x060400 PCIe Root Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: PCI bridge to [bus 6c]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0:   bridge window [mem 0x82200000-0x822fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: PTM enabled (root), 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: [8086:7a3e] type 01 class 0x060400 PCIe Root Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: PCI bridge to [bus 6d]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6:   bridge window [io  0x3000-0x3fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6:   bridge window [mem 0x82100000-0x821fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: PTM enabled (root), 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.0: [8086:7a28] type 00 class 0x078000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.0: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.3: [8086:7a2b] type 00 class 0x0c8000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.3: BAR 0 [mem 0x00000000-0x00000fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.0: [8086:7a0c] type 00 class 0x060100 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.3: [8086:7a50] type 00 class 0x040100 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.3: BAR 0 [mem 0x6205220000-0x6205223fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.3: BAR 4 [mem 0x6205000000-0x62050fffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.3: PME# supported from D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.4: [8086:7a23] type 00 class 0x0c0500 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.4: BAR 0 [mem 0x620522c000-0x620522c0ff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.4: BAR 4 [io  0xefa0-0xefbf]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.5: [8086:7a24] type 00 class 0x0c8000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.5: BAR 0 [mem 0xfe010000-0xfe010fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: [10de:28e1] type 00 class 0x030000 PCIe Legacy Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: BAR 0 [mem 0x86000000-0x86ffffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: BAR 1 [mem 0x6000000000-0x61ffffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: BAR 3 [mem 0x6200000000-0x6201ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: BAR 5 [io  0x4000-0x407f]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: ROM [mem 0xfff80000-0xffffffff pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: PME# supported from D0 D3hot
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.1: [10de:22be] type 00 class 0x040300 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.1: BAR 0 [mem 0x87000000-0x87003fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: PCI bridge to [bus 01]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: [8086:1136] type 01 class 0x060400 PCIe Switch Upstream Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: PCI bridge to [bus 03-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0:   bridge window [mem 0x54000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0:   bridge window [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: PTM enabled, 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: PCI bridge to [bus 02-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: [8086:1136] type 01 class 0x060400 PCIe Switch Downstream Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: PCI bridge to [bus 04]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0:   bridge window [mem 0x625a000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: [8086:1136] type 01 class 0x060400 PCIe Switch Downstream Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: PCI bridge to [bus 05-37]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0:   bridge window [mem 0x6b000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0:   bridge window [mem 0x6235000000-0x6259ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: [8086:1136] type 01 class 0x060400 PCIe Switch Downstream Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: PCI bridge to [bus 38]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0:   bridge window [mem 0x6af00000-0x6affffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: [8086:1136] type 01 class 0x060400 PCIe Switch Downstream Port
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: PCI bridge to [bus 39-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0:   bridge window [mem 0x54000000-0x6aefffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0:   bridge window [mem 0x6210000000-0x6234ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: PCI bridge to [bus 03-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: [8086:1137] type 00 class 0x0c0340 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: BAR 0 [mem 0x625a000000-0x625a03ffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: BAR 2 [mem 0x625a040000-0x625a040fff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: PCI bridge to [bus 04]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: PCI bridge to [bus 05-37]
+Jul 02 06:18:38 cachyos kernel: pci 0000:38:00.0: [8086:1138] type 00 class 0x0c0330 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:38:00.0: BAR 0 [mem 0x6af00000-0x6af0ffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:38:00.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 0000:38:00.0: PME# supported from D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: PCI bridge to [bus 38]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: PCI bridge to [bus 39-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6c:00.0: [10ec:522a] type 00 class 0xff0000 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:6c:00.0: BAR 0 [mem 0x82200000-0x82200fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6c:00.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:6c:00.0: PME# supported from D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: PCI bridge to [bus 6c]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: [10ec:2600] type 00 class 0x020000 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: BAR 0 [io  0x3000-0x30ff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: BAR 2 [mem 0x82104000-0x82104fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: BAR 4 [mem 0x82100000-0x82103fff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: supports D1 D2
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: PCI bridge to [bus 6d]
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PEPD: Duplicate LPS0 _DSM functions (mask: 0x79)
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: interrupt unblocked
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: event unblocked
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: EC_CMD/EC_SC=0x66, EC_DATA=0x62
+Jul 02 06:18:38 cachyos kernel: ACPI: EC: GPE=0x6e
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.LPCB.EC0_: Boot DSDT EC initialization complete
+Jul 02 06:18:38 cachyos kernel: ACPI: \_SB_.PC00.LPCB.EC0_: EC: Used to handle transactions and events
+Jul 02 06:18:38 cachyos kernel: iommu: Default domain type: Translated
+Jul 02 06:18:38 cachyos kernel: iommu: DMA domain TLB invalidation policy: lazy mode
+Jul 02 06:18:38 cachyos kernel: SCSI subsystem initialized
+Jul 02 06:18:38 cachyos kernel: libata version 3.00 loaded.
+Jul 02 06:18:38 cachyos kernel: ACPI: bus type USB registered
+Jul 02 06:18:38 cachyos kernel: usbcore: registered new interface driver usbfs
+Jul 02 06:18:38 cachyos kernel: usbcore: registered new interface driver hub
+Jul 02 06:18:38 cachyos kernel: usbcore: registered new device driver usb
+Jul 02 06:18:38 cachyos kernel: EDAC MC: Ver: 3.0.0
+Jul 02 06:18:38 cachyos kernel: efivars: Registered efivars operations
+Jul 02 06:18:38 cachyos kernel: NetLabel: Initializing
+Jul 02 06:18:38 cachyos kernel: NetLabel:  domain hash size = 128
+Jul 02 06:18:38 cachyos kernel: NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+Jul 02 06:18:38 cachyos kernel: NetLabel:  unlabeled traffic allowed by default
+Jul 02 06:18:38 cachyos kernel: mctp: management component transport protocol core
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_MCTP protocol family
+Jul 02 06:18:38 cachyos kernel: PCI: Using ACPI for IRQ routing
+Jul 02 06:18:38 cachyos kernel: PCI: pci_cache_line_size set to 64 bytes
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.5: BAR 0 [mem 0xfe010000-0xfe010fff]: can't claim; no compatible bridge window
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x0009f000-0x0009ffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x38154000-0x3bffffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x39344000-0x3bffffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x3f229000-0x3fffffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x4193f000-0x43ffffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x46b00000-0x47ffffff]
+Jul 02 06:18:38 cachyos kernel: e820: reserve RAM buffer [mem 0x10ad800000-0x10afffffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: vgaarb: setting as boot VGA device
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: vgaarb: bridge control possible
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: vgaarb: bridge control possible
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+Jul 02 06:18:38 cachyos kernel: vgaarb: loaded
+Jul 02 06:18:38 cachyos kernel: Monitor-Mwait will be used to enter C-1 state
+Jul 02 06:18:38 cachyos kernel: Monitor-Mwait will be used to enter C-2 state
+Jul 02 06:18:38 cachyos kernel: Monitor-Mwait will be used to enter C-3 state
+Jul 02 06:18:38 cachyos kernel: clocksource: Switched to clocksource tsc-early
+Jul 02 06:18:38 cachyos kernel: VFS: Disk quotas dquot_6.6.0
+Jul 02 06:18:38 cachyos kernel: VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+Jul 02 06:18:38 cachyos kernel: pnp: PnP ACPI init
+Jul 02 06:18:38 cachyos kernel: system 00:00: [io  0x0680-0x069f] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:00: [io  0x164e-0x164f] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:02: [io  0x1854-0x1857] has been reserved
+Jul 02 06:18:38 cachyos kernel: pnp 00:04: disabling [mem 0xc0000000-0xcfffffff] because it overlaps 0000:00:02.0 BAR 9 [mem 0x00000000-0xdfffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfedc0000-0xfedc7fff] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfeda0000-0xfeda0fff] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfeda1000-0xfeda1fff] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfed20000-0xfed7ffff] could not be reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfed90000-0xfed93fff] could not be reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfed45000-0xfed8ffff] could not be reserved
+Jul 02 06:18:38 cachyos kernel: system 00:04: [mem 0xfee00000-0xfeefffff] has been reserved
+Jul 02 06:18:38 cachyos kernel: system 00:05: [io  0x2000-0x20fe] has been reserved
+Jul 02 06:18:38 cachyos kernel: pnp: PnP ACPI: found 7 devices
+Jul 02 06:18:38 cachyos kernel: clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_INET protocol family
+Jul 02 06:18:38 cachyos kernel: IP idents hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: tcp_listen_portaddr_hash hash table entries: 32768 (order: 7, 524288 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: TCP established hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: TCP: Hash tables configured (established 524288 bind 65536)
+Jul 02 06:18:38 cachyos kernel: MPTCP token hash table entries: 65536 (order: 9, 1572864 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: UDP hash table entries: 32768 (order: 9, 2097152 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: UDP-Lite hash table entries: 32768 (order: 9, 2097152 bytes, linear)
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_UNIX/PF_LOCAL protocol family
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_XDP protocol family
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: ROM [mem 0xfff80000-0xffffffff pref]: can't claim; no compatible bridge window
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: bridge window [io  0x1000-0x0fff] to [bus 05-37] add_size 1000
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: bridge window [io  0x1000-0x0fff] to [bus 39-6b] add_size 1000
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: bridge window [io  0x1000-0x0fff] to [bus 03-6b] add_size 2000
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: bridge window [io  0x1000-0x0fff] to [bus 02-6b] add_size 3000
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 2 [mem 0x4020000000-0x40ffffffff 64bit pref]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: VF BAR 0 [mem 0x4010000000-0x4016ffffff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.0: BAR 0 [mem 0x4017000000-0x4017000fff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.3: BAR 0 [mem 0x4017001000-0x4017001fff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: bridge window [io  0x6000-0x8fff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.0: BAR 0 [mem 0x4017002000-0x4017002fff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.3: BAR 0 [mem 0x4017003000-0x4017003fff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.5: BAR 0 [mem 0x52800000-0x52800fff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: ROM [mem 0x87080000-0x870fffff pref]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: PCI bridge to [bus 01]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [io  0x4000-0x4fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [mem 0x86000000-0x870fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0:   bridge window [mem 0x6000000000-0x6201ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: bridge window [io  0x6000-0x7fff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: bridge window [io  0x6000-0x6fff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: bridge window [io  0x7000-0x7fff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: PCI bridge to [bus 04]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0:   bridge window [mem 0x625a000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: PCI bridge to [bus 05-37]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0:   bridge window [io  0x6000-0x6fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0:   bridge window [mem 0x6b000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0:   bridge window [mem 0x6235000000-0x6259ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: PCI bridge to [bus 38]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0:   bridge window [mem 0x6af00000-0x6affffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: PCI bridge to [bus 39-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0:   bridge window [io  0x7000-0x7fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0:   bridge window [mem 0x54000000-0x6aefffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0:   bridge window [mem 0x6210000000-0x6234ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: PCI bridge to [bus 03-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0:   bridge window [io  0x6000-0x7fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0:   bridge window [mem 0x54000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0:   bridge window [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: PCI bridge to [bus 02-6b]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0:   bridge window [io  0x6000-0x8fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0:   bridge window [mem 0x54000000-0x820fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0:   bridge window [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: PCI bridge to [bus 6c]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0:   bridge window [mem 0x82200000-0x822fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: PCI bridge to [bus 6d]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6:   bridge window [io  0x3000-0x3fff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6:   bridge window [mem 0x82100000-0x821fffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: resource 7 [mem 0x52800000-0xbfffffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:00: resource 8 [mem 0x4000000000-0x7fffffffff window]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:01: resource 0 [io  0x4000-0x4fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:01: resource 1 [mem 0x86000000-0x870fffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:01: resource 2 [mem 0x6000000000-0x6201ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:02: resource 0 [io  0x6000-0x8fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:02: resource 1 [mem 0x54000000-0x820fffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:02: resource 2 [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:03: resource 0 [io  0x6000-0x7fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:03: resource 1 [mem 0x54000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:03: resource 2 [mem 0x6210000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:04: resource 2 [mem 0x625a000000-0x625a0fffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:05: resource 0 [io  0x6000-0x6fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:05: resource 1 [mem 0x6b000000-0x81efffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:05: resource 2 [mem 0x6235000000-0x6259ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:38: resource 1 [mem 0x6af00000-0x6affffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:39: resource 0 [io  0x7000-0x7fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:39: resource 1 [mem 0x54000000-0x6aefffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:39: resource 2 [mem 0x6210000000-0x6234ffffff 64bit pref]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:6c: resource 1 [mem 0x82200000-0x822fffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:6d: resource 0 [io  0x3000-0x3fff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 0000:6d: resource 1 [mem 0x82100000-0x821fffff]
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.1: extending delay after power-on from D3hot to 20 msec
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.1: D0 power state depends on 0000:01:00.0
+Jul 02 06:18:38 cachyos kernel: PCI: CLS 64 bytes, default 64
+Jul 02 06:18:38 cachyos kernel: DMAR: Intel-IOMMU force enabled due to platform opt in
+Jul 02 06:18:38 cachyos kernel: DMAR: No ATSR found
+Jul 02 06:18:38 cachyos kernel: DMAR: No SATC found
+Jul 02 06:18:38 cachyos kernel: DMAR: dmar0: Using Queued invalidation
+Jul 02 06:18:38 cachyos kernel: DMAR: dmar1: Using Queued invalidation
+Jul 02 06:18:38 cachyos kernel: Trying to unpack rootfs image as initramfs...
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:02.0: Adding to iommu group 0
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:00.0: Adding to iommu group 1
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:01.0: Adding to iommu group 2
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:04.0: Adding to iommu group 3
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:08.0: Adding to iommu group 4
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:0e.0: Adding to iommu group 5
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.0: Adding to iommu group 6
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.2: Adding to iommu group 6
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:14.3: Adding to iommu group 7
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.0: Adding to iommu group 8
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:15.3: Adding to iommu group 8
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:16.0: Adding to iommu group 9
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1a.0: Adding to iommu group 10
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.0: Adding to iommu group 11
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1c.6: Adding to iommu group 12
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.0: Adding to iommu group 13
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1e.3: Adding to iommu group 13
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.0: Adding to iommu group 14
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.3: Adding to iommu group 14
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.4: Adding to iommu group 14
+Jul 02 06:18:38 cachyos kernel: pci 0000:00:1f.5: Adding to iommu group 14
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.0: Adding to iommu group 15
+Jul 02 06:18:38 cachyos kernel: pci 0000:01:00.1: Adding to iommu group 15
+Jul 02 06:18:38 cachyos kernel: pci 0000:02:00.0: Adding to iommu group 16
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:00.0: Adding to iommu group 17
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:01.0: Adding to iommu group 18
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:02.0: Adding to iommu group 19
+Jul 02 06:18:38 cachyos kernel: pci 0000:03:03.0: Adding to iommu group 20
+Jul 02 06:18:38 cachyos kernel: pci 0000:04:00.0: Adding to iommu group 21
+Jul 02 06:18:38 cachyos kernel: pci 0000:38:00.0: Adding to iommu group 22
+Jul 02 06:18:38 cachyos kernel: pci 0000:6c:00.0: Adding to iommu group 23
+Jul 02 06:18:38 cachyos kernel: pci 0000:6d:00.0: Adding to iommu group 24
+Jul 02 06:18:38 cachyos kernel: DMAR: Intel(R) Virtualization Technology for Directed I/O
+Jul 02 06:18:38 cachyos kernel: PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+Jul 02 06:18:38 cachyos kernel: software IO TLB: mapped [mem 0x00000000340a9000-0x00000000380a9000] (64MB)
+Jul 02 06:18:38 cachyos kernel: clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x2135f7c97c8, max_idle_ns: 440795273205 ns
+Jul 02 06:18:38 cachyos kernel: clocksource: Switched to clocksource tsc
+Jul 02 06:18:38 cachyos kernel: Initialise system trusted keyrings
+Jul 02 06:18:38 cachyos kernel: Key type blacklist registered
+Jul 02 06:18:38 cachyos kernel: workingset: timestamp_bits=36 max_order=24 bucket_order=0
+Jul 02 06:18:38 cachyos kernel: fuse: init (API version 7.45)
+Jul 02 06:18:38 cachyos kernel: integrity: Platform Keyring initialized
+Jul 02 06:18:38 cachyos kernel: integrity: Machine keyring initialized
+Jul 02 06:18:38 cachyos kernel: xor: automatically using best checksumming function   avx       
+Jul 02 06:18:38 cachyos kernel: Key type asymmetric registered
+Jul 02 06:18:38 cachyos kernel: Asymmetric key parser 'x509' registered
+Jul 02 06:18:38 cachyos kernel: Block layer SCSI generic (bsg) driver version 0.4 loaded (major 245)
+Jul 02 06:18:38 cachyos kernel: io scheduler mq-deadline registered
+Jul 02 06:18:38 cachyos kernel: io scheduler kyber registered
+Jul 02 06:18:38 cachyos kernel: Adaptive Deadline I/O Scheduler 3.1.9 by Masahito Suzuki
+Jul 02 06:18:38 cachyos kernel: io scheduler adios registered
+Jul 02 06:18:38 cachyos kernel: io scheduler bfq registered
+Jul 02 06:18:38 cachyos kernel: ledtrig-cpu: registered to indicate activity on CPUs
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:01.0: PME: Signaling with IRQ 122
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1a.0: PME: Signaling with IRQ 123
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1a.0: AER: enabled with IRQ 123
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1a.0: pciehp: Slot #24 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1c.0: PME: Signaling with IRQ 124
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1c.0: AER: enabled with IRQ 124
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1c.6: PME: Signaling with IRQ 125
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:00:1c.6: AER: enabled with IRQ 125
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:03:01.0: pciehp: Slot #1 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+Jul 02 06:18:38 cachyos kernel: pcieport 0000:03:03.0: pciehp: Slot #3 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl+ IbPresDis- LLActRep+
+Jul 02 06:18:38 cachyos kernel: ACPI: AC: AC Adapter [ACAD] (on-line)
+Jul 02 06:18:38 cachyos kernel: input: Power Button as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+Jul 02 06:18:38 cachyos kernel: ACPI: button: Power Button [PWRB]
+Jul 02 06:18:38 cachyos kernel: input: Lid Switch as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0D:00/input/input1
+Jul 02 06:18:38 cachyos kernel: ACPI: button: Lid Switch [LID0]
+Jul 02 06:18:38 cachyos kernel: input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input2
+Jul 02 06:18:38 cachyos kernel: ACPI: button: Power Button [PWRF]
+Jul 02 06:18:38 cachyos kernel: thermal LNXTHERM:00: registered as thermal_zone0
+Jul 02 06:18:38 cachyos kernel: ACPI: thermal: Thermal Zone [TZ01] (90 C)
+Jul 02 06:18:38 cachyos kernel: Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+Jul 02 06:18:38 cachyos kernel: ACPI: battery: Slot [BAT1] (battery present)
+Jul 02 06:18:38 cachyos kernel: hpet_acpi_add: no address or irqs in _CRS
+Jul 02 06:18:38 cachyos kernel: Non-volatile memory driver v1.3
+Jul 02 06:18:38 cachyos kernel: Linux agpgart interface v0.103
+Jul 02 06:18:38 cachyos kernel: ACPI: bus type drm_connector registered
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: hcc params 0x20007fc1 hci version 0x120 quirks 0x0000000200009810
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:00:14.0: Host supports USB 3.2 Enhanced SuperSpeed
+Jul 02 06:18:38 cachyos kernel: usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.18
+Jul 02 06:18:38 cachyos kernel: usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Jul 02 06:18:38 cachyos kernel: usb usb1: Product: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: usb usb1: Manufacturer: Linux 6.18.37-1-cachyos-lts xhci-hcd
+Jul 02 06:18:38 cachyos kernel: usb usb1: SerialNumber: 0000:00:14.0
+Jul 02 06:18:38 cachyos kernel: hub 1-0:1.0: USB hub found
+Jul 02 06:18:38 cachyos kernel: hub 1-0:1.0: 16 ports detected
+Jul 02 06:18:38 cachyos kernel: usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.18
+Jul 02 06:18:38 cachyos kernel: usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Jul 02 06:18:38 cachyos kernel: usb usb2: Product: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: usb usb2: Manufacturer: Linux 6.18.37-1-cachyos-lts xhci-hcd
+Jul 02 06:18:38 cachyos kernel: usb usb2: SerialNumber: 0000:00:14.0
+Jul 02 06:18:38 cachyos kernel: hub 2-0:1.0: USB hub found
+Jul 02 06:18:38 cachyos kernel: hub 2-0:1.0: 10 ports detected
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: new USB bus registered, assigned bus number 3
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: hcc params 0x20007fc1 hci version 0x110 quirks 0x0000000200009810
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: new USB bus registered, assigned bus number 4
+Jul 02 06:18:38 cachyos kernel: xhci_hcd 0000:38:00.0: Host supports USB 3.1 Enhanced SuperSpeed
+Jul 02 06:18:38 cachyos kernel: usb usb3: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.18
+Jul 02 06:18:38 cachyos kernel: usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Jul 02 06:18:38 cachyos kernel: usb usb3: Product: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: usb usb3: Manufacturer: Linux 6.18.37-1-cachyos-lts xhci-hcd
+Jul 02 06:18:38 cachyos kernel: usb usb3: SerialNumber: 0000:38:00.0
+Jul 02 06:18:38 cachyos kernel: hub 3-0:1.0: USB hub found
+Jul 02 06:18:38 cachyos kernel: hub 3-0:1.0: 2 ports detected
+Jul 02 06:18:38 cachyos kernel: usb usb4: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.18
+Jul 02 06:18:38 cachyos kernel: usb usb4: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+Jul 02 06:18:38 cachyos kernel: usb usb4: Product: xHCI Host Controller
+Jul 02 06:18:38 cachyos kernel: usb usb4: Manufacturer: Linux 6.18.37-1-cachyos-lts xhci-hcd
+Jul 02 06:18:38 cachyos kernel: usb usb4: SerialNumber: 0000:38:00.0
+Jul 02 06:18:38 cachyos kernel: hub 4-0:1.0: USB hub found
+Jul 02 06:18:38 cachyos kernel: hub 4-0:1.0: 2 ports detected
+Jul 02 06:18:38 cachyos kernel: usbcore: registered new interface driver usbserial_generic
+Jul 02 06:18:38 cachyos kernel: usbserial: USB Serial support registered for generic
+Jul 02 06:18:38 cachyos kernel: i8042: PNP: PS/2 Controller [PNP0303:PS2K] at 0x60,0x64 irq 1
+Jul 02 06:18:38 cachyos kernel: i8042: PNP: PS/2 appears to have AUX port disabled, if this is incorrect please boot with i8042.nopnp
+Jul 02 06:18:38 cachyos kernel: serio: i8042 KBD port at 0x60,0x64 irq 1
+Jul 02 06:18:38 cachyos kernel: rtc_cmos 00:01: RTC can wake from S4
+Jul 02 06:18:38 cachyos kernel: rtc_cmos 00:01: registered as rtc0
+Jul 02 06:18:38 cachyos kernel: rtc_cmos 00:01: setting system clock to 2026-07-02T00:48:37 UTC (1782953317)
+Jul 02 06:18:38 cachyos kernel: rtc_cmos 00:01: alarms up to one month, y3k, 242 bytes nvram
+Jul 02 06:18:38 cachyos kernel: intel_pstate: Intel P-state driver initializing
+Jul 02 06:18:38 cachyos kernel: input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input3
+Jul 02 06:18:38 cachyos kernel: intel_pstate: HWP enabled
+Jul 02 06:18:38 cachyos kernel: simple-framebuffer simple-framebuffer.0: [drm] Registered 1 planes with drm panic
+Jul 02 06:18:38 cachyos kernel: [drm] Initialized simpledrm 1.0.0 for simple-framebuffer.0 on minor 0
+Jul 02 06:18:38 cachyos kernel: fbcon: Deferring console take-over
+Jul 02 06:18:38 cachyos kernel: simple-framebuffer simple-framebuffer.0: [drm] fb0: simpledrmdrmfb frame buffer device
+Jul 02 06:18:38 cachyos kernel: hid: raw HID events driver (C) Jiri Kosina
+Jul 02 06:18:38 cachyos kernel: usbcore: registered new interface driver usbhid
+Jul 02 06:18:38 cachyos kernel: usbhid: USB HID core driver
+Jul 02 06:18:38 cachyos kernel: drop_monitor: Initializing network drop monitor service
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_INET6 protocol family
+Jul 02 06:18:38 cachyos kernel: Segment Routing with IPv6
+Jul 02 06:18:38 cachyos kernel: RPL Segment Routing with IPv6
+Jul 02 06:18:38 cachyos kernel: In-situ OAM (IOAM) with IPv6
+Jul 02 06:18:38 cachyos kernel: NET: Registered PF_PACKET protocol family
+Jul 02 06:18:38 cachyos kernel: ENERGY_PERF_BIAS: Set to 'normal', was 'performance'
+Jul 02 06:18:38 cachyos kernel: microcode: Current revision: 0x0000003e
+Jul 02 06:18:38 cachyos kernel: microcode: Updated early from: 0x0000002c
+Jul 02 06:18:38 cachyos kernel: IPI shorthand broadcast: enabled
+Jul 02 06:18:38 cachyos kernel: sched_clock: Marking stable (609003178, 6509672)->(645610225, -30097375)
+Jul 02 06:18:38 cachyos kernel: registered taskstats version 1
+Jul 02 06:18:38 cachyos kernel: Loading compiled-in X.509 certificates
+Jul 02 06:18:38 cachyos kernel: Freeing initrd memory: 237160K
+Jul 02 06:18:38 cachyos kernel: Loaded X.509 cert 'Build time autogenerated kernel key: 755f0888acc03717f646728f474d1a8ff8c021c0'
+Jul 02 06:18:38 cachyos kernel: zswap: loaded using pool zstd
+Jul 02 06:18:38 cachyos kernel: Demotion targets for Node 0: null
+Jul 02 06:18:38 cachyos kernel: Key type .fscrypt registered
+Jul 02 06:18:38 cachyos kernel: Key type fscrypt-provisioning registered
+Jul 02 06:18:38 cachyos kernel: Btrfs loaded, zoned=yes, fsverity=yes
+Jul 02 06:18:38 cachyos kernel: Key type big_key registered
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'Microsoft Windows Production PCA 2011: a92902398e16c49778cd90f99e4f9ae17c55af53'
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'Microsoft Corporation UEFI CA 2011: 13adbf4309bd82709c8cd54f316ed522988a1bd4'
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'Acer Database: 84f00f5841571abd2cc11a8c26d5c9c8d2b6b0b5'
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'LINPUS: 967f81f2f4f5ac0f24fca5e42982e4ad1e56ddff'
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'Linpus: linpus.com: 2e092cab5e97a89f94a6e272ec7267c267cf4483'
+Jul 02 06:18:38 cachyos kernel: integrity: Loading X.509 certificate: UEFI:db
+Jul 02 06:18:38 cachyos kernel: integrity: Loaded X.509 cert 'Quanta NB4: 073d6a4c306ea5b9499e861c7ba55cde'
+Jul 02 06:18:38 cachyos kernel: PM:   Magic number: 2:938:808
+Jul 02 06:18:38 cachyos kernel: RAS: Correctable Errors collector initialized.
+Jul 02 06:18:38 cachyos kernel: clk: Disabling unused clocks
+Jul 02 06:18:38 cachyos kernel: PM: genpd: Disabling unused power domains
+Jul 02 06:18:38 cachyos kernel: Freeing unused decrypted memory: 2028K
+Jul 02 06:18:38 cachyos kernel: Freeing unused kernel image (initmem) memory: 4628K
+Jul 02 06:18:38 cachyos kernel: Write protecting the kernel read-only data: 38912k
+Jul 02 06:18:38 cachyos kernel: Freeing unused kernel image (text/rodata gap) memory: 1160K
+Jul 02 06:18:38 cachyos kernel: Freeing unused kernel image (rodata/data gap) memory: 360K
+Jul 02 06:18:38 cachyos kernel: x86/mm: Checked W+X mappings: passed, no W+X pages found.
+Jul 02 06:18:38 cachyos kernel: rodata_test: all tests were successful
+Jul 02 06:18:38 cachyos kernel: Run /init as init process
+Jul 02 06:18:38 cachyos kernel:   with arguments:
+Jul 02 06:18:38 cachyos kernel:     /init
+Jul 02 06:18:38 cachyos kernel:     splash
+Jul 02 06:18:38 cachyos kernel:   with environment:
+Jul 02 06:18:38 cachyos kernel:     HOME=/
+Jul 02 06:18:38 cachyos kernel:     TERM=linux
+Jul 02 06:18:38 cachyos kernel: usb 1-6: new high-speed USB device number 2 using xhci_hcd
+Jul 02 06:18:38 cachyos systemd[1]: Successfully made /usr/ read-only.
+Jul 02 06:18:38 cachyos kernel: usb 1-6: New USB device found, idVendor=04f2, idProduct=b76f, bcdDevice= 0.04
+Jul 02 06:18:38 cachyos kernel: usb 1-6: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+Jul 02 06:18:38 cachyos kernel: usb 1-6: Product: ACER HD User Facing
+Jul 02 06:18:38 cachyos kernel: usb 1-6: Manufacturer: Generic
+Jul 02 06:18:38 cachyos kernel: usb 1-6: SerialNumber: 200901010001
+Jul 02 06:18:38 cachyos kernel: usb 1-14: new full-speed USB device number 3 using xhci_hcd
+Jul 02 06:18:38 cachyos systemd[1]: systemd 261.1-1-arch running in system mode (+PAM +AUDIT -SELINUX +APPARMOR -IMA +IPE +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 +KMOD +LIBCRYPTSETUP +LIBCRYPTSETUP_PLUGINS +LIBFDISK +PCRE2 +PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD +BPF_FRAMEWORK +BTF +XKBCOMMON +UTMP +LIBARCHIVE)
+Jul 02 06:18:38 cachyos systemd[1]: Detected architecture x86-64.
+Jul 02 06:18:38 cachyos systemd[1]: Running in initrd.
+Jul 02 06:18:38 cachyos systemd[1]: Initializing machine ID from random generator.
+Jul 02 06:18:38 cachyos kernel: usb 1-14: New USB device found, idVendor=8087, idProduct=0026, bcdDevice= 0.02
+Jul 02 06:18:38 cachyos kernel: usb 1-14: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+Jul 02 06:18:38 cachyos systemd[1]: Queued start job for default target Initrd Default Target.
+Jul 02 06:18:38 cachyos systemd[1]: Expecting device /dev/disk/by-uuid/fd759822-1930-4fee-a692-d1086c16595e...
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Path Units.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Slice Units.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Swaps.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Timer Units.
+Jul 02 06:18:38 cachyos systemd[1]: Listening on Journal Socket (/dev/log).
+Jul 02 06:18:38 cachyos systemd[1]: Listening on Journal Sockets.
+Jul 02 06:18:38 cachyos systemd[1]: Listening on udev Control Socket.
+Jul 02 06:18:38 cachyos systemd[1]: Listening on udev Kernel Socket.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Socket Units.
+Jul 02 06:18:38 cachyos systemd[1]: Create List of Static Device Nodes skipped, unmet condition check ConditionFileNotEmpty=/lib/modules/6.18.37-1-cachyos-lts/modules.devname
+Jul 02 06:18:38 cachyos systemd[1]: Starting Journal Service...
+Jul 02 06:18:38 cachyos systemd[1]: Starting Load Kernel Modules...
+Jul 02 06:18:38 cachyos systemd[1]: TPM PCR Barrier (initrd) skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:38 cachyos systemd[1]: Starting Create Static Device Nodes in /dev...
+Jul 02 06:18:38 cachyos systemd[1]: Starting Coldplug All udev Devices...
+Jul 02 06:18:38 cachyos systemd[1]: Starting Virtual Console Setup...
+Jul 02 06:18:38 cachyos systemd[1]: Finished Create Static Device Nodes in /dev.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Preparation for Local File Systems.
+Jul 02 06:18:38 cachyos systemd[1]: Reached target Local File Systems.
+Jul 02 06:18:38 cachyos systemd[1]: Starting Rule-based Manager for Device Events and Files...
+Jul 02 06:18:38 cachyos systemd[1]: Finished Virtual Console Setup.
+Jul 02 06:18:38 cachyos systemd-journald[251]: Collecting audit messages is disabled.
+Jul 02 06:18:38 cachyos kernel: wmi_bus wmi_bus-PNP0C14:00: [Firmware Bug]: WMBF method block execution control method not found
+Jul 02 06:18:38 cachyos kernel: wmi_bus wmi_bus-PNP0C14:01: [Firmware Bug]: WQ00 data block query control method not found
+Jul 02 06:18:38 cachyos systemd[1]: Started Rule-based Manager for Device Events and Files.
+Jul 02 06:18:38 cachyos systemd[1]: Started Journal Service.
+Jul 02 06:18:38 cachyos kernel: nvidia: loading out-of-tree module taints kernel.
+Jul 02 06:18:38 cachyos kernel: vmd 0000:00:0e.0: PCI host bridge to bus 10000:e0
+Jul 02 06:18:38 cachyos kernel: pci_bus 10000:e0: root bus resource [bus e0-ff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 10000:e0: root bus resource [mem 0x84000000-0x85ffffff]
+Jul 02 06:18:38 cachyos kernel: pci_bus 10000:e0: root bus resource [mem 0x6205102000-0x62051fffff 64bit]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.0: [8086:09ab] type 00 class 0x088000 conventional PCI endpoint
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.0: Adding to iommu group 5
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: [8086:462d] type 01 class 0x060400 PCIe Root Port
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: PCI bridge to [bus e1]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1:   bridge window [io  0x0000-0x0fff]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1:   bridge window [mem 0x84000000-0x840fffff]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: PME# supported from D0 D3hot D3cold
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: PTM enabled (root), 4ns granularity
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: Adding to iommu group 5
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: Primary bus is hard wired to 0
+Jul 02 06:18:38 cachyos kernel: pci 10000:e1:00.0: [1344:5407] type 00 class 0x010802 PCIe Endpoint
+Jul 02 06:18:38 cachyos kernel: pci 10000:e1:00.0: BAR 0 [mem 0x84000000-0x84003fff 64bit]
+Jul 02 06:18:38 cachyos kernel: rtsx_pci 0000:6c:00.0: enabling device (0000 -> 0002)
+Jul 02 06:18:38 cachyos kernel: pci 10000:e1:00.0: enabling Extended Tags
+Jul 02 06:18:38 cachyos kernel: pci 10000:e1:00.0: Adding to iommu group 5
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: PCI bridge to [bus e1]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: Primary bus is hard wired to 0
+Jul 02 06:18:38 cachyos kernel: nvidia: unknown parameter 'NVreg_UsePageAttributeTable' ignored
+Jul 02 06:18:38 cachyos kernel: nvidia-nvlink: Nvlink Core is being initialized, major device number 238
+Jul 02 06:18:38 cachyos kernel: 
+Jul 02 06:18:38 cachyos kernel: intel-lpss 0000:00:15.0: enabling device (0000 -> 0002)
+Jul 02 06:18:38 cachyos kernel: idma64 idma64.0: Found Intel integrated DMA 64-bit
+Jul 02 06:18:38 cachyos kernel: nvidia 0000:01:00.0: enabling device (0006 -> 0007)
+Jul 02 06:18:38 cachyos kernel: nvidia 0000:01:00.0: vgaarb: VGA decodes changed: olddecodes=io+mem,decodes=none:owns=none
+Jul 02 06:18:38 cachyos kernel: intel-lpss 0000:00:15.3: enabling device (0000 -> 0002)
+Jul 02 06:18:38 cachyos kernel: idma64 idma64.1: Found Intel integrated DMA 64-bit
+Jul 02 06:18:38 cachyos kernel: intel-lpss 0000:00:1e.0: enabling device (0000 -> 0002)
+Jul 02 06:18:38 cachyos kernel: idma64 idma64.2: Found Intel integrated DMA 64-bit
+Jul 02 06:18:38 cachyos kernel: intel-lpss 0000:00:1e.3: enabling device (0000 -> 0002)
+Jul 02 06:18:38 cachyos kernel: idma64 idma64.3: Found Intel integrated DMA 64-bit
+Jul 02 06:18:38 cachyos kernel: NVRM: loading NVIDIA UNIX Open Kernel Module for x86_64  610.43.02  Release Build  (notroot@)  Sun Jun 28 21:22:38 UTC 2026
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: disabling bridge window [mem size 0x00000000 64bit pref disabled] to [bus e1] (unused)
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: bridge window [mem 0x84000000-0x840fffff]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: bridge window [io  size 0x1000]: can't assign; no space
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: bridge window [io  size 0x1000]: failed to assign
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: bridge window [io  size 0x1000]: can't assign; no space
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: bridge window [io  size 0x1000]: failed to assign
+Jul 02 06:18:38 cachyos kernel: pci 10000:e1:00.0: BAR 0 [mem 0x84000000-0x84003fff 64bit]: assigned
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1: PCI bridge to [bus e1]
+Jul 02 06:18:38 cachyos kernel: pci 10000:e0:01.1:   bridge window [mem 0x84000000-0x840fffff]
+Jul 02 06:18:38 cachyos kernel: pcieport 10000:e0:01.1: can't derive routing for PCI INT B
+Jul 02 06:18:38 cachyos kernel: pcieport 10000:e0:01.1: PCI INT B: no GSI
+Jul 02 06:18:38 cachyos kernel: pcieport 10000:e0:01.1: PME: Signaling with IRQ 164
+Jul 02 06:18:38 cachyos kernel: pcieport 10000:e0:01.1: AER: enabled with IRQ 164
+Jul 02 06:18:38 cachyos kernel: vmd 0000:00:0e.0: Bound to PCI domain 10000
+Jul 02 06:18:38 cachyos kernel: nvidia-modeset: Loading NVIDIA UNIX Open Kernel Mode Setting Driver for x86_64  610.43.02  Release Build  (notroot@)  Sun Jun 28 21:22:35 UTC 2026
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Found alderlake_s (device ID 4688) integrated display version 12.00 stepping C0
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] VT-d active for gfx access
+Jul 02 06:18:38 cachyos kernel: Key type psk registered
+Jul 02 06:18:38 cachyos kernel: [drm] [nvidia-drm] [GPU ID 0x00000100] Loading driver
+Jul 02 06:18:38 cachyos kernel: nvme nvme0: pci function 10000:e1:00.0
+Jul 02 06:18:38 cachyos kernel: pcieport 10000:e0:01.1: can't derive routing for PCI INT A
+Jul 02 06:18:38 cachyos kernel: nvme 10000:e1:00.0: PCI INT A: no GSI
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: vgaarb: deactivate vga console
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Using Transparent Hugepages
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: vgaarb: VGA decodes changed: olddecodes=io+mem,decodes=none:owns=io+mem
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Finished loading DMC firmware i915/adls_dmc_ver2_01.bin (v2.1)
+Jul 02 06:18:38 cachyos kernel: nvme nvme0: 24/0/0 default/read/poll queues
+Jul 02 06:18:38 cachyos kernel:  nvme0n1: p1 p2
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] GT0: GuC firmware i915/tgl_guc_70.bin version 70.49.4
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] GT0: HuC firmware i915/tgl_huc.bin version 7.9.3
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] GT0: HuC: authenticated for all workloads
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Protected Xe Path (PXP) protected content support initialized
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Skipping intel_backlight registration
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] Registered 4 planes with drm panic
+Jul 02 06:18:38 cachyos kernel: [drm] Initialized i915 1.6.0 for 0000:00:02.0 on minor 1
+Jul 02 06:18:38 cachyos kernel: ACPI: video: [Firmware Bug]: ACPI(PEGP) defines _DOD but not _DOS
+Jul 02 06:18:38 cachyos kernel: ACPI: video: Video Device [PEGP] (multi-head: yes  rom: no  post: no)
+Jul 02 06:18:38 cachyos kernel: input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:03/LNXVIDEO:00/input/input4
+Jul 02 06:18:38 cachyos kernel: ACPI: video: Video Device [GFX0] (multi-head: yes  rom: no  post: no)
+Jul 02 06:18:38 cachyos kernel: input: Video Bus as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/LNXVIDEO:01/input/input5
+Jul 02 06:18:38 cachyos kernel: fbcon: i915drmfb (fb0) is primary device
+Jul 02 06:18:38 cachyos kernel: fbcon: Deferring console take-over
+Jul 02 06:18:38 cachyos kernel: i915 0000:00:02.0: [drm] fb0: i915drmfb frame buffer device
+Jul 02 06:18:39 cachyos kernel: BTRFS: device fsid fd759822-1930-4fee-a692-d1086c16595e devid 1 transid 90245 /dev/nvme0n1p2 (259:2) scanned by mount (398)
+Jul 02 06:18:39 cachyos kernel: BTRFS info (device nvme0n1p2): first mount of filesystem fd759822-1930-4fee-a692-d1086c16595e
+Jul 02 06:18:39 cachyos kernel: BTRFS info (device nvme0n1p2): using crc32c (crc32c-lib) checksum algorithm
+Jul 02 06:18:39 cachyos kernel: BTRFS info (device nvme0n1p2): enabling ssd optimizations
+Jul 02 06:18:39 cachyos kernel: BTRFS info (device nvme0n1p2): turning on async discard
+Jul 02 06:18:39 cachyos kernel: BTRFS info (device nvme0n1p2): enabling free space tree
+Jul 02 06:18:40 cachyos kernel: nvidia-modeset: nvidia-modeset: ACPI reported no NVIDIA native backlight available; attempting to use ACPI backlight.
+Jul 02 06:18:40 cachyos kernel: nvidia-modeset: WARNING: GPU:0: Unable to read EDID for display device DP-4
+Jul 02 06:18:40 cachyos kernel: nvidia-modeset: WARNING: GPU:0: Unable to read EDID for display device DP-4
+Jul 02 06:18:40 cachyos kernel: [drm] Initialized nvidia-drm 0.0.0 for 0000:01:00.0 on minor 2
+Jul 02 06:18:40 cachyos kernel: nvidia 0000:01:00.0: [drm] Cannot find any crtc or sizes
+Jul 02 06:18:41 jebincos systemd-journald[251]: Received SIGTERM from PID 1 (systemd).
+Jul 02 06:18:41 jebincos systemd[1]: systemd 261.1-1-arch running in system mode (+PAM +AUDIT -SELINUX +APPARMOR -IMA +IPE +SMACK +SECCOMP +GCRYPT +GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 +KMOD +LIBCRYPTSETUP +LIBCRYPTSETUP_PLUGINS +LIBFDISK +PCRE2 +PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD +BPF_FRAMEWORK +BTF +XKBCOMMON +UTMP +LIBARCHIVE)
+Jul 02 06:18:41 jebincos systemd[1]: Detected architecture x86-64.
+Jul 02 06:18:41 jebincos systemd[1]: Hostname set to <jebincos>.
+Jul 02 06:18:41 jebincos systemd[1]: bpf-restrict-fs: LSM BPF program attached
+Jul 02 06:18:41 jebincos kernel: zram: Added device: zram0
+Jul 02 06:18:41 jebincos systemd[1]: initrd-switch-root.service: Deactivated successfully.
+Jul 02 06:18:41 jebincos systemd[1]: Stopped Switch Root.
+Jul 02 06:18:41 jebincos systemd[1]: systemd-journald.service: Scheduled restart job, restart counter is at 1.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Virtual Machine and Container Slice.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/dirmngr.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/getty.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/gpg-agent.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/gpg-agent-browser.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/gpg-agent-extra.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/gpg-agent-ssh.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/keyboxd.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/modprobe.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/systemd-fsck.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice Slice /system/systemd-zram-setup.
+Jul 02 06:18:41 jebincos systemd[1]: Created slice User and Session Slice.
+Jul 02 06:18:41 jebincos systemd[1]: Dispatch Password Requests to Console Directory Watch skipped, unmet condition check ConditionPathExists=!/run/plymouth/pid
+Jul 02 06:18:41 jebincos systemd[1]: Started Forward Password Requests to Wall Directory Watch.
+Jul 02 06:18:41 jebincos systemd[1]: Set up automount Arbitrary Executable File Formats File System Automount Point.
+Jul 02 06:18:41 jebincos systemd[1]: Expecting device /dev/disk/by-uuid/B0DC-33A8...
+Jul 02 06:18:41 jebincos systemd[1]: Expecting device /dev/disk/by-uuid/fd759822-1930-4fee-a692-d1086c16595e...
+Jul 02 06:18:41 jebincos systemd[1]: Expecting device /dev/zram0...
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Login Prompts.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Image Downloads.
+Jul 02 06:18:41 jebincos systemd[1]: Stopped target Switch Root.
+Jul 02 06:18:41 jebincos systemd[1]: Stopped target Initrd File Systems.
+Jul 02 06:18:41 jebincos systemd[1]: Stopped target Initrd Root File System.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Local Integrity Protected Volumes.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Preparation for Network.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Remote File Systems.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Slice Units.
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Local Verity Protected Volumes.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Device-mapper event daemon FIFOs.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on LVM2 poll daemon socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Query the User Interactively for a Password.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Process Core Dump Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Credential Encryption/Decryption.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Factory Reset Management.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Hostname Service Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Console Output Muting Service Socket.
+Jul 02 06:18:41 jebincos systemd[1]: TPM PCR Measurements skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:41 jebincos systemd[1]: Make TPM PCR Policy skipped, unmet condition check ConditionSecurity=measured-uki
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Disk Repartitioning Service Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Resolve Monitor Varlink Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Resolve Service Varlink Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Simple Block Device Backed Storage Provider.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on Simple File System Backed Storage Provider.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on udev Control Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on udev Varlink Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Listening on User Database Manager Socket.
+Jul 02 06:18:41 jebincos systemd[1]: Mounting Huge Pages File System...
+Jul 02 06:18:41 jebincos systemd[1]: Mounting POSIX Message Queue File System...
+Jul 02 06:18:41 jebincos systemd[1]: Mounting Kernel Debug File System...
+Jul 02 06:18:41 jebincos systemd[1]: Mounting Kernel Trace File System...
+Jul 02 06:18:41 jebincos systemd[1]: Starting Create List of Static Device Nodes...
+Jul 02 06:18:41 jebincos systemd[1]: Starting Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+Jul 02 06:18:41 jebincos systemd[1]: Load Kernel Module configfs skipped, unmet condition check ConditionKernelModuleLoaded=!configfs
+Jul 02 06:18:41 jebincos systemd[1]: Mounting Kernel Configuration File System...
+Jul 02 06:18:41 jebincos systemd[1]: Load Kernel Module drm skipped, unmet condition check ConditionKernelModuleLoaded=!drm
+Jul 02 06:18:41 jebincos systemd[1]: Load Kernel Module fuse skipped, unmet condition check ConditionKernelModuleLoaded=!fuse
+Jul 02 06:18:41 jebincos systemd[1]: Mounting FUSE Control File System...
+Jul 02 06:18:41 jebincos systemd[1]: plymouth-switch-root.service: Deactivated successfully.
+Jul 02 06:18:41 jebincos systemd[1]: Stopped Plymouth switch root service.
+Jul 02 06:18:41 jebincos systemd[1]: Clear Stale Hibernate Storage Info skipped, unmet condition check ConditionPathExists=/sys/firmware/efi/efivars/HibernateLocation-8cf2644b-4b0b-428f-9387-6d876050dc67
+Jul 02 06:18:41 jebincos systemd[1]: Starting Journal Service...
+Jul 02 06:18:41 jebincos systemd[1]: Starting Load Kernel Modules...
+Jul 02 06:18:41 jebincos systemd[1]: TPM PCR Machine ID Measurement skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:41 jebincos systemd[1]: TPM PCR OS Separator skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:41 jebincos systemd[1]: Starting Remount Root and Kernel File Systems...
+Jul 02 06:18:41 jebincos systemd[1]: Early TPM SRK Setup skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:41 jebincos systemd[1]: TPM PCR NvPCR Initialization Separator skipped, unmet condition check ConditionPathExists=/etc/initrd-release
+Jul 02 06:18:41 jebincos systemd[1]: Reached target Local Encrypted Volumes.
+Jul 02 06:18:41 jebincos systemd[1]: TPM NvPCR Product ID Measurement skipped, unmet condition check ConditionSecurity=measured-os
+Jul 02 06:18:41 jebincos systemd[1]: Starting Load udev Rules from Credentials...
+Jul 02 06:18:41 jebincos systemd[1]: Starting Coldplug All udev Devices...
+Jul 02 06:18:41 jebincos systemd[1]: Mounted POSIX Message Queue File System.
+Jul 02 06:18:41 jebincos systemd[1]: Mounted Kernel Trace File System.
+Jul 02 06:18:41 jebincos systemd[1]: Finished Create List of Static Device Nodes.
+Jul 02 06:18:41 jebincos systemd[1]: Mounted Huge Pages File System.
+Jul 02 06:18:41 jebincos systemd[1]: Mounted Kernel Debug File System.
+Jul 02 06:18:41 jebincos systemd[1]: Mounted Kernel Configuration File System.
+Jul 02 06:18:41 jebincos systemd[1]: Mounted FUSE Control File System.
+Jul 02 06:18:41 jebincos systemd[1]: Starting Create Static Device Nodes in /dev gracefully...
+Jul 02 06:18:41 jebincos systemd[1]: Finished Load udev Rules from Credentials.
+Jul 02 06:18:41 jebincos systemd-journald[483]: Collecting audit messages is disabled.
+Jul 02 06:18:41 jebincos systemd[1]: Started Journal Service.
+Jul 02 06:18:41 jebincos kernel: Asymmetric key parser 'pkcs8' registered
+Jul 02 06:18:41 jebincos kernel: i2c_dev: i2c /dev entries driver
+Jul 02 06:18:41 jebincos kernel: BTRFS info (device nvme0n1p2 state M): use zstd compression, level 1
+Jul 02 06:18:41 jebincos kernel: device-mapper: uevent: version 1.0.3
+Jul 02 06:18:41 jebincos kernel: device-mapper: ioctl: 4.50.0-ioctl (2025-04-28) initialised: dm-devel@lists.linux.dev
+Jul 02 06:18:42 jebincos kernel: zram0: detected capacity change from 0 to 131098624
+Jul 02 06:18:42 jebincos kernel: input: PC Speaker as /devices/platform/pcspkr/input/input6
+Jul 02 06:18:42 jebincos kernel: input: Acer Wireless Radio Control as /devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1b/10251229:00/input/input7
+Jul 02 06:18:42 jebincos kernel: dw-apb-uart.2: ttyS4 at MMIO 0x4017002000 (irq = 16, base_baud = 6250000) is a 16550A
+Jul 02 06:18:42 jebincos kernel: ACPI: bus type thunderbolt registered
+Jul 02 06:18:42 jebincos kernel: thunderbolt 0000:04:00.0: enabling device (0000 -> 0002)
+Jul 02 06:18:42 jebincos kernel: spi-nor spi0.0: supply vcc not found, using dummy regulator
+Jul 02 06:18:42 jebincos kernel: i801_smbus 0000:00:1f.4: enabling device (0000 -> 0003)
+Jul 02 06:18:42 jebincos kernel: Creating 1 MTD partitions on "0000:00:1f.5":
+Jul 02 06:18:42 jebincos kernel: 0x000000000000-0x000002000000 : "BIOS"
+Jul 02 06:18:42 jebincos kernel: i801_smbus 0000:00:1f.4: SPD Write Disable is set
+Jul 02 06:18:42 jebincos kernel: i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+Jul 02 06:18:42 jebincos kernel: i2c i2c-17: Successfully instantiated SPD at 0x50
+Jul 02 06:18:42 jebincos kernel: i2c i2c-17: Successfully instantiated SPD at 0x52
+Jul 02 06:18:42 jebincos kernel: acer_wmi: Acer Laptop ACPI-WMI Extras
+Jul 02 06:18:42 jebincos kernel: acer_wmi: Function bitmap for Communication Button: 0x801
+Jul 02 06:18:42 jebincos kernel: mei_me 0000:00:16.0: enabling device (0000 -> 0002)
+Jul 02 06:18:42 jebincos kernel: input: Acer WMI hotkeys as /devices/virtual/input/input8
+Jul 02 06:18:42 jebincos kernel: cfg80211: Loading compiled-in X.509 certificates for regulatory database
+Jul 02 06:18:42 jebincos kernel: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+Jul 02 06:18:42 jebincos kernel: Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+Jul 02 06:18:42 jebincos kernel: input: PIXA3848:00 093A:3848 Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-PIXA3848:00/0018:093A:3848.0001/input/input9
+Jul 02 06:18:42 jebincos kernel: input: PIXA3848:00 093A:3848 Touchpad as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-PIXA3848:00/0018:093A:3848.0001/input/input10
+Jul 02 06:18:42 jebincos kernel: hid-generic 0018:093A:3848.0001: input,hidraw0: I2C HID v1.00 Mouse [PIXA3848:00 093A:3848] on i2c-PIXA3848:00
+Jul 02 06:18:42 jebincos kernel: RAPL PMU: API unit is 2^-32 Joules, 3 fixed counters, 655360 ms ovfl timer
+Jul 02 06:18:42 jebincos kernel: RAPL PMU: hw unit of domain pp0-core 2^-14 Joules
+Jul 02 06:18:42 jebincos kernel: RAPL PMU: hw unit of domain package 2^-14 Joules
+Jul 02 06:18:42 jebincos kernel: RAPL PMU: hw unit of domain pp1-gpu 2^-14 Joules
+Jul 02 06:18:42 jebincos kernel: intel_pmc_core INT33A1:00:  initialized
+Jul 02 06:18:42 jebincos kernel: spd5118 17-0050: DDR5 temperature sensor: vendor 0x06:0x32 revision 1.6
+Jul 02 06:18:42 jebincos kernel: mei_pxp 0000:00:16.0-fbf6fcf1-96cf-4e2e-a6a6-1bab8cbe36b1: bound 0000:00:02.0 (ops i915_pxp_tee_component_ops [i915])
+Jul 02 06:18:42 jebincos kernel: mei_hdcp 0000:00:16.0-b638ab7e-94e2-4ea2-a552-d1c54b627f04: bound 0000:00:02.0 (ops i915_hdcp_ops [i915])
+Jul 02 06:18:42 jebincos kernel: intel_rapl_common: Found RAPL domain package
+Jul 02 06:18:42 jebincos kernel: intel_rapl_common: Found RAPL domain core
+Jul 02 06:18:42 jebincos kernel: intel_rapl_common: Found RAPL domain uncore
+Jul 02 06:18:42 jebincos kernel: spd5118 17-0052: DDR5 temperature sensor: vendor 0x06:0x32 revision 1.6
+Jul 02 06:18:42 jebincos kernel: r8169 0000:6d:00.0: enabling device (0000 -> 0003)
+Jul 02 06:18:42 jebincos kernel: iwlwifi 0000:00:14.3: enabling device (0000 -> 0002)
+Jul 02 06:18:42 jebincos kernel: mc: Linux media interface: v0.10
+Jul 02 06:18:42 jebincos kernel: iwlwifi 0000:00:14.3: Detected crf-id 0x1300504, cnv-id 0x80401 wfpm id 0x80000030
+Jul 02 06:18:42 jebincos kernel: iwlwifi 0000:00:14.3: PCI dev 7a70/1652, rev=0x430, rfid=0x10a100
+Jul 02 06:18:42 jebincos kernel: iwlwifi 0000:00:14.3: Detected Killer(R) Wi-Fi 6 AX1650i 160MHz Wireless Network Adapter (201NGW)
+Jul 02 06:18:42 jebincos kernel: r8169 0000:6d:00.0 eth0: RTL8168h/8111h, 74:d4:dd:06:c9:61, XID 541, IRQ 226
+Jul 02 06:18:42 jebincos kernel: r8169 0000:6d:00.0 eth0: jumbo features [frames: 9194 bytes, tx checksumming: ko]
+Jul 02 06:18:42 jebincos kernel: iwlwifi 0000:00:14.3: loaded firmware version 89.735b75a4.0 so-a0-hr-b0-89.ucode op_mode iwlmvm
+Jul 02 06:18:42 jebincos kernel: Bluetooth: Core ver 2.22
+Jul 02 06:18:42 jebincos kernel: NET: Registered PF_BLUETOOTH protocol family
+Jul 02 06:18:42 jebincos kernel: Bluetooth: HCI device and connection manager initialized
+Jul 02 06:18:42 jebincos kernel: Bluetooth: HCI socket layer initialized
+Jul 02 06:18:42 jebincos kernel: Bluetooth: L2CAP socket layer initialized
+Jul 02 06:18:42 jebincos kernel: Bluetooth: SCO socket layer initialized
+Jul 02 06:18:42 jebincos kernel: r8169 0000:6d:00.0 enp109s0: renamed from eth0
+Jul 02 06:18:42 jebincos kernel: input: PIXA3848:00 093A:3848 Mouse as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-PIXA3848:00/0018:093A:3848.0001/input/input11
+Jul 02 06:18:42 jebincos kernel: input: PIXA3848:00 093A:3848 Touchpad as /devices/pci0000:00/0000:00:15.0/i2c_designware.0/i2c-0/i2c-PIXA3848:00/0018:093A:3848.0001/input/input12
+Jul 02 06:18:42 jebincos kernel: hid-multitouch 0018:093A:3848.0001: input,hidraw0: I2C HID v1.00 Mouse [PIXA3848:00 093A:3848] on i2c-PIXA3848:00
+Jul 02 06:18:42 jebincos kernel: pps_core: LinuxPPS API ver. 1 registered
+Jul 02 06:18:42 jebincos kernel: pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+Jul 02 06:18:42 jebincos kernel: PTP clock support registered
+Jul 02 06:18:42 jebincos kernel: videodev: Linux video capture interface: v2.00
+Jul 02 06:18:42 jebincos kernel: mousedev: PS/2 mouse device common for all mice
+Jul 02 06:18:43 jebincos kernel: proc_thermal_pci 0000:00:04.0: enabling device (0000 -> 0002)
+Jul 02 06:18:43 jebincos kernel: intel_rapl_common: Found RAPL domain package
+Jul 02 06:18:43 jebincos kernel: snd_hda_intel 0000:00:1f.3: Digital mics found on Skylake+ platform, using SOF driver
+Jul 02 06:18:43 jebincos kernel: snd_hda_intel 0000:01:00.1: Disabling MSI
+Jul 02 06:18:43 jebincos kernel: snd_hda_intel 0000:01:00.1: Handle vga_switcheroo audio client
+Jul 02 06:18:43 jebincos kernel: usbcore: registered new interface driver btusb
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Device revision is 2
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Secure boot is enabled
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: OTP lock is enabled
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: API lock is enabled
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Debug lock is disabled
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Minimum firmware build 1 week 10 2014
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Bootloader timestamp 2019.40 buildtype 1 build 38
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: DSM reset method type: 0x00
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Found device firmware: intel/ibt-1040-4150.sfi
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Boot Address: 0x100800
+Jul 02 06:18:43 jebincos kernel: Bluetooth: hci0: Firmware Version: 202-5.26
+Jul 02 06:18:43 jebincos kernel: uvcvideo 1-6:1.0: Found UVC 1.10 device ACER HD User Facing (04f2:b76f)
+Jul 02 06:18:43 jebincos kernel: usbcore: registered new interface driver uvcvideo
+Jul 02 06:18:43 jebincos kernel: input: HDA NVidia HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:01.0/0000:01:00.1/sound/card0/input13
+Jul 02 06:18:43 jebincos kernel: input: HDA NVidia HDMI/DP,pcm=7 as /devices/pci0000:00/0000:00:01.0/0000:01:00.1/sound/card0/input14
+Jul 02 06:18:43 jebincos kernel: input: HDA NVidia HDMI/DP,pcm=8 as /devices/pci0000:00/0000:00:01.0/0000:01:00.1/sound/card0/input15
+Jul 02 06:18:43 jebincos kernel: input: HDA NVidia HDMI/DP,pcm=9 as /devices/pci0000:00/0000:00:01.0/0000:01:00.1/sound/card0/input16
+Jul 02 06:18:43 jebincos kernel: intel_tcc_cooling: Programmable TCC Offset detected
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if 0x040100
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: bound 0000:00:02.0 (ops intel_audio_component_bind_ops [i915])
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: use msi interrupt mode
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: hda codecs found, mask 5
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: using HDA machine driver skl_hda_dsp_generic now
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: NHLT device BT(0) detected, ssp_mask 0x4
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: BT link detected in NHLT tables: 0x4
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: DMICs detected in NHLT tables: 2
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware paths/files for ipc type 0:
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3:  Firmware file:     intel/sof/sof-rpl-s.ri
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3:  Topology file:     intel/sof-tplg/sof-hda-generic-2ch.tplg
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:1
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x20
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x10
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: Detected RF HR B5, rfid=0x10a100
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: RFIm is deactivated, reason = 5
+Jul 02 06:18:43 jebincos kernel: Adding 65549308k swap on /dev/zram0.  Priority:100 extents:1 across:65549308k SSDsc
+Jul 02 06:18:43 jebincos kernel: iwlwifi 0000:00:14.3: base HW address: 50:28:4a:a8:6e:7a
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware info: version 2:2:0-57864
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Firmware: ABI 3:22:1 Kernel ABI 3:23:1
+Jul 02 06:18:43 jebincos kernel: sof-audio-pci-intel-tgl 0000:00:1f.3: Topology: ABI 3:22:1 Kernel ABI 3:23:1
+Jul 02 06:18:43 jebincos kernel: skl_hda_dsp_generic skl_hda_dsp_generic: ASoC: Parent card not yet available, widget card binding deferred
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0: ALC245: picked fixup  for PCI SSID 1025:0000
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0: autoconfig for ALC245: line_outs=1 (0x14/0x0/0x0/0x0/0x0) type:speaker
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0:    hp_outs=1 (0x21/0x0/0x0/0x0/0x0)
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0:    mono: mono_out=0x0
+Jul 02 06:18:43 jebincos kernel: snd_hda_codec_alc269 ehdaudio0D0:    inputs:
+Jul 02 06:18:43 jebincos kernel: skl_hda_dsp_generic skl_hda_dsp_generic: hda_dsp_hdmi_build_controls: no PCM in topology for HDMI converter 3
+Jul 02 06:18:43 jebincos kernel: input: sof-hda-dsp Headphone as /devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card1/input17
+Jul 02 06:18:43 jebincos kernel: input: sof-hda-dsp HDMI/DP,pcm=3 as /devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card1/input18
+Jul 02 06:18:43 jebincos kernel: input: sof-hda-dsp HDMI/DP,pcm=4 as /devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card1/input19
+Jul 02 06:18:43 jebincos kernel: input: sof-hda-dsp HDMI/DP,pcm=5 as /devices/pci0000:00/0000:00:1f.3/skl_hda_dsp_generic/sound/card1/input20
+Jul 02 06:18:43 jebincos systemd-journald[483]: Received client request to flush runtime journal.
+Jul 02 06:18:43 jebincos kernel: Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+Jul 02 06:18:43 jebincos kernel: Bluetooth: BNEP filters: protocol multicast
+Jul 02 06:18:43 jebincos kernel: Bluetooth: BNEP socket layer initialized
+Jul 02 06:18:43 jebincos kernel: Generic FE-GE Realtek PHY r8169-0-6d00:00: attached PHY driver (mii_bus:phy_addr=r8169-0-6d00:00, irq=MAC)
+Jul 02 06:18:44 jebincos kernel: r8169 0000:6d:00.0 enp109s0: Link is Down
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x20
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x10
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: RFIm is deactivated, reason = 5
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x20
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x10
+Jul 02 06:18:44 jebincos kernel: iwlwifi 0000:00:14.3: RFIm is deactivated, reason = 5
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Waiting for firmware download to complete
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Firmware loaded in 1349564 usecs
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Waiting for device to boot
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Device booted in 14663 usecs
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Found Intel DDC parameters: intel/ibt-1040-4150.ddc
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Applying Intel DDC parameters completed
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Firmware timestamp 2026.5 buildtype 1 build 82122
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Firmware SHA1: 0x2925677d
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Fseq status: Success (0x00)
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Fseq executed: 00.00.02.41
+Jul 02 06:18:44 jebincos kernel: Bluetooth: hci0: Fseq BT Top: 00.00.02.41
+Jul 02 06:18:44 jebincos kernel: Bluetooth: MGMT ver 1.23
+Jul 02 06:18:44 jebincos kernel: NET: Registered PF_ALG protocol family
+Jul 02 06:18:44 jebincos kernel: tun: Universal TUN/TAP device driver, 1.6
+Jul 02 06:18:45 jebincos kernel: [UFW BLOCK] IN=tailscale0 OUT= MAC= SRC=fe80:0000:0000:0000:1197:0991:627a:b03d DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=21853 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:45 jebincos kernel: [UFW BLOCK] IN=tailscale0 OUT= MAC= SRC=fe80:0000:0000:0000:1197:0991:627a:b03d DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=21853 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:45 jebincos kernel: [UFW BLOCK] IN=tailscale0 OUT= MAC= SRC=fe80:0000:0000:0000:1197:0991:627a:b03d DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=21853 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:48 jebincos kernel: wlan0: authenticate with 50:3d:d1:eb:cf:cb (local address=50:28:4a:a8:6e:7a)
+Jul 02 06:18:48 jebincos kernel: wlan0: send auth to 50:3d:d1:eb:cf:cb (try 1/3)
+Jul 02 06:18:48 jebincos kernel: wlan0: authenticated
+Jul 02 06:18:48 jebincos kernel: wlan0: associate with 50:3d:d1:eb:cf:cb (try 1/3)
+Jul 02 06:18:48 jebincos kernel: wlan0: RX AssocResp from 50:3d:d1:eb:cf:cb (capab=0x1111 status=0 aid=3)
+Jul 02 06:18:48 jebincos kernel: wlan0: associated
+Jul 02 06:18:48 jebincos kernel: wlan0: Limiting TX power to 20 (20 - 0) dBm as advertised by 50:3d:d1:eb:cf:cb
+Jul 02 06:18:48 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=192.168.0.7 DST=224.0.0.252 LEN=54 TOS=0x00 PREC=0x00 TTL=255 ID=64097 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:48 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=192.168.0.7 DST=224.0.0.252 LEN=54 TOS=0x00 PREC=0x00 TTL=255 ID=64145 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:49 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=192.168.0.7 DST=224.0.0.252 LEN=54 TOS=0x00 PREC=0x00 TTL=255 ID=64335 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:49 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:49 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:28:4a:a8:6e:7a:86:dd SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:50 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:50 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:28:4a:a8:6e:7a:86:dd SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:50 jebincos kernel: Initializing XFRM netlink socket
+Jul 02 06:18:50 jebincos kernel: bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+Jul 02 06:18:50 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC= SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:50 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:28:4a:a8:6e:7a:86:dd SRC=fe80:0000:0000:0000:cacf:167c:1bd0:bfbe DST=ff02:0000:0000:0000:0000:0000:0001:0003 LEN=74 TC=0 HOPLIMIT=255 FLOWLBL=274722 PROTO=UDP SPT=5355 DPT=5355 LEN=34 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=296 TOS=0x00 PREC=0x00 TTL=64 ID=60295 DF PROTO=UDP SPT=36406 DPT=54263 LEN=276 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=305 TOS=0x00 PREC=0x00 TTL=64 ID=60296 DF PROTO=UDP SPT=36406 DPT=54263 LEN=285 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=352 TOS=0x00 PREC=0x00 TTL=64 ID=60297 DF PROTO=UDP SPT=36406 DPT=54263 LEN=332 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=360 TOS=0x00 PREC=0x00 TTL=64 ID=60298 DF PROTO=UDP SPT=36406 DPT=54263 LEN=340 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=350 TOS=0x00 PREC=0x00 TTL=64 ID=60299 DF PROTO=UDP SPT=36406 DPT=54263 LEN=330 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=362 TOS=0x00 PREC=0x00 TTL=64 ID=60300 DF PROTO=UDP SPT=36406 DPT=54263 LEN=342 
+Jul 02 06:18:51 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=318 TOS=0x00 PREC=0x00 TTL=64 ID=60301 DF PROTO=UDP SPT=36406 DPT=54263 LEN=298 
+Jul 02 06:18:51 jebincos kernel: Bluetooth: RFCOMM TTY layer initialized
+Jul 02 06:18:51 jebincos kernel: Bluetooth: RFCOMM socket layer initialized
+Jul 02 06:18:51 jebincos kernel: Bluetooth: RFCOMM ver 1.11
+Jul 02 06:18:58 jebincos kernel: nvme nvme0: using unchecked data buffer
+Jul 02 06:18:58 jebincos kernel: block nvme0n1: No UUID available providing old NGUID
+Jul 02 06:18:59 jebincos kernel: warning: `kdeconnectd' uses wireless extensions which will stop working for Wi-Fi 7 hardware; use nl80211
+Jul 02 06:19:37 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:86:dd SRC=2607:6bc0:0000:0000:0000:0000:0000:0010 DST=2406:7400:0056:2755:39b4:e769:c329:6bde LEN=111 TC=0 HOPLIMIT=56 FLOWLBL=131988 PROTO=TCP SPT=443 DPT=58280 WINDOW=56 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:20:10 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:08:00 SRC=16.79.38.103 DST=192.168.0.7 LEN=98 TOS=0x00 PREC=0x20 TTL=243 ID=789 DF PROTO=TCP SPT=443 DPT=50756 WINDOW=8 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:21:12 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:50:3d:d1:eb:cf:c9:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=36 TOS=0x00 PREC=0x00 TTL=1 ID=1243 DF PROTO=2 
+Jul 02 06:21:40 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:86:dd SRC=2607:6bc0:0000:0000:0000:0000:0000:0010 DST=2406:7400:0056:2755:39b4:e769:c329:6bde LEN=111 TC=0 HOPLIMIT=56 FLOWLBL=1024487 PROTO=TCP SPT=443 DPT=58280 WINDOW=56 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:22:11 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:08:00 SRC=16.79.38.103 DST=192.168.0.7 LEN=98 TOS=0x00 PREC=0x20 TTL=243 ID=790 DF PROTO=TCP SPT=443 DPT=50756 WINDOW=8 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:23:17 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:50:3d:d1:eb:cf:c9:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=36 TOS=0x00 PREC=0x00 TTL=1 ID=9545 DF PROTO=2 
+Jul 02 06:23:43 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:86:dd SRC=2607:6bc0:0000:0000:0000:0000:0000:0010 DST=2406:7400:0056:2755:39b4:e769:c329:6bde LEN=111 TC=0 HOPLIMIT=56 FLOWLBL=895025 PROTO=TCP SPT=443 DPT=58280 WINDOW=56 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:23:49 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:86:dd SRC=2607:6bc0:0000:0000:0000:0000:0000:0010 DST=2406:7400:0056:2755:39b4:e769:c329:6bde LEN=96 TC=0 HOPLIMIT=56 FLOWLBL=706851 PROTO=TCP SPT=443 DPT=40702 WINDOW=82 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:24:12 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:50:3d:d1:eb:cf:c9:08:00 SRC=16.79.38.103 DST=192.168.0.7 LEN=98 TOS=0x00 PREC=0x20 TTL=243 ID=791 DF PROTO=TCP SPT=443 DPT=50756 WINDOW=8 RES=0x00 ACK PSH URGP=0 
+Jul 02 06:25:22 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:50:3d:d1:eb:cf:c9:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=36 TOS=0x00 PREC=0x00 TTL=1 ID=14317 DF PROTO=2 
+Jul 02 06:25:48 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:25:48 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:25:48 jebincos kernel: GSP task watchdog timeout @ pc:0x109ce80, partition:2#0, task:3, gfid: 0
+Jul 02 06:25:48 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782953748
+Jul 02 06:25:48 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:25:48 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:25:48 jebincos kernel: NVRM:         sepc:0x000000000109ce80     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:25:48 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:25:48 jebincos kernel: NVRM:         ra:0x0000000001b63762   sp:0x00000002ffe0ab20   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:25:48 jebincos kernel: NVRM:         a0:0x00000002ffe0ab40   a1:0x00000002ffe0ab40   a2:0x0000000000000080   a3:0x0000000000000001
+Jul 02 06:25:48 jebincos kernel: NVRM:         a4:0x0000000000000001   a5:0x0000000000000000   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:25:48 jebincos kernel: NVRM:         s0:0x00000002ffe0ac10   s1:0xffffffffffffffff   s2:0x0000000000000001   s3:0x00000000041d3f50
+Jul 02 06:25:48 jebincos kernel: NVRM:         s4:0x00000002f9392090   s5:0x00000000203b2660   s6:0x00000002ffe0ac20   s7:0x000000000000000e
+Jul 02 06:25:48 jebincos kernel: NVRM:         s8:0x000000000158601a   s9:0x000000000418ff68  s10:0x00000000203b2648  s11:0x0000000000000001
+Jul 02 06:25:48 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:25:48 jebincos kernel: NVRM:         t4:0x0000000000000038   t5:0x00000000040001d8   t6:0x0000000020800a9a
+Jul 02 06:25:48 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000109ce80
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001711c98
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001712cba
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b9963a
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:25:48 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000109ce7e  0x000000000010012e  0x000000000109ce7c  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109cdfe  0x0000000001b63734
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x000000000109cc0e
+Jul 02 06:25:48 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:25:48 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:25:48 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:26:21 jebincos kernel: NVRM: kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:26:21 jebincos kernel: NVRM: kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:26:21 jebincos kernel: GSP task watchdog timeout @ pc:0x1585560, partition:2#0, task:3, gfid: 0
+Jul 02 06:26:21 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782953781
+Jul 02 06:26:21 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:26:21 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:26:21 jebincos kernel: NVRM:         sepc:0x0000000001585560     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:26:21 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:26:21 jebincos kernel: NVRM:         ra:0x0000000001586064   sp:0x00000002ffe0abf0   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:26:21 jebincos kernel: NVRM:         a0:0x18be530477f2f0e0   a1:0x0000000000000000   a2:0x00000002ffe0ac50   a3:0x0000000000000002
+Jul 02 06:26:21 jebincos kernel: NVRM:         a4:0x0000000000001650   a5:0x00000000009502f9   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:26:21 jebincos kernel: NVRM:         s0:0x00000002ffe0ac40   s1:0x00000002f9521ed0   s2:0x0000000000000027   s3:0x00000000000000b5
+Jul 02 06:26:21 jebincos kernel: NVRM:         s4:0x18be530477f2f0e0   s5:0x00000002540be400   s6:0x00000000000f4240   s7:0x00000000203088c8
+Jul 02 06:26:21 jebincos kernel: NVRM:         s8:0x000000000418ff68   s9:0x0000000000000065  s10:0x00000002f939e570  s11:0x0000000000000000
+Jul 02 06:26:21 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:26:21 jebincos kernel: NVRM:         t4:0x00000002f9392090   t5:0x00000000040001d8   t6:0x000000002080a0d1
+Jul 02 06:26:21 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001585560
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001586064
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001b898fc
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001a94490
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001b99402
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:26:21 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x000000000158555e  0x000000000010012e  0x0000000001585568  0xffffffff93003ca6  0x000000000158552c
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x0000000001586060  0x00000000015857ca  0x000000000158604c
+Jul 02 06:26:21 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:26:21 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:26:21 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:26:51 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:26:51 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:26:51 jebincos kernel: GSP task watchdog timeout @ pc:0x1a9ba44, partition:2#0, task:3, gfid: 0
+Jul 02 06:26:51 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782953811
+Jul 02 06:26:51 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:26:51 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:26:51 jebincos kernel: NVRM:         sepc:0x0000000001a9ba44     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:26:51 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:26:51 jebincos kernel: NVRM:         ra:0x0000000001bc7ad4   sp:0x00000002ffe0aab0   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:26:51 jebincos kernel: NVRM:         a0:0x0000000000000000   a1:0xffffffffffffffff   a2:0x00000002ffe0aae4   a3:0x0000000000000000
+Jul 02 06:26:51 jebincos kernel: NVRM:         a4:0x0000000000000000   a5:0x00000000000000ff   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:26:51 jebincos kernel: NVRM:         s0:0x00000002ffe0ab60   s1:0x0000000000000000   s2:0x00000002f9392090   s3:0x0000000000000001
+Jul 02 06:26:51 jebincos kernel: NVRM:         s4:0x0000000000000000   s5:0x00000002f943b430   s6:0x0000000000000001   s7:0x0000000000000008
+Jul 02 06:26:51 jebincos kernel: NVRM:         s8:0x000000000418ff68   s9:0x00000002f942b6f0  s10:0x00000000041d3f2c  s11:0x0000000000000001
+Jul 02 06:26:51 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000000   t2:0x0000000000000000   t3:0x0000000000000000
+Jul 02 06:26:51 jebincos kernel: NVRM:         t4:0xfffffffffffffffe   t5:0x00000000040001d8   t6:0x0000000020800a70
+Jul 02 06:26:51 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001a9ba44
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001b637ce
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001b898fc
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001a94490
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001b99544
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:26:51 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001a9ba40  0x000000000010012e  0x0000000001a9ba3e  0xffffffff93003d94  0x0000000001a9ba3c
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x0000000001bc7ad0  0xffffffff93003d52
+Jul 02 06:26:51 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:26:51 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:26:51 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:27:21 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:27:21 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:27:21 jebincos kernel: GSP task watchdog timeout @ pc:0x1577a62, partition:2#0, task:3, gfid: 0
+Jul 02 06:27:21 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782953841
+Jul 02 06:27:21 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:27:21 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:27:21 jebincos kernel: NVRM:         sepc:0x0000000001577a62     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:27:21 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:27:21 jebincos kernel: NVRM:         ra:0x000000000157836a   sp:0x00000002ffe0a2c0   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:27:21 jebincos kernel: NVRM:         a0:0x00000002f95204f0   a1:0x00000000000002a5   a2:0x0000000000000018   a3:0x00000000041d4020
+Jul 02 06:27:21 jebincos kernel: NVRM:         a4:0x00000000ffffffff   a5:0xffffffffffffffff   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:27:21 jebincos kernel: NVRM:         s0:0x00000002ffe0a310   s1:0x0000000000000008   s2:0x00000002f95204f0   s3:0x0000000001b636e6
+Jul 02 06:27:21 jebincos kernel: NVRM:         s4:0x00000002f9392090   s5:0x0000000000000000   s6:0x00000002ffe0a400   s7:0x000000000000000e
+Jul 02 06:27:21 jebincos kernel: NVRM:         s8:0x000000000158601a   s9:0x000000000418ff68  s10:0x18be53114ee672c0  s11:0x0000000000000000
+Jul 02 06:27:21 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:27:21 jebincos kernel: NVRM:         t4:0x0000000000000001   t5:0x0000000000000001   t6:0x00000000000441f0
+Jul 02 06:27:21 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001577a62
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b636e6
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b8ede0
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x00000000016446b4
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001659b1a
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x00000000016474e0
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x000000000165a2e8
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x00000000018dd6e4
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001ae94c4
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x00000000010422f2
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001042aea
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001a89162
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001a8fa7e
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b9952c
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:27:21 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001577a60  0x000000000010012e  0x0000000001577a5e  0x0000000001578366  0x0000000001577a8e
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001578358  0x0000000001b636e4  0x0000000001be1628  0x0000000001b636c4  0x0000000001be1628
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b636b6  0x000000000157838c  0x0000000001577a8e  0x0000000001578376  0x0000000001577a8e
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001578366  0x0000000001577a8e  0x0000000001578358  0x0000000001b636a0  0x0000000001573a8c
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b6368e  0x0000000001be1628  0x0000000001b63674  0x0000000001586016  0x0000000001b63ac6
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001585ff8  0x0000000001b6416c  0x0000000001be1628  0x0000000001b6414a  0x0000000001b8eddc
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001428ee4  0x0000000001b69998  0xffffffff93003ca6  0x0000000001b69960  0x0000000001428f1c
+Jul 02 06:27:21 jebincos kernel: NVRM:         0xffffffff93003ca6  0x0000000001428efe  0x0000000001b8ee68  0x000000000163be3c  0x0000000001b8ede4
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b6418a  0x00000000015860a4  0x00000000015855b2  0xffffffff93003ca6  0x000000000158552c
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001586060  0x00000000015857ca  0x000000000158604c  0x00000000018c0c76  0x000000000158603c
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x0000000001b637fc  0x0000000001bc7c52  0x00000000012895ae  0x000000000142403e  0x0000000001bc712a
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x000000000142404e  0x0000000001442f94  0x0000000001ba48b6  0x0000000001a9ba46
+Jul 02 06:27:21 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:27:21 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:27:21 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:27:27 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:50:3d:d1:eb:cf:c9:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=36 TOS=0x00 PREC=0x00 TTL=1 ID=19097 DF PROTO=2 
+Jul 02 06:27:46 jebincos kernel: NVRM: GPU0 _kgspIsHeartbeatTimedOut: Heartbeat timed out, currentTimeMs 542438447 heartbeat 542408446 heartbeatWithOffsetMs 542408446 diff 30001 timeout 5200
+Jul 02 06:27:46 jebincos kernel: NVRM: GPU0 _kgspRpcRecvPoll: GSP RM heartbeat timed out
+Jul 02 06:29:32 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=01:00:5e:00:00:01:50:3d:d1:eb:cf:c9:08:00 SRC=192.168.0.1 DST=224.0.0.1 LEN=36 TOS=0x00 PREC=0x00 TTL=1 ID=19552 DF PROTO=2 
+Jul 02 06:29:43 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:29:43 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:29:43 jebincos kernel: GSP task watchdog timeout @ pc:0x1bc7a5c, partition:2#0, task:3, gfid: 0
+Jul 02 06:29:43 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782953982
+Jul 02 06:29:43 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:29:43 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:29:43 jebincos kernel: NVRM:         sepc:0x0000000001bc7a5c     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:29:43 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:29:43 jebincos kernel: NVRM:         ra:0x0000000001bc7a48   sp:0x00000002ffe0aac0   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:29:43 jebincos kernel: NVRM:         a0:0x0000000000000000   a1:0x00000002f939e570   a2:0x00000002ffe0aae4   a3:0x0000000000000000
+Jul 02 06:29:43 jebincos kernel: NVRM:         a4:0x0000000000000000   a5:0x00000002f9394090   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:29:43 jebincos kernel: NVRM:         s0:0x00000002ffe0ab60   s1:0x00000002f93b2890   s2:0x00000002f9392090   s3:0x0000000000000001
+Jul 02 06:29:43 jebincos kernel: NVRM:         s4:0x0000000000000000   s5:0x00000002f943b430   s6:0x00000002ffe0ac50   s7:0x0000000001b637ce
+Jul 02 06:29:43 jebincos kernel: NVRM:         s8:0x000000000418ff68   s9:0x00000002f942b6f0  s10:0x00000002f939e570  s11:0x0000000000000001
+Jul 02 06:29:43 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:29:43 jebincos kernel: NVRM:         t4:0xfffffffffffffffe   t5:0x00000000040001d8   t6:0xffffffff90960101
+Jul 02 06:29:43 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001bc7a5c
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b637ce
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b898fc
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001a94490
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b99544
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:29:43 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001bc7a5a  0x000000000010012e  0x0000000001bc7a58  0x0000000001878304  0x0000000001bc7a46
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b637ca  0x000000000109ced8  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:29:43 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:29:43 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:29:43 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:30:13 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:30:13 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:30:13 jebincos kernel: GSP task watchdog timeout @ pc:0x1585560, partition:2#0, task:3, gfid: 0
+Jul 02 06:30:13 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782954012
+Jul 02 06:30:13 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:30:13 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:30:13 jebincos kernel: NVRM:         sepc:0x0000000001585560     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:30:13 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:30:13 jebincos kernel: NVRM:         ra:0x0000000001586064   sp:0x00000002ffe0abf0   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:30:13 jebincos kernel: NVRM:         a0:0x18be533a6d427980   a1:0x0000000000000000   a2:0x00000002ffe0ac50   a3:0x0000000000000002
+Jul 02 06:30:13 jebincos kernel: NVRM:         a4:0x0000000000001650   a5:0x00000000009502f9   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:30:13 jebincos kernel: NVRM:         s0:0x00000002ffe0ac40   s1:0x00000002f95222f0   s2:0x0000000000000053   s3:0x00000000000000b5
+Jul 02 06:30:13 jebincos kernel: NVRM:         s4:0x18be533a6d427980   s5:0x00000002540be400   s6:0x00000000000f4240   s7:0x00000000203088c8
+Jul 02 06:30:13 jebincos kernel: NVRM:         s8:0x000000000418ff68   s9:0x0000000000000065  s10:0x00000002f939e570  s11:0x0000000000000001
+Jul 02 06:30:13 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:30:13 jebincos kernel: NVRM:         t4:0xfffffffffffffffe   t5:0x00000000040001d8   t6:0x000000002080a0d1
+Jul 02 06:30:13 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001585560
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001586064
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b898fc
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001a94490
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b99544
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:30:13 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x000000000158555e  0x000000000010012e  0x0000000001585568  0xffffffff93003ca6  0x000000000158552c
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001586060  0x00000000015857ca  0x000000000158604c  0x00000000018c0c76  0x000000000158603c
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b637fc  0x0000000001bc7c52  0x00000000012895ae  0x000000000142403e  0x0000000001bc712a
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x000000000142404e  0x0000000001442f94  0x0000000001ba48b6  0x0000000001a9ba46  0xffffffff93003d94
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001a9ba3c  0x0000000001ba488e  0x0000000001442f68  0x0000000001ba47fc  0xffffffff93003d52
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001ba47d2  0x0000000001442f46  0x0000000001ba48b6  0x0000000001a9ba46  0xffffffff93003d94
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001a9ba3c  0x0000000001ba488e  0x0000000001442ed6  0x0000000001ba47fc  0xffffffff93003d52
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001ba47d2  0x0000000001442ebe  0x000000000142425e  0x0000000001442e9e  0x000000000142407a
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001b58d80  0x000000000142405c  0x00000000012895a0  0x0000000001bc7af8  0x0000000001a9ba46
+Jul 02 06:30:13 jebincos kernel: NVRM:         0xffffffff93003d94  0x0000000001a9ba3c  0x0000000001bc7ad0  0xffffffff93003d52  0x0000000001bc7abc
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001a9ba46  0xffffffff93003d94  0x0000000001a9ba3c  0x0000000001bc7a8c  0xffffffff93003d52
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x0000000001bc7a78
+Jul 02 06:30:13 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:30:13 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:30:13 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:30:14 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=322 TOS=0x00 PREC=0x00 TTL=64 ID=39584 DF PROTO=UDP SPT=1900 DPT=49376 LEN=302 
+Jul 02 06:30:15 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=366 TOS=0x00 PREC=0x00 TTL=64 ID=39637 DF PROTO=UDP SPT=36406 DPT=49376 LEN=346 
+Jul 02 06:30:15 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=322 TOS=0x00 PREC=0x00 TTL=64 ID=39643 DF PROTO=UDP SPT=1900 DPT=49376 LEN=302 
+Jul 02 06:30:15 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=366 TOS=0x00 PREC=0x00 TTL=64 ID=39653 DF PROTO=UDP SPT=36406 DPT=49376 LEN=346 
+Jul 02 06:30:16 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=322 TOS=0x00 PREC=0x00 TTL=64 ID=39669 DF PROTO=UDP SPT=1900 DPT=49376 LEN=302 
+Jul 02 06:30:17 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=366 TOS=0x00 PREC=0x00 TTL=64 ID=39713 DF PROTO=UDP SPT=36406 DPT=49376 LEN=346 
+Jul 02 06:30:17 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=322 TOS=0x00 PREC=0x00 TTL=64 ID=39744 DF PROTO=UDP SPT=1900 DPT=49376 LEN=302 
+Jul 02 06:30:18 jebincos kernel: [UFW BLOCK] IN=wlan0 OUT= MAC=50:28:4a:a8:6e:7a:74:ec:b2:25:39:d9:08:00 SRC=192.168.0.3 DST=192.168.0.7 LEN=366 TOS=0x00 PREC=0x00 TTL=64 ID=39763 DF PROTO=UDP SPT=36406 DPT=49376 LEN=346 
+Jul 02 06:30:43 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:30:43 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:30:43 jebincos kernel: GSP task watchdog timeout @ pc:0x1b63786, partition:2#0, task:3, gfid: 0
+Jul 02 06:30:43 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782954043
+Jul 02 06:30:43 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:30:43 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:30:43 jebincos kernel: NVRM:         sepc:0x0000000001b63786     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:30:43 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:30:43 jebincos kernel: NVRM:         ra:0x0000000001b63762   sp:0x00000002ffe0ab60   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:30:43 jebincos kernel: NVRM:         a0:0x0000000000000001   a1:0x00000002f96b71f0   a2:0x000000000000009e   a3:0x000000000000001e
+Jul 02 06:30:43 jebincos kernel: NVRM:         a4:0x0000000000000001   a5:0x0000000000000010   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:30:43 jebincos kernel: NVRM:         s0:0x00000002ffe0ac40   s1:0xffffffffffffffff   s2:0x0000000000000001   s3:0x00000000041d3f50
+Jul 02 06:30:43 jebincos kernel: NVRM:         s4:0x00000002f9392090   s5:0x00000000203b2660   s6:0x00000002ffe0ac50   s7:0x000000000000000e
+Jul 02 06:30:43 jebincos kernel: NVRM:         s8:0x000000000158601a   s9:0x000000000418ff68  s10:0x00000000203b2648  s11:0x0000000000000001
+Jul 02 06:30:43 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:30:43 jebincos kernel: NVRM:         t4:0xfffffffffffffffe   t5:0x00000000040001d8   t6:0xffffffff90960101
+Jul 02 06:30:43 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b63786
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b641f8
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b898fc
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001a94490
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b99544
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:30:43 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b63784  0x000000000010012e  0x0000000001b63782  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x000000000109cdfe  0x0000000001b63734  0x000000000109cc0e  0x0000000001b63722  0x000000000109cc0e
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001b6370e  0x0000000001b635b6  0x0000000001b636f6  0x0000000001573b30  0x0000000001b63848
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x0000000001573b30  0x0000000001b63848  0x0000000001573b30  0x0000000001b63848
+Jul 02 06:30:43 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:30:43 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:30:43 jebincos kernel: NVRM:     ------------[ end crash report ]------------
+Jul 02 06:31:13 jebincos kernel: NVRM: GPU0 kgspHealthCheck_TU102: ****************************** GSP-CrashCat Report *******************************
+Jul 02 06:31:13 jebincos kernel: NVRM: GPU0 kgspPrintGspBinBuildId_IMPL: GSP bin buildId: 1687a6f9071ccd1eb24e902150aa95df8c420a84
+Jul 02 06:31:13 jebincos kernel: GSP task watchdog timeout @ pc:0x109ce80, partition:2#0, task:3, gfid: 0
+Jul 02 06:31:13 jebincos kernel: NVRM:     Reported by libos partition:2#4 kernel v3.1 [0] @ ts:1782954073
+Jul 02 06:31:13 jebincos kernel: NVRM:     RISC-V CSR State:
+Jul 02 06:31:13 jebincos kernel: NVRM:         sstatus:0x0000000200000020  sscratch:0xffffffffa30114e0     sie:0x0000000000000220  sip:0x0000000000000020
+Jul 02 06:31:13 jebincos kernel: NVRM:         sepc:0x000000000109ce80     stval:0x0000000000000000  scause:0x8000000000000005
+Jul 02 06:31:13 jebincos kernel: NVRM:     RISC-V GPR State:
+Jul 02 06:31:13 jebincos kernel: NVRM:         ra:0x0000000001b63762   sp:0x00000002ffe0a300   gp:0x0000000000000000   tp:0x0000000300200000
+Jul 02 06:31:13 jebincos kernel: NVRM:         a0:0x00000002ffe0a320   a1:0x00000002ffe0a320   a2:0x000000000000008d   a3:0x0000000000002000
+Jul 02 06:31:13 jebincos kernel: NVRM:         a4:0x0000000000000001   a5:0x0000000000000000   a6:0x001fffffffffffff   a7:0x0000000000000000
+Jul 02 06:31:13 jebincos kernel: NVRM:         s0:0x00000002ffe0a3f0   s1:0xffffffffffffffff   s2:0x0000000000000001   s3:0x00000000041d3f50
+Jul 02 06:31:13 jebincos kernel: NVRM:         s4:0x00000002f9392090   s5:0x00000000203b2660   s6:0x00000002ffe0a400   s7:0x000000000000000e
+Jul 02 06:31:13 jebincos kernel: NVRM:         s8:0x000000000158601a   s9:0x000000000418ff68  s10:0x00000000203b2648  s11:0x0000000000000000
+Jul 02 06:31:13 jebincos kernel: NVRM:         t0:0x0000000000000005   t1:0x0000000000000003   t2:0x0000000000000000   t3:0x001fffffffffffff
+Jul 02 06:31:13 jebincos kernel: NVRM:         t4:0x0000000000000000   t5:0x00000002f761e219   t6:0x0000000000000020
+Jul 02 06:31:13 jebincos kernel: NVRM:     Stack Trace:
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000109ce80
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000158601a
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b64170
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b8ede0
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x00000000016446b4
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001659b1a
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x00000000016474e0
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000165a2e8
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x00000000018dd6e4
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001ae94c4
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x00000000010422f2
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001042aea
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001a89162
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001a8fa7e
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b9952c
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001aa66b8
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001c026b4
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001a9bcc6
+Jul 02 06:31:13 jebincos kernel: NVRM:     PC Trace:
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000109ce7e  0x000000000010012e  0x000000000109ce7c  0x0000000001b6375e  0x000000000109ceba
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b6375e  0x000000000109ceba  0x0000000001b6375e  0x000000000109cdfe  0x0000000001b63734
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000109cc0e  0x0000000001b63722  0x000000000109cc0e  0x0000000001b6370e  0x0000000001b635b6
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b636f6  0x0000000001573b30  0x0000000001b63848  0x0000000001573b30  0x0000000001b63848
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001573b30  0x0000000001b63848  0x0000000001573b30  0x0000000001b63848  0x0000000001573b30
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b63848  0x0000000001573b30  0x0000000001b63848  0x000000000157838c  0x0000000001577a8e
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001578376  0x0000000001577a8e  0x0000000001578366  0x0000000001577a8e  0x0000000001578358
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001b636e4  0x0000000001be1628  0x0000000001b636c4  0x0000000001be1628  0x0000000001b636b6
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x000000000157838c  0x0000000001577a8e  0x0000000001578376  0x0000000001577a8e  0x0000000001578366
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x0000000001577a8e  0x0000000001578358  0x0000000001b636a0  0x0000000001573a8c  0x0000000001b6368e
+Jul 02 06:31:13 jebincos kernel: NVRM:     Local I/O Register State:
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x01281500:0x00000000   0x01281504:0xbadf5108   0x01281508:0x0084411c   0x01281510:0x00000000
+Jul 02 06:31:13 jebincos kernel: NVRM:         0x01281528:0x01049052   0x0128152c:0x01000050   0x01281530:0x00000000   0x01280008:0x00000000
+Jul 02 06:31:13 jebincos kernel: NVRM:     ------------[ end crash report ]------------

@@ -1,0 +1,11 @@
+# NVIDIA RTD3 stability monitor — started 2026-06-29 14:35:14 IST
+# Target: 24h with zero NVRM error signatures. Fix = NVreg_DynamicPowerManagement=0 (kernel cmdline).
+# columns: timestamp | boot | dpm | runtime_status | err_sigs(this boot) | smi | verdict
+2026-06-29 14:35:14 | boot=2026-06-29 14:29:41 | dpm=0 | status=active    | err_sigs=0 | smi=OK | => OK
+2026-06-29 15:09:33 | EVENT: GSP firmware crash (Xid 120 load-addr-misaligned) + Xid 62 PMU halt + Xid 154 PF-FLR. NOT the RTD3/L2-evict bug (L2 evict=0, DPM=0). GPU in reset-required/locked state, nvidia-smi=ERR!. Needs reboot. Durable fix candidate: switch open->proprietary module.
+2026-06-29 15:26:35 | boot=2026-06-29 15:18:37 | dpm=0 | status=active    | err_sigs=0 | smi=OK | => OK
+2026-06-29 15:33:11 | boot=2026-06-29 15:31:54 | dpm=0 | status=active    | err_sigs=51355 | smi=FAIL/HANG | => ERRORS=51355 SMI=FAIL/HANG
+2026-06-29 15:38:58 | boot=2026-06-29 15:38:05 | dpm=0 | status=active    | err_sigs=0 | smi=OK | => OK
+2026-06-29 17:11:24 | EVENT: GSP firmware crash UNDER GAME (Vulkan) load 17:07:41 - Xid+GSP-CrashCat+Reset required x49. Proves GSP crash is LOAD-triggered (CUDA AND Vulkan), not faster-whisper-specific. GPU wedged, GUI frozen, needs cold reboot. Escalate to 580.xx driver downgrade.
+2026-06-29 18:28:14 | EVENT: Hogwarts Legacy launched on dGPU via prime-run -> GSP crash under Vulkan load (Xid+GSP-CrashCat+Reset required). CLEAN REPRO on fixed baseline (610+DPM=0, fw-whisper fixed). So: light CUDA load OK, heavy Vulkan game load crashes GSP => high-load/power-ramp instability. Next: try GPU power/clock cap.
+2026-06-29 18:54:03 | DIAGNOSIS: GPU SURVIVED 90s full-power compute burn (100% util, 73W, peak 86C, 2000 iters, 0 faults). Hardware/power/thermals FINE. faster-whisper(CUDA) works. Only Hogwarts Legacy (Vulkan/DXVK/Proton-Experimental on 610 open driver) crashes GSP, at launch. => game/Vulkan-path-specific bug, NOT hardware. Next: try Proton 9.0 / Proton-GE.
