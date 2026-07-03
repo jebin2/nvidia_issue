@@ -1,6 +1,10 @@
 [Unit]
 Description=Lock NVIDIA GPU clocks (workaround: PMU firmware crash on memory p-state transitions, RTX 4050 Laptop)
-After=multi-user.target
+# Run BEFORE the login screen: kwin_wayland probes the dGPU as soon as the session
+# starts, and on 2026-07-03 the PMU halted (Xid 62/158) ~10 s after boot while kwin
+# was already up. Locking clocks before any client exists means the one unavoidable
+# memory p-state ramp happens with zero GPU traffic.
+Before=display-manager.service
 
 [Service]
 Type=oneshot
