@@ -1,4 +1,11 @@
-# RTX 4050 Laptop (AD107M) GPU crashes on Linux — full diagnosis & working fix
+# RTX 4050 Laptop (AD107M) GPU crashes on Linux — full diagnosis & partial mitigation
+
+> **Update 2026-08-01 — the "working fix" below is only a partial mitigation.**
+> Four weeks of further use found three failure modes the clock-lock workaround does not
+> cover: a PMU halt at driver init (before any clock can be set), a PMU halt mid-session
+> *with* the memory clock verifiably locked, and a silent channel hang that the driver never
+> logs an Xid for at all. See failure modes 4–6 below. The original text is kept intact so the
+> record shows what was believed and what disproved it.
 
 **TL;DR:** On an Acer Predator Helios Neo 16 (PHN16-71, i7-13700HX + RTX 4050 Laptop) running
 CachyOS/Arch, *any* Vulkan workload crashed the NVIDIA GSP firmware (Xid 120), wedging the GPU
@@ -6,7 +13,7 @@ until a power cycle — making Steam and every game unusable, while CUDA worked 
 The bug lives in NVIDIA's GPU firmware (GSP *and* PMU), not in the hardware, and it exists in
 **both** the 610-open and 580 driver branches.
 
-## The working configuration (2026-07-02)
+## The best known configuration (2026-07-02)
 
 | Component | Setting |
 |---|---|
@@ -17,10 +24,11 @@ The bug lives in NVIDIA's GPU firmware (GSP *and* PMU), not in the hardware, and
 | RTD3 | `nvidia.NVreg_DynamicPowerManagement=0` on the kernel cmdline (fixes a separate resume-crash issue) |
 | initramfs | Do **not** early-load nvidia (`/etc/mkinitcpio.conf.d/99-no-early-nvidia.conf` with `MODULES=()`) — the 580 modules+firmware bloated the image past what Limine would load (kernel panic `VFS: unable to mount root fs`), and early-loading also makes `modprobe.d` ineffective |
 
-Result: **Hogwarts Legacy plays flawlessly** on the dGPU via Proton (`prime-run %command%`),
+Result at the time: **Hogwarts Legacy plays flawlessly** on the dGPU via Proton (`prime-run %command%`),
 99 % GPU utilization, zero Xid errors. CUDA (PyTorch/CTranslate2/faster-whisper) unaffected throughout.
+This held for several days before modes 4–6 appeared.
 
-## The three firmware failure modes we isolated
+## The firmware failure modes we isolated
 
 1. **GSP task crash on Vulkan** (both 610-open and 580-with-GSP): `Xid 120, GSP task exception,
    partition:2#0, task:3`. On 610 the task dies in a tight polling loop reading `0xbadf....`
@@ -32,8 +40,28 @@ Result: **Hogwarts Legacy plays flawlessly** on the dGPU via Proton (`prime-run 
    stays perfect throughout.
 3. **PMU halt during game loads** (580 with GSP off): `Xid 62` (PMU halt) / `Xid 158`
    (FB_FLUSH timeout) around ~2.6 GB VRAM during heavy asset streaming. Core clock caps did NOT
-   help; **locking the memory clock (`-lmc 8001`) eliminated it completely** — the PMU's memory
+   help; locking the memory clock (`-lmc 8001`) eliminated *this specific* crash — the PMU's memory
    p-state transition machinery is the crashing code, and pinning VRAM frequency means it never runs.
+   *(This was originally written as "eliminated it completely". Modes 4–6 disproved that.)*
+4. **PMU halt at driver init** (580 with GSP off): `Xid 62` during module load, with a
+   **byte-identical fault signature across five separate boots**
+   (`3247696a 000147a8 00000000 202b26a8 202b258a 202b1b76 202cc866 202b4ae2`). Follow-on `Xid 158`
+   timeouts are attributed to the **udev worker that loads the module** — this happens before any
+   graphics client exists, so no clock lock can reach it (the systemd unit fails with
+   `System is not in ready state`). Roughly **1 in 3 boots**; needs a full power-off.
+   Side effect: `nvidia-smi` reports `WARNING: infoROM is corrupted` — a **false alarm**, it is a
+   read failure through a dead PMU and clears on power cycle. Don't RMA over it.
+5. **PMU halt mid-session with the memory clock locked** (580 with GSP off): after 10 h of a stable
+   session, Halo: MCC triggered `Xid 62 → Xid 45 (all channels, including the compositor's) →
+   Xid 154 GPU Reset Required` with `nvidia-smi` confirming `8001 MHz, Enabled`. Once latched,
+   every title reports *"Failed to initialise DirectX 12"* until a power cycle.
+6. **Silent channel hang with no Xid at all** (580 with GSP off): picture freezes, audio continues,
+   desktop stays responsive. `nvidia-smi` shows **100 % utilization at 0 % memory traffic and flat
+   idle power** — a context submitted and never retired — while the driver logs *nothing* and never
+   attempts recovery. `kill -9` on the game recovers the GPU fully, no reboot needed.
+   Reproduced on three unrelated engines (Hogwarts Legacy, Halo: MCC, Batman: Arkham Knight).
+   Both clock locks were eliminated as causes by direct experiment — removing them changed nothing
+   (time-to-hang scattered randomly between 1.4 and 9.5 min across every configuration tested).
 
 Common thread: every failure is a **power/engine-management microcontroller** (GSP task 3, GFW/devinit,
 PMU) dying around engine power-up or memory p-state work on this VBIOS (95.07.19.00.25). Hardware was
@@ -53,10 +81,18 @@ rendering clean — plus everything works with the firmware sidestepped.
   `kernel-log-lts-gsp-crashloop.txt` (8 complete GSP-CrashCat RISC-V core dumps)
 - `.nvidia-monitor/` — the stability-monitoring scripts and event log kept during the diagnosis
 
-## Trade-offs of the workaround
+## Trade-offs, and what to actually expect
 
 - GSP off = the driver manages the GPU from the CPU (NVIDIA's legacy mode; mature and stable).
 - `-lmc 8001` keeps VRAM at full clock → a few watts more idle drain while the lock is active.
   The systemd service applies it at boot; disable it (`systemctl disable nvidia-clock-lock`) if
   you need maximum battery and aren't gaming.
-- Diagnosed with substantial help from Claude (Anthropic) over a three-day debugging session.
+- **Realistic expectations on this hardware today:** roughly 1 boot in 3 fails with mode 4 and
+  needs a full power-off; gaming sessions hang (mode 6) somewhere between 1 and 10 minutes in,
+  recoverable with `pkill -9 -f <game>.exe` without rebooting. GL and CUDA remain rock solid
+  throughout — this is specifically the graphics/power-management firmware path.
+- **If you are on an Optimus laptop, check which GPU your game is actually using** before blaming
+  any of the above. Without `prime-run`, DXVK/vkd3d will happily pick the Intel iGPU and the game
+  will stutter for entirely unrelated reasons. Launch options that force the dGPU:
+  `VKD3D_FILTER_DEVICE_NAME="NVIDIA" DXVK_FILTER_DEVICE_NAME="NVIDIA" prime-run %command%`
+- Diagnosed with substantial help from Claude (Anthropic) across several debugging sessions.
