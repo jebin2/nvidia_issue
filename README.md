@@ -1,11 +1,12 @@
 # RTX 4050 Laptop (AD107M) GPU crashes on Linux — full diagnosis & partial mitigation
 
-> **Update 2026-08-01 — the "working fix" below is only a partial mitigation.**
+> **Update 2026-09-04 — the "working fix" below is only a partial mitigation.**
 > Four weeks of further use found three failure modes the clock-lock workaround does not
 > cover: a PMU halt at driver init (before any clock can be set), a PMU halt mid-session
 > *with* the memory clock verifiably locked, and a silent channel hang that the driver never
 > logs an Xid for at all. See failure modes 4–6 below. The original text is kept intact so the
-> record shows what was believed and what disproved it.
+> record shows what was believed and what disproved it. Still reproducing on **580.178.04** and
+> kernel **6.18.42-lts**, so driver updates through early September have not addressed it.
 
 **TL;DR:** On an Acer Predator Helios Neo 16 (PHN16-71, i7-13700HX + RTX 4050 Laptop) running
 CachyOS/Arch, *any* Vulkan workload crashed the NVIDIA GSP firmware (Xid 120), wedging the GPU
@@ -62,6 +63,16 @@ This held for several days before modes 4–6 appeared.
    Reproduced on three unrelated engines (Hogwarts Legacy, Halo: MCC, Batman: Arkham Knight).
    Both clock locks were eliminated as causes by direct experiment — removing them changed nothing
    (time-to-hang scattered randomly between 1.4 and 9.5 min across every configuration tested).
+7. **The same dead-on-boot state, silently** (580.178.04, kernel 6.18.42-lts): identical to mode 4 but
+   with **no Xid logged at all**. `nvidia-smi` still prints a plausible-looking GPU; the only hint is
+   `[System is not in ready state]` where the clocks should be, and the clock-lock unit failing ~10 s
+   into boot. So don't trust a log grep to tell you the GPU is healthy — see the health check below.
+8. **CUDA/UVM deadlocks unkillably once the GPU is wedged**: with the GPU dead, Steam's
+   `d3ddriverquery6` probe enters `uvm_gpu_retain_by_uuid`, takes the UVM global mutex, and spins
+   forever in `uvm_spin_loop` waiting on a push that will never retire. Every later probe piles up
+   behind it in **uninterruptible D state**, one per launch attempt. `kill -9` does nothing,
+   `nvidia-smi` itself wedges, and clean shutdown can stall (use SysRq or hold the power button).
+   This is the one failure with **no userspace recovery** — unlike mode 6, where killing the game works.
 
 Common thread: every failure is a **power/engine-management microcontroller** (GSP task 3, GFW/devinit,
 PMU) dying around engine power-up or memory p-state work on this VBIOS (95.07.19.00.25). Hardware was
@@ -91,6 +102,13 @@ rendering clean — plus everything works with the firmware sidestepped.
   needs a full power-off; gaming sessions hang (mode 6) somewhere between 1 and 10 minutes in,
   recoverable with `pkill -9 -f <game>.exe` without rebooting. GL and CUDA remain rock solid
   throughout — this is specifically the graphics/power-management firmware path.
+- **Check the GPU is alive before launching anything.** `nvidia-smi` is not a reliable health check —
+  it reports a normal-looking GPU in the dead state. This is:
+  ```sh
+  vulkaninfo --summary >/dev/null 2>&1 && echo "GPU OK" || echo "GPU DEAD — power off"
+  ```
+  If it says dead, a **full power-off** is the only fix; a warm reboot will not clear it. Launching a
+  game anyway just leaks unkillable processes (failure mode 8).
 - **If you are on an Optimus laptop, check which GPU your game is actually using** before blaming
   any of the above. Without `prime-run`, DXVK/vkd3d will happily pick the Intel iGPU and the game
   will stutter for entirely unrelated reasons. Launch options that force the dGPU:

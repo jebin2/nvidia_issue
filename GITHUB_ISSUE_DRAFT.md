@@ -1,6 +1,6 @@
 # TITLE (copy into the GitHub title field):
 
-[AD107M / RTX 4050 Laptop] GSP firmware crashes under Vulkan in BOTH 610.43.02-open and 580.173.02 (same task, partition:2#0 task:3); with GSP disabled, PMU halts (Xid 62) at driver init and mid-session, plus silent channel hangs with no Xid at all; OpenGL/CUDA unaffected; no reliable workaround
+[AD107M / RTX 4050 Laptop] GSP firmware crashes under Vulkan in BOTH 610.43.02-open and 580.173.02 (same task, partition:2#0 task:3); with GSP disabled, PMU halts (Xid 62) at driver init and mid-session, plus silent channel hangs with no Xid at all; once wedged, CUDA/UVM deadlocks unkillably in `uvm_spin_loop` with no timeout; still present in 580.178.04; no reliable workaround
 
 ---
 
@@ -14,9 +14,9 @@
 | iGPU | Intel UHD 770 (8086:4688) — drives the internal display (Wayland, KDE Plasma) |
 | dGPU | GeForce RTX 4050 Laptop / Max-Q — **AD107M** (10de:28e1 rev a1), VBIOS **95.07.19.00.25** |
 | Driver (modes A–C) | **nvidia-open 610.43.02** (nvidia-utils 610.43.02-3, Arch/CachyOS) |
-| Driver (modes D–H) | **nvidia-580xx 580.173.02** proprietary (DKMS), `NVreg_EnableGpuFirmware=0` for E–H |
+| Driver (modes D–I) | **nvidia-580xx 580.173.02** and **580.178.04** proprietary (DKMS), `NVreg_EnableGpuFirmware=0` for E–I |
 | GSP buildId | `1687a6f9071ccd1eb24e902150aa95df8c420a84` |
-| Kernels tested | **7.1.2-cachyos**, **6.18.37-cachyos-lts**, **6.18.40-cachyos-lts** (same behaviour) |
+| Kernels tested | **7.1.2-cachyos**, **6.18.37/6.18.40/6.18.42-cachyos-lts** (same behaviour) |
 | Vulkan loader / Mesa | vulkan-icd-loader 1.4.350.1, mesa 26.1.6 |
 | Cmdline | includes `nvidia.NVreg_DynamicPowerManagement=0` (RTD3 fully disabled; runtime PM `active`) |
 | Usage model | PRIME render offload (`prime-run`); dGPU has no display attached |
@@ -24,7 +24,7 @@
 ## Summary
 Any **Vulkan** use of the dGPU (vkcube, Steam client startup probe `d3ddriverquery64.exe -d3d12` through vkd3d-proton, kwin_wayland's Vulkan probe, or a DX12 game via Proton) crashes the GSP firmware — **in both the 610.43.02 open module and 580.173.02 proprietary-with-GSP, always the same firmware task (`partition:2#0, task:3`)**. **OpenGL and CUDA are completely unaffected** — `prime-run glxgears` ran 10 minutes clean on the same session type that kills vkcube in 1–3 minutes, and CUDA runs heavy sustained loads flawlessly (details below). So the graphics engine itself powers up and renders fine via GL; only the Vulkan path triggers the GSP task hang. The kernel version changes timing/recovery, not the bug. All testing under Wayland (KDE); X11 untested.
 
-**With the GSP disabled (`NVreg_EnableGpuFirmware=0`, proprietary 580) Vulkan works, but the PMU fails instead** (Xid 62 / Xid 158). Locking the memory clock (`nvidia-smi -lmc 8001`) initially appeared to fix this completely and was reported as a workaround. **Four further weeks of use disproved that** — see modes F, G and H below. The PMU also halts *before any clock can be applied* (at driver init, with a byte-identical fault signature across five separate boots), it halts *mid-session with the memory clock verifiably locked at 8001 MHz*, and there is a third failure where a channel hangs forever and **the driver never logs an Xid at all**. Every observed failure remains in power/engine-management firmware on this VBIOS (95.07.19.00.25), but there is **no configuration known to avoid it**.
+**With the GSP disabled (`NVreg_EnableGpuFirmware=0`, proprietary 580) Vulkan works, but the PMU fails instead** (Xid 62 / Xid 158). Locking the memory clock (`nvidia-smi -lmc 8001`) initially appeared to fix this completely and was reported as a workaround. **Two further months of use disproved that** — see modes F, G and H below. The PMU also halts *before any clock can be applied* (at driver init, with a byte-identical fault signature across five separate boots), it halts *mid-session with the memory clock verifiably locked at 8001 MHz*, and there is a third failure where a channel hangs forever and **the driver never logs an Xid at all**. Every observed failure remains in power/engine-management firmware on this VBIOS (95.07.19.00.25), but there is **no configuration known to avoid it**. The CUDA/OpenGL exemption noted above holds only while the GPU is healthy: once the PMU has halted, the UVM layer deadlocks in an unbounded spin (mode I).
 
 Note the recurring PMU fault word across every Xid 62 on this board — the low 24 bits are constant (`47696a`) while the top byte varies with context:
 `6247696a`, `2247696a`, `3247696a`, `0247696a`, `d247696a`.
@@ -123,6 +123,42 @@ separately, as it will cause users to RMA healthy boards.
 Recovery requires a full power-off; a warm reboot frequently reproduces it immediately. In one
 stretch, **4 of 6 consecutive boots** failed this way.
 
+### Variant: the same dead-on-boot state with *no Xid logged at all* (580.178.04, 2026-09-04)
+
+Boot at 18:34:41 on 580.178.04 / kernel 6.18.42-lts produced an identical end state with a
+**completely empty kernel log** — `journalctl -k -b 0 | grep "NVRM: Xid"` returns nothing. The only
+trace anywhere in the system that something went wrong is the clock-lock unit failing 10 seconds
+into boot:
+
+```
+ExecStart=/usr/bin/nvidia-smi -pm 1        status=0/SUCCESS
+ExecStart=/usr/bin/nvidia-smi -lmc 8001    status=255/EXCEPTION
+Active: failed since Fri 2026-09-04 18:34:51 IST
+```
+
+`nvidia-smi -pm 1` succeeding and `-lmc 8001` failing one second later brackets the moment the PMU
+went away. From then on the GPU is unusable but *looks* healthy to a casual check — no warning
+banner, no infoROM message, no Xid:
+
+```
+$ nvidia-smi --query-gpu=utilization.gpu,memory.used,clocks.gr,clocks.mem --format=csv,noheader
+0 %, 2 MiB, [System is not in ready state], [System is not in ready state]
+
+$ vulkaninfo --summary
+ERROR: terminator_CreateDevice: Failed in ICD libGLX_nvidia.so.580.178.04 vkCreateDevice call
+ERROR at vulkaninfo.h:1864: vkCreateDevice failed with ERROR_INITIALIZATION_FAILED
+```
+
+Forcing the Intel ICD works normally, so the Vulkan stack itself is fine. **`vulkaninfo --summary`
+returning `ERROR_INITIALIZATION_FAILED` is the cheapest reliable detector for this state** — far
+more reliable than `nvidia-smi`, which reports a plausible-looking GPU. Applications surface it as
+a driver problem and send users to reinstall drivers that are not at fault; the Vulkan client under
+test reported *"needs a Vulkan-capable GPU and up-to-date graphics drivers, and could not find one
+on this system."*
+
+The important part for triage: **mode F does not always announce itself.** Any log-based detection
+keyed on Xid 62 will miss this variant entirely.
+
 ## Failure mode G — GSP off: PMU halts mid-session WITH the memory clock locked
 Directly contradicts the mode-E workaround. After 10 h 25 m of a stable session, a *different*
 title (Halo: The Master Chief Collection, an unrelated engine to Hogwarts Legacy) triggered a full
@@ -192,6 +228,69 @@ Random scatter with no correlation to any variable. Core clock floor (`-lgc 900,
 tested separately and made no difference. **Neither clock lock is implicated in this mode, and
 neither prevents it.**
 
+## Failure mode I — GSP off: CUDA/UVM deadlocks unkillably once the GPU is wedged, with no timeout
+Observed 2026-09-04 on **580.178.04** / kernel 6.18.42-lts, on a machine already in the silent
+mode-F state described above. This is a **driver-side** bug and is independent of whatever the
+firmware did first.
+
+With the GPU unresponsive, Steam's GPU-enumeration helper (`d3ddriverquery6`) enters UVM and never
+returns. The first invocation takes the UVM global mutex and then spins forever inside
+`uvm_spin_loop`, waiting on a push that the dead GPU will never retire:
+
+```
+task:d3ddriverquery6 state:R   pid:15514        ← holds the mutex, spinning in kernel mode
+  uvm_spin_loop
+  wait_for_entry_with_spin
+  uvm_tracker_wait_for_entry
+  uvm_push_end_and_wait
+  channel_pool_add
+  uvm_channel_manager_create
+  uvm_gpu_semaphore_pool_create
+  uvm_gpu_retain_by_uuid
+  uvm_va_space_register_gpu
+  uvm_api_register_gpu
+  uvm_unlocked_ioctl
+```
+
+Every later invocation then piles up behind that mutex in **uninterruptible D state**:
+
+```
+INFO: task d3ddriverquery6:17492 blocked for more than 122 seconds.
+      Tainted: P           OE       6.18.42-1-cachyos-lts #1
+INFO: task d3ddriverquery6:17492 is blocked on a mutex likely owned by task d3ddriverquery6:15514.
+  __mutex_lock
+  uvm_gpu_retain_by_uuid
+  uvm_va_space_register_gpu
+  uvm_api_register_gpu
+  uvm_unlocked_ioctl
+```
+
+Repeating at 122 / 245 / 368 seconds and continuing indefinitely. After 30 minutes:
+
+```
+PID    STAT  ELAPSED  WCHAN                   COMMAND
+15514  R<s   29:45    -                       d3ddriverquery6
+17492  D<s   28:43    uvm_gpu_retain_by_uuid  d3ddriverquery6
+18987  Ds    27:33    uvm_gpu_retain_by_uuid  d3ddriverquery6
+19861  Ds    26:37    uvm_gpu_retain_by_uuid  d3ddriverquery6
+```
+
+Consequences:
+
+- **`kill -9` cannot clear any of this.** The D-state tasks do not take signals, and the lock holder
+  is spinning in kernel mode where it never checks for them. Unlike mode H — where killing the game
+  fully recovers the GPU — there is no userspace recovery at all.
+- **Each retry leaks another permanently stuck process.** A user who tries to launch a game three
+  more times ends up with three more unkillable tasks.
+- **`nvidia-smi` itself wedges** into D state once this has happened, so the standard diagnostic
+  hangs rather than reporting.
+- **Clean shutdown may stall**, because systemd cannot reap the stuck tasks; SysRq or a forced
+  power-off is required.
+
+`uvm_spin_loop` appears to have no upper bound. A GPU that has stopped retiring work is exactly the
+case that bound exists for, and CUDA/UVM was otherwise the one path on this board that never
+misbehaved — so this converts a graphics-firmware fault into an unrecoverable system-wide one.
+
 ## Other drivers tried
 - **595.71.05 open (DKMS):** cannot initialize AD107M on kernel 7.1 (same 0xbadf5720 flood → "No devices").
 - `pcie_aspm=off`: made initialization worse. (No proprietary build exists for the 610 branch.)
@@ -245,7 +344,7 @@ Please investigate the GSP/PMU firmware's engine power-up and memory p-state han
 (VBIOS 95.07.19.00.25). GL and CUDA running flawlessly on the same board shows the silicon is
 fine and localizes the failure to the graphics/power-management firmware paths.
 
-Three specific requests, in priority order:
+Four specific requests, in priority order:
 
 1. **Mode F is the blocker.** The PMU halts during module init with a byte-identical fault
    signature across five boots, before any user configuration can be applied. There is no
@@ -255,7 +354,12 @@ Three specific requests, in priority order:
    RM never times it out, never raises an Xid, and never attempts recovery — the GPU simply reports
    100 % busy at 0 % memory traffic indefinitely. Even if the underlying hang is a firmware issue,
    the driver should detect and report it. Right now it is invisible to every diagnostic.
-3. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
+3. **`uvm_spin_loop` needs an upper bound (mode I).** When the GPU stops retiring pushes, UVM
+   spins forever while holding the global mutex, and every subsequent `uvm_api_register_gpu` piles
+   up in uninterruptible D state. Nothing in userspace can recover it — not `kill -9`, and often
+   not a clean shutdown. A bounded wait that fails the ioctl with an error would turn an
+   unrecoverable hang into a normal failure.
+4. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
    unresponsive. It is a read failure through dead firmware, not EEPROM damage, and it will send
    users to RMA perfectly healthy boards.
 
