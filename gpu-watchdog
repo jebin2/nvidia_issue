@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# gpu-watchdog - detect the mode-H silent channel hang and recover automatically.
+# Signature: ~100% utilization at ~0% memory traffic while drawing idle power,
+# with a client still holding VRAM. Nothing is executing. The driver never
+# notices, so the only fix is killing the client that owns the context.
+set -uo pipefail
+
+POLL_SEC=3
+CONFIRM_SAMPLES=10
+UTIL_MIN=90
+MEMTRAFFIC_MAX=2
+POWER_MAX_W=25
+VRAM_MIN_MIB=500
+SMI_TIMEOUT=10
+
+UNSTICK="${UNSTICK:-gpu-unstick}"
+
+ONCE=0
+if [ "${1:-}" = "--once" ]; then
+    ONCE=1
+fi
+
+log() {
+    printf '%s %s\n' "$(date '+%F %T')" "$*"
+}
+
+sample() {
+    timeout "$SMI_TIMEOUT" nvidia-smi --query-gpu=utilization.gpu,utilization.memory,power.draw,memory.used --format=csv,noheader,nounits 2>/dev/null
+}
+
+streak=0
+
+while true; do
+    row="$(sample)"
+
+    if [ -z "$row" ]; then
+        log "nvidia-smi unresponsive - mode F/I, needs a power-cycle. Not acting."
+        streak=0
+        if [ "$ONCE" -eq 1 ]; then
+            exit 2
+        fi
+        sleep $((POLL_SEC * 10))
+        continue
+    fi
+
+    IFS=',' read -r util mem power vram <<< "${row// /}"
+    util="${util%%.*}"
+    mem="${mem%%.*}"
+    power="${power%%.*}"
+    vram="${vram%%.*}"
+
+    if [ "$ONCE" -eq 1 ]; then
+        log "sample: util=${util}% mem-traffic=${mem}% power=${power}W vram=${vram}MiB"
+    fi
+
+    hung=0
+    if [ "${util:-0}" -ge "$UTIL_MIN" ] && [ "${mem:-99}" -le "$MEMTRAFFIC_MAX" ]; then
+        if [ "${power:-999}" -le "$POWER_MAX_W" ] && [ "${vram:-0}" -ge "$VRAM_MIN_MIB" ]; then
+            hung=1
+        fi
+    fi
+
+    if [ "$hung" -eq 1 ]; then
+        streak=$((streak + 1))
+        log "suspect ${streak}/${CONFIRM_SAMPLES}: util=${util}% mem=${mem}% ${power}W ${vram}MiB"
+    else
+        if [ "$streak" -gt 0 ]; then
+            log "cleared (util=${util}% mem=${mem}% ${power}W) - not a hang"
+        fi
+        streak=0
+    fi
+
+    if [ "$streak" -ge "$CONFIRM_SAMPLES" ]; then
+        log "mode H confirmed after $((CONFIRM_SAMPLES * POLL_SEC))s - running ${UNSTICK}"
+        "$UNSTICK" 2>&1 | while IFS= read -r line; do log "  ${line}"; done
+        streak=0
+        sleep $((POLL_SEC * 5))
+    fi
+
+    if [ "$ONCE" -eq 1 ]; then
+        log "(--once: single sample taken, exiting)"
+        exit 0
+    fi
+
+    sleep "$POLL_SEC"
+done

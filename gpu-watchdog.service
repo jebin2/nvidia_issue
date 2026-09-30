@@ -1,0 +1,12 @@
+[Unit]
+Description=Recover the NVIDIA GPU from the mode-H silent channel hang
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/gpu-watchdog
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -91,6 +91,7 @@ rendering clean — plus everything works with the firmware sidestepped.
 - `fix_boot.sh`, `fix_boot2.sh` — recovery scripts used when the oversized initramfs broke Limine boot (chroot-from-snapshot pattern)
 - `gpu_powercycle.sh` — attempted software D3cold power-cycle of a wedged dGPU (spoiler: a wedged GPU hangs even `modprobe -r`)
 - [`gpu-unstick`](gpu-unstick) — recovery helper for the mode-6 silent hang: identifies which failure you are actually in (a kill-recoverable channel hang vs. a PMU halt that needs a power-off), kills the client holding the wedged context while refusing to touch the compositor, then verifies the GPU returned to idle
+- [`gpu-watchdog`](gpu-watchdog) + [`gpu-watchdog.service`](gpu-watchdog.service) — systemd *user* service that polls for the mode-6 signature (high utilization at ~0% memory traffic while drawing idle power, with a client still resident), confirms it held for ~30s to rule out false positives, then runs `gpu-unstick` automatically. Turns a freeze you have to notice and fix into the game closing itself. `gpu-watchdog --once` samples and exits.
 - Evidence logs: `nvidia-bug-report-*.log.gz` (healthy baseline / GFW_BOOT failure state) and
   `kernel-log-lts-gsp-crashloop.txt` (8 complete GSP-CrashCat RISC-V core dumps)
 - `.nvidia-monitor/` — the stability-monitoring scripts and event log kept during the diagnosis
