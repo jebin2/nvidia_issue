@@ -92,21 +92,34 @@ for t in "${targets[@]}"; do
 done
 
 # --------------------------------------------------------------------- verify
+# Success is "the wedged clients are gone", not "the GPU is at 0%" — a healthy
+# client (the GeForce NOW player, a compositor) legitimately keeps it non-zero.
+gone=0
 for _ in 1 2 3 4 5 6 7 8 9 10; do
     read -r -t 1 _ < /dev/zero 2>/dev/null || true   # ~1s pause without sleep(1)
-    after=$(timeout "$SMI_TIMEOUT" nvidia-smi \
-            --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null) || break
-    [[ "$after" == 0\ %,* ]] && break
+    still=$(timeout "$SMI_TIMEOUT" nvidia-smi --query-compute-apps=pid \
+            --format=csv,noheader 2>/dev/null) || { gone=-1; break; }
+    gone=1
+    for t in "${targets[@]}"; do
+        IFS=$'\t' read -r pid _ _ <<< "$t"
+        grep -qx "[[:space:]]*${pid}[[:space:]]*" <<< "$still" && gone=0
+    done
+    (( gone )) && break
 done
 
+after=$(timeout "$SMI_TIMEOUT" nvidia-smi \
+        --query-gpu=utilization.gpu,memory.used,clocks.gr --format=csv,noheader 2>/dev/null)
+
 say
-if [[ -n "${after:-}" ]]; then
-    say "After: ${after}"
-    if [[ "$after" == 0\ %,* ]]; then
-        say "GPU recovered. Relaunch when ready."
-    else
-        say "Still busy. Give it a few seconds; if it does not settle, power-cycle."
-    fi
-else
+if (( gone == -1 )) || [[ -z "$after" ]]; then
     say "nvidia-smi stopped responding after the kill — that is mode I. Power-cycle."
+elif (( gone )); then
+    say "After: ${after}"
+    say "GPU recovered. Relaunch when ready."
+    remaining=$(timeout "$SMI_TIMEOUT" nvidia-smi --query-compute-apps=process_name \
+                --format=csv,noheader 2>/dev/null | paste -sd', ')
+    [[ -n "$remaining" ]] && say "(still on the GPU, normally: ${remaining})"
+else
+    say "After: ${after}"
+    say "Target still present — likely stuck in D state (mode I). Power-cycle."
 fi
