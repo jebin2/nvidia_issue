@@ -60,7 +60,9 @@ This held for several days before modes 4–6 appeared.
    desktop stays responsive. `nvidia-smi` shows **100 % utilization at 0 % memory traffic and flat
    idle power** — a context submitted and never retired — while the driver logs *nothing* and never
    attempts recovery. `kill -9` on the game recovers the GPU fully, no reboot needed.
-   Reproduced on three unrelated engines (Hogwarts Legacy, Halo: MCC, Batman: Arkham Knight).
+   Reproduced on four unrelated engines (Hogwarts Legacy, Halo: MCC, Batman: Arkham Knight,
+   Diablo IV) — still unchanged as of 2026-09-30 on kernel 6.18.52-lts, with both clock locks
+   verified applied at the moment of the hang.
    Both clock locks were eliminated as causes by direct experiment — removing them changed nothing
    (time-to-hang scattered randomly between 1.4 and 9.5 min across every configuration tested).
 7. **The same dead-on-boot state, silently** (580.178.04, kernel 6.18.42-lts): identical to mode 4 but

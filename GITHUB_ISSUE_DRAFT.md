@@ -203,9 +203,28 @@ Audio continues (CPU-side), the window freezes, and the desktop stays fully resp
 compositor is on the iGPU and unaffected. `kill -9` on the game recovers the GPU completely, with
 no reset required and no reboot.
 
-**Reproduced across three unrelated engines:** Hogwarts Legacy (UE4), Halo: MCC, Batman: Arkham
-Knight (UE3), all via vkd3d-proton/DXVK under PRIME offload. In Hogwarts it sometimes escalates to
-an Xid 109 after several minutes; in Arkham Knight it never logged anything in 6 observed hangs.
+**Reproduced across four unrelated engines:** Hogwarts Legacy (UE4), Halo: MCC, Batman: Arkham
+Knight (UE3) and Diablo IV, all via vkd3d-proton/DXVK under PRIME offload. In Hogwarts it sometimes
+escalates to an Xid 109 after several minutes; in Arkham Knight it never logged anything in 6
+observed hangs.
+
+Still reproducing unchanged on **2026-09-30**, kernel 6.18.52-lts, on a boot where the clock locks
+applied cleanly and **no Xid was logged all session**. Diablo IV, captured while hung:
+
+```
+utilization.gpu     100 %      ← reported busy
+utilization.memory    0 %      ← zero memory-controller traffic
+power.draw         12.01 W     ← idle, against a ~101 W cap
+memory.used        5597 MiB    ← game still holding VRAM
+temperature          64 C
+clocks.gr / clocks.mem   1500 MHz / 8001 MHz   ← both locks verified applied
+kernel Xid          (none)
+```
+
+`pkill -9` on the game returned the GPU to `0 %, 20 MiB, 210 MHz` immediately, no reset and no
+reboot. Note the locks were **verified applied at the moment of the hang** — further confirmation
+that mode H is independent of the clock-lock workaround, and that ten months of driver updates
+(580.173.02 → 580.178.04) and kernel updates (6.18.37 → 6.18.52) have not touched it.
 
 ```
 Jul 02 11:49:06  Xid 109, pid=5745,  name=HogwartsLegacy., channel 0x3c, CTX SWITCH TIMEOUT, Info 0x2ac015
