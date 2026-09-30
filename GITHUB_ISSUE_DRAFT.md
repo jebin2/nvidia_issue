@@ -306,9 +306,56 @@ Consequences:
 - **Clean shutdown may stall**, because systemd cannot reap the stuck tasks; SysRq or a forced
   power-off is required.
 
-`uvm_spin_loop` appears to have no upper bound. A GPU that has stopped retiring work is exactly the
-case that bound exists for, and CUDA/UVM was otherwise the one path on this board that never
-misbehaved — so this converts a graphics-firmware fault into an unrecoverable system-wide one.
+### This is confirmed in the shipped source, not inferred
+
+`nvidia-uvm` ships as source in the DKMS tree, so the behaviour above can be read directly.
+From **`nvidia-uvm/uvm_common.c:249`** (580.178.04):
+
+```c
+NV_STATUS uvm_spin_loop(uvm_spin_loop_t *spin)
+{
+    NvU64 curr = NV_GETTIME();
+    ...
+    cpu_relax();
+
+    // TODO: Bug 1710855: Also check fatal_signal_pending() here if the caller can handle it.
+
+    if (curr - spin->print_time_ns >= 1000*1000*1000*UVM_SPIN_LOOP_PRINT_TIMEOUT_SEC) {
+        spin->print_time_ns = curr;
+        return NV_ERR_TIMEOUT_RETRY;
+    }
+
+    return NV_OK;
+}
+```
+
+**There is no absolute timeout.** `NV_ERR_TIMEOUT_RETRY` is a periodic *retry* signal, not an abort,
+and the wrapper macro in `uvm_common.h:288` treats it purely as a diagnostic:
+
+```c
+#define UVM_SPIN_LOOP(__spin) ({
+    NV_STATUS __status = uvm_spin_loop(__spin);
+    if (__status == NV_ERR_TIMEOUT_RETRY) {
+        UVM_DBG_PRINT("Warning: stuck waiting for %llus\n", ...);
+        if (uvm_debug_prints_enabled())
+            dump_stack();
+    }
+    __status;
+})
+```
+
+So callers spin forever by construction. Worse, the only diagnostic UVM offers is behind
+`uvm_debug_prints_enabled()`, which is off in production builds — which is why the kernel log for
+mode I contains the kernel's own `hung_task` traces and **nothing at all from UVM**, despite UVM
+being the component that is stuck.
+
+The `kill -9` immunity is explained by the same function: the `TODO` on the line above notes that
+`fatal_signal_pending()` is **not** checked here. A task spinning in `uvm_spin_loop` never looks to
+see whether it has been killed. Both TODOs reference **Bug 1710855**, so this is a known gap.
+
+A GPU that has stopped retiring work is exactly the case an upper bound exists for, and CUDA/UVM was
+otherwise the one path on this board that never misbehaved — so this converts a graphics-firmware
+fault into an unrecoverable system-wide one.
 
 ## Other drivers tried
 - **595.71.05 open (DKMS):** cannot initialize AD107M on kernel 7.1 (same 0xbadf5720 flood → "No devices").
@@ -373,11 +420,13 @@ Four specific requests, in priority order:
    RM never times it out, never raises an Xid, and never attempts recovery — the GPU simply reports
    100 % busy at 0 % memory traffic indefinitely. Even if the underlying hang is a firmware issue,
    the driver should detect and report it. Right now it is invisible to every diagnostic.
-3. **`uvm_spin_loop` needs an upper bound (mode I).** When the GPU stops retiring pushes, UVM
-   spins forever while holding the global mutex, and every subsequent `uvm_api_register_gpu` piles
-   up in uninterruptible D state. Nothing in userspace can recover it — not `kill -9`, and often
-   not a clean shutdown. A bounded wait that fails the ioctl with an error would turn an
-   unrecoverable hang into a normal failure.
+3. **`uvm_spin_loop` needs an upper bound and a signal check (mode I) — see Bug 1710855.**
+   `nvidia-uvm/uvm_common.c:249` has no absolute timeout: `NV_ERR_TIMEOUT_RETRY` is a diagnostic
+   retry, and `UVM_SPIN_LOOP` only logs it behind `uvm_debug_prints_enabled()`. So when the GPU
+   stops retiring pushes, UVM spins forever holding the global mutex, every subsequent
+   `uvm_api_register_gpu` piles up in uninterruptible D state, and the in-tree `TODO` explains the
+   `kill -9` immunity — `fatal_signal_pending()` is not checked. Bounding the wait and honouring
+   fatal signals would turn an unrecoverable system hang into a normal ioctl failure.
 4. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
    unresponsive. It is a read failure through dead firmware, not EEPROM damage, and it will send
    users to RMA perfectly healthy boards.
