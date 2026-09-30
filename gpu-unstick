@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# gpu-unstick — recover an NVIDIA GPU wedged by the mode-H silent channel hang.
+#
+# Mode H (see ~/nvidia_issue/GITHUB_ISSUE_DRAFT.md): the GPU stops retiring work
+# and the driver never notices. Signature is 100% utilization.gpu at 0%
+# utilization.memory with flat idle power, and no Xid logged at all. Killing the
+# client that owns the wedged context recovers the GPU fully, no reboot.
+#
+# This does NOT help with mode F (PMU halt at driver init) or mode I (unkillable
+# UVM deadlock) — those need a full power-off, and the script says so.
+#
+# Usage: gpu-unstick [-n]    -n = dry run, report only
+
+set -uo pipefail
+
+SMI_TIMEOUT=10
+VRAM_FLOOR_MIB=100          # ignore compositor-sized allocations
+DRY_RUN=0
+[[ "${1:-}" == "-n" ]] && DRY_RUN=1
+
+# Never kill these even if they hold VRAM — losing the compositor logs you out.
+PROTECTED='kwin_wayland|Xorg|Xwayland|gnome-shell|Hyprland|sway|plasmashell|gamescope'
+
+say() { printf '%s\n' "$*"; }
+
+# ---------------------------------------------------------------- health check
+# A wedged-at-init GPU makes nvidia-smi hang in D state, so always time it out.
+if ! smi=$(timeout "$SMI_TIMEOUT" nvidia-smi \
+        --query-gpu=utilization.gpu,utilization.memory,power.draw,memory.used,clocks.gr \
+        --format=csv,noheader 2>&1); then
+    say "nvidia-smi did not respond within ${SMI_TIMEOUT}s."
+    say "That is mode F or mode I — the GPU is dead below the level a kill can reach."
+    say
+    say "Fix: full power-off. A warm reboot will NOT clear it (Xid 154 latches)."
+    say "If shutdown stalls, hold Alt+SysRq and press S, U, B."
+    exit 2
+fi
+
+if [[ "$smi" == *"not in ready state"* || "$smi" == *"ERR!"* ]]; then
+    say "GPU reports: ${smi}"
+    say
+    say "That is mode F — the PMU halted, usually at driver init. Nothing to kill."
+    say "Fix: full power-off, not a reboot."
+    exit 2
+fi
+
+IFS=',' read -r util_gpu util_mem power vram clk <<< "$smi"
+trim() { printf '%s' "${1#"${1%%[![:space:]]*}"}"; }
+say "GPU: util $(trim "$util_gpu") | mem-traffic $(trim "$util_mem") | power $(trim "$power") | vram $(trim "$vram") | clk $(trim "$clk")"
+
+# ------------------------------------------------------------ find the culprit
+apps=$(timeout "$SMI_TIMEOUT" nvidia-smi \
+        --query-compute-apps=pid,process_name,used_memory \
+        --format=csv,noheader,nounits 2>/dev/null)
+
+mapfile -t targets < <(
+    printf '%s\n' "$apps" \
+    | awk -F', *' -v floor="$VRAM_FLOOR_MIB" -v prot="$PROTECTED" '
+        NF >= 3 && $3 + 0 >= floor && $2 !~ prot { print $1 "\t" $2 "\t" $3 }'
+)
+
+if (( ${#targets[@]} == 0 )); then
+    say
+    say "No client is holding significant VRAM — nothing to unstick."
+    [[ "${util_gpu// /}" == "100%" ]] && \
+        say "Note: utilization still reads 100%. If it stays there, power-cycle."
+    exit 0
+fi
+
+say
+say "Holding the GPU:"
+for t in "${targets[@]}"; do
+    IFS=$'\t' read -r pid name mib <<< "$t"
+    say "  pid ${pid}  ${mib} MiB  ${name}"
+done
+
+if (( DRY_RUN )); then
+    say
+    say "(dry run — nothing killed)"
+    exit 0
+fi
+
+# ------------------------------------------------------------------------ kill
+say
+for t in "${targets[@]}"; do
+    IFS=$'\t' read -r pid name mib <<< "$t"
+    if kill -9 "$pid" 2>/dev/null; then
+        say "killed ${pid} (${name})"
+    else
+        say "could not kill ${pid} — already gone, or stuck in D state (mode I)"
+    fi
+done
+
+# --------------------------------------------------------------------- verify
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+    read -r -t 1 _ < /dev/zero 2>/dev/null || true   # ~1s pause without sleep(1)
+    after=$(timeout "$SMI_TIMEOUT" nvidia-smi \
+            --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null) || break
+    [[ "$after" == 0\ %,* ]] && break
+done
+
+say
+if [[ -n "${after:-}" ]]; then
+    say "After: ${after}"
+    if [[ "$after" == 0\ %,* ]]; then
+        say "GPU recovered. Relaunch when ready."
+    else
+        say "Still busy. Give it a few seconds; if it does not settle, power-cycle."
+    fi
+else
+    say "nvidia-smi stopped responding after the kill — that is mode I. Power-cycle."
+fi
