@@ -13,7 +13,17 @@ POWER_MAX_W=25
 VRAM_MIN_MIB=500
 SMI_TIMEOUT=10
 
-UNSTICK="${UNSTICK:-gpu-unstick}"
+# systemd user services do NOT inherit an interactive shell's PATH, and
+# ~/.local/bin is typically absent from it - so resolve the helper next to this
+# script rather than trusting PATH. UNSTICK= overrides for testing.
+if [ -z "${UNSTICK:-}" ]; then
+    _self_dir="$(dirname "$(readlink -f "$0")")"
+    if [ -x "${_self_dir}/gpu-unstick" ]; then
+        UNSTICK="${_self_dir}/gpu-unstick"
+    else
+        UNSTICK="gpu-unstick"
+    fi
+fi
 
 ONCE=0
 if [ "${1:-}" = "--once" ]; then
@@ -72,7 +82,13 @@ while true; do
 
     if [ "$streak" -ge "$CONFIRM_SAMPLES" ]; then
         log "mode H confirmed after $((CONFIRM_SAMPLES * POLL_SEC))s - running ${UNSTICK}"
-        "$UNSTICK" 2>&1 | while IFS= read -r line; do log "  ${line}"; done
+        if ! command -v "$UNSTICK" >/dev/null 2>&1 && [ ! -x "$UNSTICK" ]; then
+            # Fail loudly: a silent no-op here looks exactly like a working
+            # watchdog while the GPU stays wedged.
+            log "  ERROR: ${UNSTICK} not found or not executable - cannot recover"
+        else
+            "$UNSTICK" 2>&1 | while IFS= read -r line; do log "  ${line}"; done
+        fi
         streak=0
         sleep $((POLL_SEC * 5))
     fi
