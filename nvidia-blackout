@@ -1,0 +1,251 @@
+#!/usr/bin/env bash
+# nvidia-blackout — make the NVIDIA GPU invisible to the system, or bring it back.
+#
+# This machine's dGPU (AD107M / RTX 4050 Mobile) fails in six distinct ways
+# documented in GITHUB_ISSUE_DRAFT.md, three of which require a full power-off
+# to clear. When the chip is costing more than it earns, this turns it off.
+#
+# Four independent layers, so no single one failing brings the GPU back:
+#   1. modprobe blacklist + install override  -> nothing can modprobe it
+#   2. kernel cmdline modprobe.blacklist      -> not even the initramfs can
+#   3. udev rule removing the PCI function    -> gone from lspci and /dev/dri
+#   4. parent bridge runtime PM               -> the link drops to D3cold
+#
+# WHAT YOU LOSE:
+#   - every external display output. Intel exposes only the internal eDP-1;
+#     HDMI-A-1, DP-1 and DP-2 are all wired to the dGPU.
+#   - GeForce NOW, which needs Vulkan video decode that the UHD 770 lacks.
+#
+# Usage:  nvidia-blackout status        report the current state (no root)
+#         sudo nvidia-blackout off      blind the GPU
+#         sudo nvidia-blackout on       undo it
+#         sudo nvidia-blackout off --purge   also uninstall the driver packages
+
+set -uo pipefail
+
+MODS="nvidia,nvidia_drm,nvidia_modeset,nvidia_uvm,nvidia_wmi_ec_backlight,nouveau"
+ROOT_PORT="0000:00:01.0"          # the port the dGPU sits behind on this board
+MODPROBE_CONF="/etc/modprobe.d/99-nvidia-blackout.conf"
+UDEV_RULE="/etc/udev/rules.d/99-nvidia-blackout.rules"
+D3_UNIT="/etc/systemd/system/nvidia-blackout-d3cold.service"
+LIMINE="/etc/default/limine"
+NV_SERVICES="nvidia-clock-lock nvidia-persistenced nvidia-powerd nvidia-suspend
+             nvidia-resume nvidia-hibernate nvidia-suspend-then-hibernate"
+DRIVER_PKGS="nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils
+             opencl-nvidia-580xx lib32-opencl-nvidia-580xx libva-nvidia-driver
+             nvidia-prime linux-firmware-nvidia"
+
+say()  { printf '%s\n' "$*"; }
+step() { printf '\n==> %s\n' "$*"; }
+die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
+
+need_root() { [ "$(id -u)" = 0 ] || die "needs root: sudo $0 $*"; }
+
+rebuild_initramfs() {
+    step "rebuilding initramfs"
+    if   command -v dracut-rebuild >/dev/null 2>&1; then dracut-rebuild
+    elif command -v mkinitcpio     >/dev/null 2>&1; then mkinitcpio -P
+    elif command -v dracut         >/dev/null 2>&1; then dracut --regenerate-all --force
+    else say "  no initramfs tool found — skipping"
+    fi
+}
+
+# ------------------------------------------------------------------- status
+cmd_status() {
+    local blinded=1
+
+    say "Layer 1  modprobe blacklist"
+    if [ -f "$MODPROBE_CONF" ]; then say "         ACTIVE   $MODPROBE_CONF"
+    else say "         absent"; blinded=0; fi
+
+    say "Layer 2  kernel cmdline"
+    if grep -q 'modprobe.blacklist=nvidia' /proc/cmdline 2>/dev/null; then
+        say "         ACTIVE   (live, this boot)"
+    elif grep -q 'modprobe.blacklist=nvidia' "$LIMINE" 2>/dev/null; then
+        say "         staged   configured but not yet booted — reboot needed"
+        blinded=0
+    else say "         absent"; blinded=0; fi
+
+    say "Layer 3  PCI device removal"
+    if [ -f "$UDEV_RULE" ]; then say "         rule installed  $UDEV_RULE"
+    else say "         rule absent"; blinded=0; fi
+    local onbus
+    onbus=$(lspci -nn 2>/dev/null | grep -i '10de:')
+    if [ -n "$onbus" ]; then
+        say "         device PRESENT on the bus:"
+        printf '%s\n' "$onbus" | sed 's/^/           /'
+        blinded=0
+    else
+        say "         device GONE from the bus"
+    fi
+
+    say "Layer 4  PCIe link power"
+    if [ -r "/sys/bus/pci/devices/$ROOT_PORT/power_state" ]; then
+        say "         $ROOT_PORT is in $(cat "/sys/bus/pci/devices/$ROOT_PORT/power_state")"
+    else
+        say "         $ROOT_PORT not readable"
+    fi
+
+    say ""
+    say "Modules loaded:"
+    local mods
+    mods=$(lsmod | awk '/^(nvidia|nouveau)/ {print $1}')
+    if [ -n "$mods" ]; then
+        printf '         %s\n' $mods
+        blinded=0
+    else
+        say "         none"
+    fi
+
+    say ""
+    say "DRM cards:"
+    for c in /sys/class/drm/card[0-9]; do
+        [ -e "$c/device/uevent" ] || continue
+        printf '         %s  %s\n' "${c##*/}" \
+            "$(sed -n 's/^DRIVER=//p' "$c/device/uevent" 2>/dev/null)"
+    done
+
+    if [ -z "$onbus" ] && [ -e /usr/share/vulkan/icd.d/nvidia_icd.json ]; then
+        say ""
+        say "Note: nvidia_icd.json is still installed, so Vulkan apps will probe a"
+        say "      GPU that is not there and log an error. 'off --purge' removes it."
+    fi
+
+    say ""
+    if [ "$blinded" = 1 ]; then say "VERDICT: the GPU is fully blinded."
+    else say "VERDICT: the GPU is visible, or only partly blinded."; fi
+}
+
+# ---------------------------------------------------------------------- off
+cmd_off() {
+    local purge=0
+    [ "${1:-}" = "--purge" ] && purge=1
+
+    step "1/5 modprobe blacklist"
+    {
+        say "# Written by nvidia-blackout. Remove with: sudo nvidia-blackout on"
+        say "# blacklist alone only stops autoloading; 'install /bin/false' also"
+        say "# stops anything that asks for the module by name."
+        for m in ${MODS//,/ }; do say "blacklist $m"; done
+        for m in ${MODS//,/ }; do say "install $m /bin/false"; done
+    } > "$MODPROBE_CONF"
+    say "  wrote $MODPROBE_CONF"
+
+    # The old tuning files now configure a driver that will never load. Park
+    # them so a future reader does not think the GPU is still in use.
+    for f in nvidia-gsp-off.conf nvidia-pm.conf; do
+        [ -f "/etc/modprobe.d/$f" ] && mv -v "/etc/modprobe.d/$f" "/etc/modprobe.d/$f.disabled"
+    done
+
+    step "2/5 kernel cmdline"
+    [ -f "$LIMINE" ] || die "$LIMINE not found — is this still a limine system?"
+    cp -a "$LIMINE" "$LIMINE.bak.$(date +%Y%m%d%H%M%S)"
+    sed -i '/NVreg_DynamicPowerManagement/d' "$LIMINE"
+    grep -q 'modprobe.blacklist=nvidia' "$LIMINE" || \
+        printf 'KERNEL_CMDLINE[default]+=" modprobe.blacklist=%s"\n' "$MODS" >> "$LIMINE"
+    limine-update || die "limine-update failed — do not reboot until this is fixed"
+    say "  --- $LIMINE now:"; sed 's/^/      /' "$LIMINE"
+
+    step "3/5 udev rule: delete the PCI functions at boot"
+    # Keyed on vendor, not bus address, so it survives PCI renumbering. Vendor
+    # 0x10de catches both 01:00.0 (the GPU) and 01:00.1 (its HDMI audio).
+    {
+        say "# Written by nvidia-blackout. Remove with: sudo nvidia-blackout on"
+        say 'ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{remove}="1"'
+    } > "$UDEV_RULE"
+    say "  wrote $UDEV_RULE"
+
+    step "4/5 let the PCIe port drop to D3cold once the device is gone"
+    cat > "$D3_UNIT" <<EOF
+[Unit]
+Description=Allow the ex-NVIDIA PCIe port to runtime-suspend
+After=systemd-udev-settle.service
+
+[Service]
+Type=oneshot
+# With no children left on the port and power/control=auto, the kernel can put
+# the whole link into D3cold instead of leaving it idling in D0.
+ExecStart=/usr/bin/bash -c 'echo auto > /sys/bus/pci/devices/$ROOT_PORT/power/control || true'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable nvidia-blackout-d3cold.service
+
+    step "5/5 disabling nvidia services"
+    for s in $NV_SERVICES; do
+        systemctl disable "$s.service" 2>/dev/null && say "  disabled $s" || true
+    done
+
+    if [ "$purge" = 1 ]; then
+        step "purging driver packages"
+        say "  Review this list before confirming — -Rns also takes unused deps."
+        pacman -Rns $DRIVER_PKGS
+    fi
+
+    rebuild_initramfs
+
+    say ""
+    say "Done. Two things left, then reboot:"
+    say ""
+    say "  systemctl --user disable --now gpu-watchdog.service     # as you, not root"
+    say "  sudo reboot"
+    say ""
+    say "After the reboot, run:  nvidia-blackout status"
+    [ "$purge" = 0 ] && {
+        say ""
+        say "You kept the driver packages, so DKMS will still rebuild the module on"
+        say "every kernel update and Vulkan apps will log a failed ICD probe. Run"
+        say "'sudo nvidia-blackout off --purge' if that bothers you."
+    }
+}
+
+# ----------------------------------------------------------------------- on
+cmd_on() {
+    step "modprobe.d"
+    rm -fv "$MODPROBE_CONF"
+    for f in nvidia-gsp-off.conf nvidia-pm.conf; do
+        [ -f "/etc/modprobe.d/$f.disabled" ] && \
+            mv -v "/etc/modprobe.d/$f.disabled" "/etc/modprobe.d/$f"
+    done
+
+    step "kernel cmdline"
+    if [ -f "$LIMINE" ]; then
+        cp -a "$LIMINE" "$LIMINE.bak.$(date +%Y%m%d%H%M%S)"
+        sed -i '/modprobe.blacklist=nvidia/d' "$LIMINE"
+        # Restore the RTD3 workaround: without it the GPU crashes on resume.
+        grep -q NVreg_DynamicPowerManagement "$LIMINE" || \
+            printf 'KERNEL_CMDLINE[default]+=" nvidia.NVreg_DynamicPowerManagement=0"\n' >> "$LIMINE"
+        limine-update || die "limine-update failed"
+        sed 's/^/      /' "$LIMINE"
+    fi
+
+    step "udev"
+    rm -fv "$UDEV_RULE"
+
+    step "services"
+    systemctl disable --now nvidia-blackout-d3cold.service 2>/dev/null || true
+    rm -fv "$D3_UNIT"
+    systemctl daemon-reload
+    for s in nvidia-clock-lock nvidia-powerd nvidia-suspend nvidia-resume nvidia-hibernate; do
+        systemctl enable "$s.service" 2>/dev/null && say "  enabled $s" || true
+    done
+
+    rebuild_initramfs
+
+    say ""
+    say "Done. If you purged the driver, reinstall it before rebooting:"
+    say "  sudo pacman -S nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils"
+    say ""
+    say "Then: systemctl --user enable --now gpu-watchdog.service && sudo reboot"
+}
+
+case "${1:-status}" in
+    status|-s|--status) cmd_status ;;
+    off|disable)  shift; need_root off "$@"; cmd_off "$@" ;;
+    on|enable)    shift; need_root on;       cmd_on ;;
+    -h|--help|help)
+        sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//' ;;
+    *) die "unknown command '${1}' — try: status | off | on" ;;
+esac
