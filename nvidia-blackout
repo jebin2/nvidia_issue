@@ -16,10 +16,13 @@
 #     HDMI-A-1, DP-1 and DP-2 are all wired to the dGPU.
 #   - GeForce NOW, which needs Vulkan video decode that the UHD 770 lacks.
 #
-# Usage:  nvidia-blackout status        report the current state (no root)
-#         sudo nvidia-blackout off      blind the GPU
-#         sudo nvidia-blackout on       undo it
-#         sudo nvidia-blackout off --purge   also uninstall the driver packages
+# Usage:  nvidia-blackout status       report the current state (no root)
+#         sudo ~/nvidia_issue/nvidia-blackout off      blind the GPU
+#         sudo ~/nvidia_issue/nvidia-blackout on       undo it
+#         sudo ~/nvidia_issue/nvidia-blackout off --purge   also drop the packages
+#
+# The root commands need the full path: sudo resets PATH to sudoers' secure_path,
+# which does not include ~/.local/bin, so the symlink there is invisible to it.
 
 set -uo pipefail
 
@@ -39,7 +42,7 @@ say()  { printf '%s\n' "$*"; }
 step() { printf '\n==> %s\n' "$*"; }
 die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
 
-need_root() { [ "$(id -u)" = 0 ] || die "needs root: sudo $0 $*"; }
+need_root() { [ "$(id -u)" = 0 ] || die "needs root: sudo $(readlink -f "$0") $*"; }
 
 rebuild_initramfs() {
     step "rebuilding initramfs"
@@ -53,6 +56,13 @@ rebuild_initramfs() {
 # ------------------------------------------------------------------- status
 cmd_status() {
     local blinded=1
+
+    # Sample this before anything else: layer 3 runs lspci, which reads every
+    # device's config space and runtime-resumes the bridge. A reading taken
+    # afterwards always says D0, because the check woke what it measures.
+    local port_state port_rt
+    port_state=$(cat "/sys/bus/pci/devices/$ROOT_PORT/power_state" 2>/dev/null)
+    port_rt=$(cat "/sys/bus/pci/devices/$ROOT_PORT/power/runtime_status" 2>/dev/null)
 
     say "Layer 1  modprobe blacklist"
     if [ -f "$MODPROBE_CONF" ]; then say "         ACTIVE   $MODPROBE_CONF"
@@ -80,8 +90,12 @@ cmd_status() {
     fi
 
     say "Layer 4  PCIe link power"
-    if [ -r "/sys/bus/pci/devices/$ROOT_PORT/power_state" ]; then
-        say "         $ROOT_PORT is in $(cat "/sys/bus/pci/devices/$ROOT_PORT/power_state")"
+    if [ -n "$port_state" ]; then
+        say "         $ROOT_PORT is in $port_state (${port_rt:-unknown})"
+        case "$port_state" in
+            D3cold) : ;;
+            *) say "         expected D3cold — the link is still powered"; blinded=0 ;;
+        esac
     else
         say "         $ROOT_PORT not readable"
     fi
