@@ -97,6 +97,87 @@ rendering clean — plus everything works with the firmware sidestepped.
   `kernel-log-lts-gsp-crashloop.txt` (8 complete GSP-CrashCat RISC-V core dumps)
 - `.nvidia-monitor/` — the stability-monitoring scripts and event log kept during the diagnosis
 
+## How to run the tools
+
+All three scripts live in this repository and are symlinked into `~/.local/bin`,
+so there is exactly one copy of each — edit them here, not there.
+
+```bash
+ln -s ~/nvidia_issue/gpu-unstick      ~/.local/bin/gpu-unstick
+ln -s ~/nvidia_issue/gpu-watchdog     ~/.local/bin/gpu-watchdog
+ln -s ~/nvidia_issue/nvidia-blackout  ~/.local/bin/nvidia-blackout
+```
+
+### `nvidia-blackout` — disable the dGPU entirely
+
+```bash
+nvidia-blackout status                                     # which layers are live (no root)
+sudo ~/nvidia_issue/nvidia-blackout off                    # blind the GPU
+sudo ~/nvidia_issue/nvidia-blackout off --purge            # ...and uninstall the driver
+sudo ~/nvidia_issue/nvidia-blackout on                     # undo all of it
+nvidia-blackout --help
+```
+
+**The root subcommands need the full path.** `sudo` resets `PATH` to sudoers'
+`secure_path`, which does not include `~/.local/bin`, so the symlink is invisible
+to it and you get `sudo: nvidia-blackout: command not found`.
+
+After `off`, two more steps:
+
+```bash
+systemctl --user disable --now gpu-watchdog.service        # as your user, not root
+sudo reboot                                                # layers 2-4 need a reboot
+```
+
+Then confirm. A correct result looks like this — note that layer 4 must read
+`D3cold`, not `D0`, or the PCIe link is still powered:
+
+```
+$ nvidia-blackout status
+Layer 1  modprobe blacklist
+         ACTIVE   /etc/modprobe.d/99-nvidia-blackout.conf
+Layer 2  kernel cmdline
+         ACTIVE   (live, this boot)
+Layer 3  PCI device removal
+         rule installed  /etc/udev/rules.d/99-nvidia-blackout.rules
+         device GONE from the bus
+Layer 4  PCIe link power
+         0000:00:01.0 is in D3cold (suspended)
+
+Modules loaded:
+         none
+
+DRM cards:
+         card1  i915
+
+VERDICT: the GPU is fully blinded.
+```
+
+Layer 2 distinguishes `staged` (written to `/etc/default/limine` but not yet
+booted into) from `ACTIVE` (present in `/proc/cmdline`). From the outside those
+look identical, and conflating them would report the GPU as off when it is not.
+
+### `gpu-unstick` — recover a wedged GPU (mode 6)
+
+```bash
+gpu-unstick -n     # dry run: report what holds the GPU, kill nothing
+gpu-unstick        # kill the client owning the wedged context
+```
+
+### `gpu-watchdog` — notify when the GPU wedges
+
+```bash
+gpu-watchdog --once                                  # sample once and exit
+systemctl --user enable --now gpu-watchdog.service   # run it continuously
+journalctl --user -u gpu-watchdog -f                 # watch what it sees
+ACTION=kill gpu-watchdog                             # auto-recover instead of notifying
+```
+
+`gpu-unstick` and `gpu-watchdog` both require a live NVIDIA GPU. With
+`nvidia-blackout` active they detect that no `10de:` device is on the bus and
+say so, rather than reporting the absent GPU as a PMU halt — the two look
+identical to `nvidia-smi` but mean opposite things.
+
 ## Trade-offs, and what to actually expect
 
 - GSP off = the driver manages the GPU from the CPU (NVIDIA's legacy mode; mature and stable).

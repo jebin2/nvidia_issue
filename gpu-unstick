@@ -23,6 +23,22 @@ PROTECTED='kwin_wayland|Xorg|Xwayland|gnome-shell|Hyprland|sway|plasmashell|game
 
 say() { printf '%s\n' "$*"; }
 
+# ------------------------------------------------------------- is there a GPU?
+# nvidia-blackout removes the PCI functions outright, so there is no device to
+# unstick. That failure looks identical to a wedged GPU from nvidia-smi's side
+# but means the opposite, so check the bus before concluding anything.
+# (Captured rather than `grep -q`: grep -q closes the pipe early, lspci dies of
+# SIGPIPE, and pipefail would turn a successful match into a failed test.)
+on_bus=$(lspci -nn 2>/dev/null | grep -i '10de:')
+if [[ -z "$on_bus" ]]; then
+    say "No NVIDIA device is on the PCI bus — there is nothing to unstick."
+    say
+    say "This is not a crash. The GPU has been disabled, most likely by"
+    say "nvidia-blackout. Check with:  nvidia-blackout status"
+    say "To bring the GPU back:  sudo ~/nvidia_issue/nvidia-blackout on"
+    exit 0
+fi
+
 # ---------------------------------------------------------------- health check
 # A wedged-at-init GPU makes nvidia-smi hang in D state, so always time it out.
 if ! smi=$(timeout "$SMI_TIMEOUT" nvidia-smi \

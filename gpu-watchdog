@@ -80,6 +80,15 @@ No reboot needed."
         || log "  (notify-send failed - is a notification daemon running?)"
 }
 
+# If the GPU has been removed from the bus (nvidia-blackout), there is nothing
+# to watch and every poll would misreport "mode F/I, needs a power-cycle".
+# Exit cleanly so the systemd unit records a success rather than a crash loop.
+if ! lspci -nn 2>/dev/null | grep -i '10de:' > /dev/null; then
+    log "No NVIDIA device on the PCI bus — nothing to watch. Exiting."
+    log "  (disabled by nvidia-blackout? check: nvidia-blackout status)"
+    exit 0
+fi
+
 streak=0
 announced=0
 
