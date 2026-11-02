@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+# gpu-livetest — characterise the dGPU from a live USB session.
+#
+# Run this from a live ISO to answer one question: does this GPU misbehave
+# under a driver other than NVIDIA's own? The failure modes in
+# GITHUB_ISSUE_DRAFT.md all live in NVIDIA's driver and its GSP/PMU firmware
+# path. A live Arch/Omarchy ISO ships no NVIDIA driver — only
+# linux-firmware-nvidia, the GSP blobs — so it binds nouveau instead.
+#
+#   nouveau stable            -> the bug is in NVIDIA's driver. Report upstream.
+#   nouveau faults on GSP too -> firmware or silicon. No driver will fix it.
+#
+# Both outcomes are useful. The point is to come back with comparable numbers
+# rather than an impression, so this prints a fixed report and saves a copy.
+#
+# Usage:  gpu-livetest            inspect only, no load
+#         gpu-livetest --load     also run a Vulkan/GL load for LOAD_SECS
+#         LOAD_SECS=300 gpu-livetest --load
+
+set -uo pipefail
+
+LOAD_SECS="${LOAD_SECS:-120}"
+OUT="/tmp/gpu-livetest-$(date +%Y%m%d-%H%M%S).txt"
+DO_LOAD=0
+NO_GPU=0
+[ "${1:-}" = "--load" ] && DO_LOAD=1
+
+# dmesg is often restricted to root; fall back rather than silently showing
+# nothing, because "no faults found" and "could not read the log" look alike.
+klog() {
+    if dmesg 2>/dev/null | head -1 >/dev/null 2>&1 && [ -n "$(dmesg 2>/dev/null)" ]; then
+        dmesg 2>/dev/null
+    elif command -v sudo >/dev/null 2>&1; then
+        sudo dmesg 2>/dev/null
+    fi
+}
+
+hdr() { printf '\n== %s %s\n' "$1" "$(printf '%.0s-' $(seq 1 $((60 - ${#1}))))"; }
+kv()  { printf '  %-22s %s\n' "$1" "${2:-n/a}"; }
+
+report() {
+
+hdr "identity"
+kv "date"            "$(date '+%F %T %Z')"
+kv "live ISO"        "$(cat /run/archiso/bootmnt/arch/version 2>/dev/null || echo 'not archiso / unknown')"
+kv "kernel"          "$(uname -r)"
+kv "product"         "$(cat /sys/class/dmi/id/product_name 2>/dev/null)"
+kv "BIOS"            "$(cat /sys/class/dmi/id/bios_version 2>/dev/null) ($(cat /sys/class/dmi/id/bios_date 2>/dev/null))"
+
+hdr "is the GPU on the bus"
+# Captured, not piped into grep -q: grep -q closes the pipe, lspci dies of
+# SIGPIPE, and under pipefail a successful match becomes a failed test.
+on_bus=$(lspci -nn 2>/dev/null | grep -i '10de:')
+if [ -n "$on_bus" ]; then
+    printf '%s\n' "$on_bus" | sed 's/^/  /'
+else
+    kv "verdict" "NO NVIDIA DEVICE on the bus"
+    kv "" "In a live session: the dGPU is disabled in BIOS, or there is a MUX setting."
+    kv "" "On the installed system: nvidia-blackout is probably active."
+    NO_GPU=1
+    return
+fi
+
+hdr "which driver is bound"
+for d in $(lspci -D 2>/dev/null | awk '/NVIDIA/ {print $1}'); do
+    kv "$d" "$(basename "$(readlink -f "/sys/bus/pci/devices/$d/driver" 2>/dev/null)" 2>/dev/null || echo 'NONE BOUND')"
+    kv "  power_state" "$(cat "/sys/bus/pci/devices/$d/power_state" 2>/dev/null)"
+done
+kv "modules loaded" "$(lsmod | awk '/^(nvidia|nouveau)/ {printf "%s ", $1}' || echo none)"
+
+hdr "GSP firmware"
+# nouveau on Ada REQUIRES GSP, and it loads the same blobs NVIDIA's driver
+# uses. If GSP faults here too, that implicates the firmware, not the driver.
+local gsp
+gsp=$(klog | grep -iE 'gsp|GSP-RM' | tail -15)
+[ -n "$gsp" ] && printf '%s\n' "$gsp" | sed 's/^/  /' || kv "verdict" "no GSP messages in the kernel log"
+
+hdr "DRM"
+for c in /sys/class/drm/card[0-9]; do
+    [ -e "$c/device/uevent" ] || continue
+    kv "${c##*/}" "$(sed -n 's/^DRIVER=//p' "$c/device/uevent" 2>/dev/null)"
+done
+for c in /sys/class/drm/card*-*; do
+    [ -e "$c/status" ] || continue
+    printf '  %-22s status=%s enabled=%s\n' "${c##*/}" \
+        "$(cat "$c/status" 2>/dev/null)" "$(cat "$c/enabled" 2>/dev/null)"
+done
+
+hdr "render APIs"
+if command -v vulkaninfo >/dev/null 2>&1; then
+    vulkaninfo --summary 2>/dev/null | grep -E 'deviceName|driverName|driverInfo|apiVersion' | sed 's/^[[:space:]]*/  /'
+else
+    kv "vulkaninfo" "MISSING (pacman -Sy vulkan-tools)"
+fi
+if command -v glxinfo >/dev/null 2>&1; then
+    glxinfo -B 2>/dev/null | grep -E 'OpenGL renderer|OpenGL version|Device' | sed 's/^[[:space:]]*/  /'
+else
+    kv "glxinfo" "MISSING (pacman -Sy mesa-utils)"
+fi
+
+hdr "fault scan"
+local faults
+faults=$(klog | grep -iE 'Xid|NVRM|nouveau.*(fault|timeout|error|TRAP)|GSP.*(error|crash)|PMU|gpu hung|ring.*timeout')
+if [ -n "$faults" ]; then
+    printf '%s\n' "$faults" | tail -40 | sed 's/^/  /'
+    kv "count" "$(printf '%s\n' "$faults" | wc -l) matching lines"
+else
+    kv "verdict" "CLEAN — no Xid, NVRM, GSP or nouveau faults logged"
+fi
+
+}
+
+load_test() {
+    hdr "load test (${LOAD_SECS}s)"
+    local before after app=""
+    before=$(klog | grep -icE 'Xid|NVRM|nouveau.*(fault|timeout)|GSP.*(error|crash)')
+
+    for cand in vkcube glxgears; do
+        command -v "$cand" >/dev/null 2>&1 && { app="$cand"; break; }
+    done
+    if [ -z "$app" ]; then
+        kv "verdict" "no vkcube or glxgears available (pacman -Sy vulkan-tools mesa-utils)"
+        return
+    fi
+
+    kv "running" "$app for ${LOAD_SECS}s"
+    "$app" >/dev/null 2>&1 &
+    local pid=$!
+    local elapsed=0
+    while [ "$elapsed" -lt "$LOAD_SECS" ]; do
+        if ! kill -0 "$pid" 2>/dev/null; then
+            kv "RESULT" "$app DIED after ${elapsed}s — that is a reproduction"
+            break
+        fi
+        sleep 5
+        elapsed=$((elapsed + 5))
+    done
+    kill -9 "$pid" 2>/dev/null
+    wait "$pid" 2>/dev/null
+
+    after=$(klog | grep -icE 'Xid|NVRM|nouveau.*(fault|timeout)|GSP.*(error|crash)')
+    kv "fault lines before" "$before"
+    kv "fault lines after"  "$after"
+    if [ "$after" -gt "$before" ]; then
+        kv "RESULT" "NEW FAULTS under load — reproduced on this driver"
+        klog | grep -iE 'Xid|NVRM|nouveau.*(fault|timeout)|GSP.*(error|crash)' | tail -15 | sed 's/^/  /'
+    else
+        kv "RESULT" "survived ${LOAD_SECS}s with no new faults"
+    fi
+}
+
+{
+    echo "gpu-livetest — dGPU characterisation from a live session"
+    report
+    [ "$DO_LOAD" = 1 ] && [ "$NO_GPU" = 0 ] && load_test
+    echo
+    echo "Saved to: $OUT"
+} 2>&1 | tee "$OUT"
