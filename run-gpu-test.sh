@@ -241,11 +241,20 @@ fi
 # PM on so it cannot suspend, which isolates "does it survive load" from "does
 # it survive a resume". Both are real faults; they need testing separately.
 step "pinning runtime PM on (so RTD3 cannot destroy the load test)"
-for d in /sys/bus/pci/devices/0000:01:00.*; do
+# A bare `echo on > .../power/control` BLOCKS when the write triggers a resume
+# that never completes, and a shell redirect cannot be interrupted — the last
+# run froze here on 0000:01:00.1, the HDA audio function, because waking it
+# drags the GPU up through the same failing path. Time every write out, and
+# treat a timeout as the finding it is.
+for d in /sys/bus/pci/devices/0000:01:00.0 /sys/bus/pci/devices/0000:01:00.1; do
     [ -w "$d/power/control" ] || continue
-    echo on > "$d/power/control" 2>/dev/null \
-        && say "  ${d##*/}  power/control=on  (was auto)" \
-        || say "  ${d##*/}  could not pin"
+    if timeout 15 sh -c "echo on > '$d/power/control'" 2>/dev/null; then
+        say "  ${d##*/}  power/control=on"
+    else
+        say "  ${d##*/}  WRITE TIMED OUT — resuming this function hangs."
+        say "               That is the D3cold resume fault, hit directly."
+        say "               Boot with nouveau.runpm=0 to avoid it entirely."
+    fi
 done
 say "  to disable it from boot instead, add to the kernel line: nouveau.runpm=0"
 
