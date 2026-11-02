@@ -44,6 +44,12 @@ if ! mkdir -p "$OUT_DIR" 2>/dev/null || [ ! -w "$OUT_DIR" ]; then
 fi
 LOG="$OUT_DIR/session-$(date +%Y%m%d-%H%M%S)-boot${BOOT_TAG}.log"
 
+# Mirror everything from here on into $LOG. Until now only gpu-livetest's own
+# report was saved, so working out why pacman failed required photographing
+# the screen. Everything the script prints now lands on the USB.
+exec > >(tee -a "$LOG") 2>&1
+echo "=== run-gpu-test.sh $(date '+%F %T') ==="
+
 # ---------------------------------------------------------------- environment
 step "where am I"
 say "  script dir : $SELF_DIR"
@@ -100,7 +106,37 @@ if [ "$DO_INSTALL" = 1 ]; then
                 echo ""
                 echo "[extra]"
                 echo "Include = /etc/pacman.d/mirrorlist"
+                echo ""
+                # LAST, so it loses every tie — but linux-omarchy-headers is
+                # published nowhere else, so dropping it entirely means DKMS
+                # cannot build against the running kernel at all.
+                echo "[offline]"
+                echo "SigLevel = Never"
+                echo "Server = file:///var/cache/omarchy/mirror/offline/"
             } > /etc/pacman.conf
+        fi
+
+        # archiso often ships a mirrorlist with every Server line commented,
+        # expecting reflector to fill it in. pacman then reports "no servers
+        # configured for repository", which reads like a network fault.
+        if ! grep -qE '^[[:space:]]*Server[[:space:]]*=' /etc/pacman.d/mirrorlist 2>/dev/null; then
+            say "  mirrorlist has no active Server — writing known-good mirrors"
+            cp -a /etc/pacman.d/mirrorlist "/etc/pacman.d/mirrorlist.bak.$$" 2>/dev/null
+            cat > /etc/pacman.d/mirrorlist <<'MIRROREOF'
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://in-mirror.garudalinux.org/archlinux/$repo/os/$arch
+Server = https://mirrors.kernel.org/archlinux/$repo/os/$arch
+MIRROREOF
+        fi
+        say "  active mirrors: $(grep -cE '^[[:space:]]*Server[[:space:]]*=' /etc/pacman.d/mirrorlist 2>/dev/null)"
+
+        # An interrupted pacman leaves db.lck behind and every later run dies
+        # instantly with "unable to lock database", which looks just like a
+        # missing package. Earlier runs here were interrupted mid-install.
+        if [ -f /var/lib/pacman/db.lck ] && ! pgrep -x pacman >/dev/null 2>&1; then
+            say "  clearing a stale pacman db.lck left by an interrupted run"
+            rm -f /var/lib/pacman/db.lck
         fi
 
         say "  refreshing databases"
@@ -109,9 +145,16 @@ if [ "$DO_INSTALL" = 1 ]; then
         KVER="$(uname -r)"
         say "  running kernel: $KVER — looking for matching headers"
         HDR=""
-        for cand in linux-omarchy-headers linux-headers; do
+        # Order matters: linux-headers builds against Arch's stock kernel, not
+        # against 7.2.8-9-omarchy, so it is a wrong answer rather than a
+        # fallback. Only accept it if the running kernel is actually stock.
+        for cand in "linux-${KVER##*-}-headers" linux-omarchy-headers; do
             if pacman -Si "$cand" >/dev/null 2>&1; then HDR="$cand"; break; fi
         done
+        if [ -z "$HDR" ] && [ -d "/usr/lib/modules/$KVER/build" ]; then
+            say "  headers already present at /usr/lib/modules/$KVER/build"
+            HDR="SKIP"
+        fi
 
         if [ -z "$HDR" ]; then
             say
@@ -127,11 +170,16 @@ if [ "$DO_INSTALL" = 1 ]; then
             say "  installing (base-devel + a DKMS build take several minutes;"
             say "   a long pause here is compiling, not a hang)"
             ok=1
-            for pkg in "$HDR" dkms base-devel nvidia-dkms nvidia-utils vulkan-tools mesa-utils; do
-                if pacman -S --needed --noconfirm --cachedir /tmp/pacman-cache "$pkg" >/dev/null 2>&1; then
+            pkgs="dkms base-devel nvidia-dkms nvidia-utils vulkan-tools mesa-utils"
+            [ "$HDR" = "SKIP" ] || pkgs="$HDR $pkgs"
+            for pkg in $pkgs; do
+                if out=$(pacman -S --needed --noconfirm --cachedir /tmp/pacman-cache "$pkg" 2>&1); then
                     say "    installed  $pkg"
                 else
                     say "    FAILED     $pkg"
+                    # Say WHY. "FAILED" with no reason cost several boots.
+                    printf '%s\n' "$out" | grep -iE 'error|warning|not found|lock|No space|signature|key' \
+                        | head -5 | sed 's/^/               /'
                     case "$pkg" in nvidia-dkms|"$HDR") ok=0 ;; esac
                 fi
             done

@@ -87,7 +87,12 @@ fi
 
 hdr "which driver is bound"
 for d in $(timeout 20 lspci -D 2>/dev/null | awk '/NVIDIA/ {print $1}'); do
-    kv "$d" "$(basename "$(readlink -f "/sys/bus/pci/devices/$d/driver" 2>/dev/null)" 2>/dev/null || echo 'NONE BOUND')"
+    drv="$(basename "$(readlink -f "/sys/bus/pci/devices/$d/driver" 2>/dev/null)" 2>/dev/null)"
+    # With nothing bound, the symlink does not exist and readlink -f echoes the
+    # path back, so basename yields the literal "driver" — which reads as a
+    # driver named "driver". That is exactly the case worth seeing clearly.
+    [ -L "/sys/bus/pci/devices/$d/driver" ] || drv="NONE BOUND (probe failed?)"
+    kv "$d" "$drv"
     kv "  power_state" "$(cat "/sys/bus/pci/devices/$d/power_state" 2>/dev/null)"
 done
 kv "modules loaded" "$(lsmod | awk '/^(nvidia|nouveau)/ {printf "%s ", $1}' || echo none)"
