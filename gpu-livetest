@@ -184,9 +184,11 @@ load_test() {
     [ "$DO_LOAD" = 1 ] && [ "$NO_GPU" = 0 ] && load_test
     echo
     echo "Saved to: $OUT"
-} 2>&1 | tee "$OUT"
+} 2>&1 | stdbuf -oL tee "$OUT"
+sync 2>/dev/null
 
 # The summary cannot show a stack trace, and that is where the answer was last
 # time. Keep the whole log beside it.
 klog > "${OUT%.txt}-dmesg.txt" 2>/dev/null && \
     echo "Full kernel log: ${OUT%.txt}-dmesg.txt"
+sync 2>/dev/null

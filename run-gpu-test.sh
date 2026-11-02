@@ -31,8 +31,8 @@ DO_INSTALL=0
 [ "${1:-}" = "--install-driver" ] && DO_INSTALL=1
 [ "${1:-}" = "--help" ] && { sed -n '2,30p' "$0" | sed 's/^# \{0,1\}//'; exit 0; }
 
-say()  { printf '%s\n' "$*"; }
-step() { printf '\n######## %s\n' "$*"; }
+say()  { printf '%s\n' "$*"; sync 2>/dev/null; }
+step() { printf '\n######## %s\n' "$*"; sync 2>/dev/null; }
 
 BOOT_TAG="$(cut -c1-8 /proc/sys/kernel/random/boot_id 2>/dev/null)"
 OUT_DIR="$SELF_DIR/results"
@@ -44,11 +44,25 @@ if ! mkdir -p "$OUT_DIR" 2>/dev/null || [ ! -w "$OUT_DIR" ]; then
 fi
 LOG="$OUT_DIR/session-$(date +%Y%m%d-%H%M%S)-boot${BOOT_TAG}.log"
 
-# Mirror everything from here on into $LOG. Until now only gpu-livetest's own
-# report was saved, so working out why pacman failed required photographing
-# the screen. Everything the script prints now lands on the USB.
-exec > >(tee -a "$LOG") 2>&1
+# This box gets power-cycled whenever the GPU wedges, and buffered writes to a
+# FAT32 stick are simply lost when that happens — which is why the last log
+# came back 0 bytes. Remount the stick synchronous so every write is on the
+# device before the next line runs.
+if ! findmnt -no OPTIONS --target "$SELF_DIR" 2>/dev/null | grep -q '\bsync\b'; then
+    MNT="$(findmnt -no TARGET --target "$SELF_DIR" 2>/dev/null)"
+    if [ -n "$MNT" ] && mount -o remount,sync "$MNT" 2>/dev/null; then
+        echo "remounted $MNT synchronous so logs survive a power-cycle"
+    else
+        echo "WARNING: could not remount $MNT synchronous — if this machine is"
+        echo "         power-cycled, the logs below may be lost. Remount with:"
+        echo "           mount -o remount,sync $MNT"
+    fi
+fi
+
+# Line-buffered, so a crash mid-run still leaves every completed line on disk.
+exec > >(stdbuf -oL tee -a "$LOG") 2>&1
 echo "=== run-gpu-test.sh $(date '+%F %T') ==="
+sync
 
 # ---------------------------------------------------------------- environment
 step "where am I"
