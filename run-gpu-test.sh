@@ -67,31 +67,44 @@ if [ "$DO_INSTALL" = 1 ]; then
 
         # The Omarchy ISO ships ONLY a local file:// mirror:
         #     [offline]
-        #     SigLevel = Never
         #     Server = file:///var/cache/omarchy/mirror/offline/
-        # so pacman cannot see vulkan-tools or mesa-utils no matter how good
-        # the network is. Add the real repos before trying.
-        if ! grep -qE '^\[(core|extra)\]' /etc/pacman.conf; then
-            say "  pacman.conf has no [core]/[extra] — only the ISO's offline mirror."
-            say "  adding the real Arch repos"
-            cp -a /etc/pacman.conf "/etc/pacman.conf.bak.$$"
-            # SigLevel=Never because archiso's pacman-init.service often has not
-            # finished populating the keyring, which fails as "required key
-            # missing from keyring". This is a throwaway RAM-backed live system.
-            cat >> /etc/pacman.conf <<'PACEOF'
-
-[core]
-SigLevel = Never
-Include = /etc/pacman.d/mirrorlist
-
-[extra]
-SigLevel = Never
-Include = /etc/pacman.d/mirrorlist
-PACEOF
+        # Appending [core]/[extra] after it is NOT enough. Repo order is
+        # priority order, so [offline] still wins, and its database lists
+        # packages whose files are not actually on the ISO:
+        #     error: failed retrieving file 'gcc-...pkg.tar.zst' from disk :
+        #            Could not open file /var/cache/omarchy/mirror/offline/...
+        # With a network we do not want that mirror at all, so disable it and
+        # write a clean pacman.conf with the real repos first.
+        if [ ! -f /etc/pacman.conf.orig ]; then
+            cp -a /etc/pacman.conf /etc/pacman.conf.orig
+        fi
+        if ! grep -q 'gpu-livetest rewrote this' /etc/pacman.conf; then
+            say "  replacing the ISO's offline-only mirror with the real repos"
+            # CacheDir must be somewhere writable: the ISO's cache lives on the
+            # read-only squashfs, which fails as
+            #     Failure writing output to destination
+            mkdir -p /tmp/pacman-cache
+            {
+                echo "# gpu-livetest rewrote this to reach the real Arch repos."
+                echo "[options]"
+                echo "Architecture = auto"
+                echo "CacheDir = /tmp/pacman-cache"
+                echo "ParallelDownloads = 5"
+                # archiso's pacman-init.service frequently has not finished
+                # populating the keyring; without this every package fails as
+                # "required key missing from keyring". RAM-backed live system.
+                echo "SigLevel = Never"
+                echo ""
+                echo "[core]"
+                echo "Include = /etc/pacman.d/mirrorlist"
+                echo ""
+                echo "[extra]"
+                echo "Include = /etc/pacman.d/mirrorlist"
+            } > /etc/pacman.conf
         fi
 
         say "  refreshing databases"
-        pacman -Syy --noconfirm 2>&1 | tail -8
+        pacman -Syy --noconfirm --cachedir /tmp/pacman-cache 2>&1 | tail -8
 
         KVER="$(uname -r)"
         say "  running kernel: $KVER — looking for matching headers"
@@ -111,9 +124,11 @@ PACEOF
             # One at a time: pacman aborts the entire transaction on the first
             # unresolvable target, so a missing vulkan-tools also cost us the
             # driver last run. Each package now fails on its own.
+            say "  installing (base-devel + a DKMS build take several minutes;"
+            say "   a long pause here is compiling, not a hang)"
             ok=1
             for pkg in "$HDR" dkms base-devel nvidia-dkms nvidia-utils vulkan-tools mesa-utils; do
-                if pacman -S --needed --noconfirm "$pkg" >/dev/null 2>&1; then
+                if pacman -S --needed --noconfirm --cachedir /tmp/pacman-cache "$pkg" >/dev/null 2>&1; then
                     say "    installed  $pkg"
                 else
                     say "    FAILED     $pkg"
