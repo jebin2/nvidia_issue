@@ -63,8 +63,35 @@ if [ "$DO_INSTALL" = 1 ]; then
         say
         say "  Continuing with tier 1 only."
     else
-        say "  network OK; refreshing databases"
-        pacman -Sy --noconfirm 2>&1 | tail -5
+        say "  network OK"
+
+        # The Omarchy ISO ships ONLY a local file:// mirror:
+        #     [offline]
+        #     SigLevel = Never
+        #     Server = file:///var/cache/omarchy/mirror/offline/
+        # so pacman cannot see vulkan-tools or mesa-utils no matter how good
+        # the network is. Add the real repos before trying.
+        if ! grep -qE '^\[(core|extra)\]' /etc/pacman.conf; then
+            say "  pacman.conf has no [core]/[extra] — only the ISO's offline mirror."
+            say "  adding the real Arch repos"
+            cp -a /etc/pacman.conf "/etc/pacman.conf.bak.$$"
+            # SigLevel=Never because archiso's pacman-init.service often has not
+            # finished populating the keyring, which fails as "required key
+            # missing from keyring". This is a throwaway RAM-backed live system.
+            cat >> /etc/pacman.conf <<'PACEOF'
+
+[core]
+SigLevel = Never
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+SigLevel = Never
+Include = /etc/pacman.d/mirrorlist
+PACEOF
+        fi
+
+        say "  refreshing databases"
+        pacman -Syy --noconfirm 2>&1 | tail -8
 
         KVER="$(uname -r)"
         say "  running kernel: $KVER — looking for matching headers"
@@ -81,15 +108,27 @@ if [ "$DO_INSTALL" = 1 ]; then
             say "  Tier 2 is not possible on this ISO. Tier 1 results below are still valid."
         else
             say "  found headers package: $HDR"
-            if pacman -S --needed --noconfirm "$HDR" dkms base-devel \
-                   nvidia-dkms nvidia-utils vulkan-tools mesa-utils 2>&1 | tail -15; then
-                say "  install finished; loading the module"
+            # One at a time: pacman aborts the entire transaction on the first
+            # unresolvable target, so a missing vulkan-tools also cost us the
+            # driver last run. Each package now fails on its own.
+            ok=1
+            for pkg in "$HDR" dkms base-devel nvidia-dkms nvidia-utils vulkan-tools mesa-utils; do
+                if pacman -S --needed --noconfirm "$pkg" >/dev/null 2>&1; then
+                    say "    installed  $pkg"
+                else
+                    say "    FAILED     $pkg"
+                    case "$pkg" in nvidia-dkms|"$HDR") ok=0 ;; esac
+                fi
+            done
+            if [ "$ok" = 1 ]; then
+                say "  driver packages in place; loading the module"
                 modprobe nvidia 2>&1 | sed 's/^/    /'
                 modprobe nvidia_drm 2>&1 | sed 's/^/    /'
                 say "  modules now loaded: $(lsmod | awk '/^nvidia/ {printf "%s ", $1}')"
                 command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi 2>&1 | head -12 | sed 's/^/    /'
             else
-                say "  driver install FAILED — see output above. Tier 1 results still stand."
+                say "  NVIDIA driver could not be installed. Tier 1 results still stand,"
+                say "  and any load tools that did install are used below."
             fi
         fi
     fi

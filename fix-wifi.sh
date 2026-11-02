@@ -48,10 +48,32 @@ if [ -z "$IFACE" ]; then
 fi
 
 echo "    interface: $IFACE"
+
+# wpa_supplicant and iwd both claim the device; only one may own it.
+systemctl stop wpa_supplicant 2>/dev/null
 rfkill unblock all 2>/dev/null
-ip link set "$IFACE" up
-systemctl start iwd
-sleep 2
+ip link set "$IFACE" up 2>/dev/null
+
+# RESTART, not start. iwd enumerates phys when it starts, so an iwd that was
+# already running before the firmware landed has no device and reports
+# "No station on device" forever. `systemctl start` on a running unit is a
+# no-op, which is exactly the trap.
+echo "==> restarting iwd so it picks up the new device"
+systemctl restart iwd
+sleep 3
+
+echo "==> iwd device list"
+iwctl device list 2>&1 | sed 's/^/    /'
+
+if ! iwctl device list 2>/dev/null | grep -q "$IFACE"; then
+    echo
+    echo "    iwd still does not list $IFACE. Try, in order:"
+    echo "      rfkill list"
+    echo "      ip link set $IFACE up"
+    echo "      systemctl restart iwd && iwctl device list"
+    echo "      iwctl adapter phy0 set-property Powered on"
+    echo "      iwctl device $IFACE set-property Powered on"
+fi
 
 echo
 echo "Connect with:"
