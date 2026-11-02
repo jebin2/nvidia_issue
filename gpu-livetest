@@ -16,11 +16,26 @@
 # Usage:  gpu-livetest            inspect only, no load
 #         gpu-livetest --load     also run a Vulkan/GL load for LOAD_SECS
 #         LOAD_SECS=300 gpu-livetest --load
+#
+# Results are written to OUT_DIR, which defaults to the installed system at
+# /mnt/host/home/jebin/nvidia_issue/livetest so they outlive the live session.
+# Each run is tagged with the boot id, so repeated boots do not overwrite
+# each other — mode F only shows up across several boots.
 
 set -uo pipefail
 
 LOAD_SECS="${LOAD_SECS:-120}"
-OUT="/tmp/gpu-livetest-$(date +%Y%m%d-%H%M%S).txt"
+# A live session's /tmp is RAM and dies with the reboot. Point OUT_DIR at the
+# installed system (mounted from the live session) so the results survive to be
+# read back there. Falls back to /tmp if that directory is not writable.
+OUT_DIR="${OUT_DIR:-/mnt/host/home/jebin/nvidia_issue/livetest}"
+if ! mkdir -p "$OUT_DIR" 2>/dev/null || [ ! -w "$OUT_DIR" ]; then
+    echo "warning: $OUT_DIR is not writable — results will go to /tmp and will" >&2
+    echo "         NOT survive the reboot. Mount the installed system first:" >&2
+    echo "         sudo mount -o subvol=/@ /dev/nvme0n1p2 /mnt/host" >&2
+    OUT_DIR=/tmp
+fi
+OUT="$OUT_DIR/gpu-livetest-$(date +%Y%m%d-%H%M%S)-boot$(cat /proc/sys/kernel/random/boot_id 2>/dev/null | cut -c1-8).txt"
 DO_LOAD=0
 NO_GPU=0
 [ "${1:-}" = "--load" ] && DO_LOAD=1

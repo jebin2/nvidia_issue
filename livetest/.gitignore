@@ -1,0 +1,5 @@
+# Test output is machine-local evidence, kept out of the public repo: it
+# records hostnames and paths, and the point of these files is to be read back
+# in this working copy, not published.
+*
+!.gitignore
