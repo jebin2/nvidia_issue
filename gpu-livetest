@@ -116,6 +116,7 @@ for c in /sys/class/drm/card*-*; do
 done
 
 hdr "render APIs"
+kv "vulkan ICDs" "$(ls /usr/share/vulkan/icd.d/ 2>/dev/null | tr '\n' ' ' || echo NONE)"
 if command -v vulkaninfo >/dev/null 2>&1; then
     vulkaninfo --summary 2>/dev/null | grep -E 'deviceName|driverName|driverInfo|apiVersion' | sed 's/^[[:space:]]*/  /'
 else
@@ -141,7 +142,7 @@ fi
 
 load_test() {
     hdr "load test (${LOAD_SECS}s)"
-    local before after app=""
+    local before after app="" died_at=""
     before=$(klog | grep -icE 'Xid |NVRM|nouveau.*(fault|timeout|error|TRAP|hang)|GSP.*(error|crash|halt|timeout)|r535_gsp|gsp: .*(fail|timeout)|PMU halt|PMU.*halted|gpu hung|ring.*timeout|disp: init failed|Client resume failed|runtime_resume.*(fail|-110)')
 
     for cand in vkcube glxgears; do
@@ -158,7 +159,7 @@ load_test() {
     local elapsed=0
     while [ "$elapsed" -lt "$LOAD_SECS" ]; do
         if ! kill -0 "$pid" 2>/dev/null; then
-            kv "RESULT" "$app DIED after ${elapsed}s — that is a reproduction"
+            died_at=$elapsed
             break
         fi
         sleep 5
@@ -170,6 +171,21 @@ load_test() {
     after=$(klog | grep -icE 'Xid |NVRM|nouveau.*(fault|timeout|error|TRAP|hang)|GSP.*(error|crash|halt|timeout)|r535_gsp|gsp: .*(fail|timeout)|PMU halt|PMU.*halted|gpu hung|ring.*timeout|disp: init failed|Client resume failed|runtime_resume.*(fail|-110)')
     kv "fault lines before" "$before"
     kv "fault lines after"  "$after"
+    # An app that exits in the first few seconds never applied any load. The
+    # usual cause is no Vulkan/GL driver or no display to present to — NOT a
+    # GPU fault — and reporting it as a reproduction is worse than useless.
+    if [ -n "${died_at:-}" ] && [ "$died_at" -lt 15 ]; then
+        kv "RESULT" "$app exited after ${died_at}s — it never ran, so NO LOAD was applied"
+        kv "" "This is almost certainly a missing ICD or no display, not a GPU fault."
+        kv "vulkan ICDs" "$(ls /usr/share/vulkan/icd.d/ 2>/dev/null | tr '\n' ' ')"
+        kv "DISPLAY" "${DISPLAY:-<unset>}  WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-<unset>}"
+        kv "" "Install drivers (vulkan-nouveau / vulkan-intel) and run from the"
+        kv "" "graphical session, not a bare TTY."
+        return
+    fi
+    if [ -n "${died_at:-}" ]; then
+        kv "RESULT" "$app DIED after ${died_at}s under load — that IS a reproduction"
+    fi
     if [ "$after" -gt "$before" ]; then
         kv "RESULT" "NEW FAULTS under load — reproduced on this driver"
         klog | grep -iE 'Xid |NVRM|nouveau.*(fault|timeout|error|TRAP|hang)|GSP.*(error|crash|halt|timeout)|r535_gsp|gsp: .*(fail|timeout)|PMU halt|PMU.*halted|gpu hung|ring.*timeout|disp: init failed|Client resume failed|runtime_resume.*(fail|-110)' | tail -15 | sed 's/^/  /'

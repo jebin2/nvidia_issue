@@ -208,7 +208,7 @@ MIRROREOF
             # space or headers failure cannot cost us the load test too.
             say "  installing load tools first (small), driver after (large)"
             ok=1
-            pkgs="vulkan-tools mesa-utils dkms base-devel nvidia-dkms nvidia-utils"
+            pkgs="vulkan-tools mesa-utils vulkan-nouveau vulkan-intel vulkan-icd-loader dkms base-devel nvidia-dkms nvidia-utils"
             [ "$HDR" = "SKIP" ] || pkgs="$HDR $pkgs"
             for pkg in $pkgs; do
                 if out=$(pacman -S --needed --noconfirm --cachedir /tmp/pacman-cache "$pkg" 2>&1); then
