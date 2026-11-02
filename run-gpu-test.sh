@@ -165,6 +165,12 @@ MIRROREOF
         for cand in "linux-${KVER##*-}-headers" linux-omarchy-headers; do
             if pacman -Si "$cand" >/dev/null 2>&1; then HDR="$cand"; break; fi
         done
+        if [ -n "$HDR" ] && ! pacman -Sp "$HDR" >/dev/null 2>&1; then
+            say "  WARNING: $HDR is in a repo database but its file is missing"
+            say "  from the ISO mirror, and it is published nowhere else. DKMS"
+            say "  cannot build against $KVER. The driver step will be skipped;"
+            say "  the load test under nouveau still runs and is the useful part."
+        fi
         if [ -z "$HDR" ] && [ -d "/usr/lib/modules/$KVER/build" ]; then
             say "  headers already present at /usr/lib/modules/$KVER/build"
             HDR="SKIP"
@@ -181,10 +187,28 @@ MIRROREOF
             # One at a time: pacman aborts the entire transaction on the first
             # unresolvable target, so a missing vulkan-tools also cost us the
             # driver last run. Each package now fails on its own.
-            say "  installing (base-devel + a DKMS build take several minutes;"
-            say "   a long pause here is compiling, not a hang)"
+            # Every package failed with "could not extract ... (Write failed)":
+            # the live overlay was full, not a pacman or repo problem. Report
+            # the space, and grow the copy-on-write tmpfs if it is undersized.
+            say "  free space on / : $(df -h / 2>/dev/null | awk 'NR==2{print $4" of "$2}')"
+            COW=/run/archiso/cowspace
+            if [ -d "$COW" ]; then
+                say "  cowspace        : $(df -h "$COW" 2>/dev/null | awk 'NR==2{print $4" free of "$2}')"
+                avail_k=$(df -k "$COW" 2>/dev/null | awk 'NR==2{print $4}')
+                if [ "${avail_k:-0}" -lt 3145728 ]; then
+                    say "  under 3 GiB free — growing the cow tmpfs to 75% of RAM"
+                    mount -o remount,size=75% "$COW" 2>&1 | sed 's/^/    /'
+                    say "  cowspace now    : $(df -h "$COW" 2>/dev/null | awk 'NR==2{print $4" free"}')"
+                fi
+            fi
+
+            # Order matters. vulkan-tools and mesa-utils are ~100 MB and are
+            # what the load test needs; the driver is 1.5 GB and may not be
+            # installable here at all. Get the cheap, decisive thing first so a
+            # space or headers failure cannot cost us the load test too.
+            say "  installing load tools first (small), driver after (large)"
             ok=1
-            pkgs="dkms base-devel nvidia-dkms nvidia-utils vulkan-tools mesa-utils"
+            pkgs="vulkan-tools mesa-utils dkms base-devel nvidia-dkms nvidia-utils"
             [ "$HDR" = "SKIP" ] || pkgs="$HDR $pkgs"
             for pkg in $pkgs; do
                 if out=$(pacman -S --needed --noconfirm --cachedir /tmp/pacman-cache "$pkg" 2>&1); then
