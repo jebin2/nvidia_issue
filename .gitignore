@@ -1,3 +1,7 @@
 driver-downgrade/*.pkg.tar.zst
 claude_session.txt
 GeForceNOWSetup.log
+
+# Wi-Fi credentials — never commit these to a public repo
+*.psk
+wifi/

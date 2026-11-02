@@ -75,10 +75,39 @@ if ! iwctl device list 2>/dev/null | grep -q "$IFACE"; then
     echo "      iwctl device $IFACE set-property Powered on"
 fi
 
+# ---------------------------------------------------------------- credentials
+# Saved credentials live in wifi/*.psk NEXT TO THIS SCRIPT, never inside it:
+# this script is in a public git repo and the passphrase is not. FAT32 cannot
+# store permissions, so the mode is set after copying — iwd refuses to read a
+# credential file that is group- or world-readable.
+if ls "$HERE"/wifi/*.psk >/dev/null 2>&1; then
+    echo "==> installing saved network credentials"
+    mkdir -p /var/lib/iwd
+    for f in "$HERE"/wifi/*.psk; do
+        install -m 600 -o root -g root "$f" /var/lib/iwd/ && echo "    $(basename "$f")"
+    done
+    systemctl restart iwd
+    sleep 3
+
+    echo "==> waiting for auto-connect"
+    for _ in $(seq 1 20); do
+        if iwctl station "$IFACE" show 2>/dev/null | grep -qi 'State.*connected'; then
+            break
+        fi
+        sleep 1
+    done
+    iwctl station "$IFACE" show 2>&1 | grep -iE 'State|Connected network|IPv4' | sed 's/^/    /'
+fi
+
 echo
-echo "Connect with:"
-echo "    iwctl station $IFACE scan"
-echo "    iwctl station $IFACE get-networks"
-echo "    iwctl station $IFACE connect \"YOUR_SSID\""
-echo
-echo "Verify:  ping -c3 archlinux.org"
+echo "==> connectivity"
+if ping -c2 -W3 archlinux.org >/dev/null 2>&1; then
+    echo "    ONLINE — ready for: bash run-gpu-test.sh --install-driver"
+else
+    echo "    not online yet. Connect manually:"
+    echo "      iwctl station $IFACE scan"
+    echo "      iwctl station $IFACE get-networks"
+    echo "      iwctl station $IFACE connect \"SSID\""
+    echo "    or use wired:"
+    echo "      ip link set enp109s0 up && dhcpcd enp109s0"
+fi
