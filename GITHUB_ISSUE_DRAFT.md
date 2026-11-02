@@ -26,6 +26,15 @@ Any **Vulkan** use of the dGPU (vkcube, Steam client startup probe `d3ddriverque
 
 **With the GSP disabled (`NVreg_EnableGpuFirmware=0`, proprietary 580) Vulkan works, but the PMU fails instead** (Xid 62 / Xid 158). Locking the memory clock (`nvidia-smi -lmc 8001`) initially appeared to fix this completely and was reported as a workaround. **Two further months of use disproved that** — see modes F, G and H below. The PMU also halts *before any clock can be applied* (at driver init, with a byte-identical fault signature across five separate boots), it halts *mid-session with the memory clock verifiably locked at 8001 MHz*, and there is a third failure where a channel hangs forever and **the driver never logs an Xid at all**. Every observed failure remains in power/engine-management firmware on this VBIOS (95.07.19.00.25), but there is **no configuration known to avoid it**. The CUDA/OpenGL exemption noted above holds only while the GPU is healthy: once the PMU has halted, the UVM layer deadlocks in an unbounded spin (mode I).
 
+**UPDATE 2026-11-02 — the two power-transition faults reproduce under `nouveau`, with no NVIDIA
+driver code loaded at all.** Booting a live Arch image (Omarchy 2026.11.02, kernel 7.2.8) that ships
+no NVIDIA driver, the same board fails the same way under nouveau + GSP **RM 570.144** (a different
+firmware build from the 580.178.04 above): the D3cold resume fault reproduced on 4 of 8 boots and
+the init-time halt (mode F) on another, while 3 boots were clean. Same VBIOS, same BIOS, different
+driver, different GSP build, newer kernel. Details in the dedicated section below. This removes
+NVIDIA's kernel driver from the suspect list and localizes the remaining failures to GSP/PMU
+firmware, the VBIOS, and the platform's ACPI power path.
+
 Note the recurring PMU fault word across every Xid 62 on this board — the low 24 bits are constant (`47696a`) while the top byte varies with context:
 `6247696a`, `2247696a`, `3247696a`, `0247696a`, `d247696a`.
 
@@ -357,9 +366,94 @@ A GPU that has stopped retiring work is exactly the case an upper bound exists f
 otherwise the one path on this board that never misbehaved — so this converts a graphics-firmware
 fault into an unrecoverable system-wide one.
 
+## The power-transition faults reproduce under nouveau (no NVIDIA driver loaded)
+
+Tested from a live Arch image (Omarchy 2026.11.02) that ships **no NVIDIA driver** — only
+`linux-firmware-nvidia`. Kernel `7.2.8-9-omarchy`, driver `nouveau`, **GSP RM version 570.144**,
+same board, same `VBIOS 95.07.19.00.25`, same BIOS V1.13.
+
+Across 8 boots: 3 clean, 4 ended in the D3cold resume fault, 1 failed to probe at all.
+
+### A healthy boot looks completely normal
+
+```
+pci 0000:01:00.0: optimus capabilities: enabled, status dynamic power
+nouveau: detected PR support, will not use DSM
+nouveau 0000:01:00.0: NVIDIA AD107 (197000a1)
+nouveau 0000:01:00.0: gsp: RM version: 570.144
+nouveau 0000:01:00.0: bios: version 95.07.19.00.25
+nouveau 0000:01:00.0: drm: VRAM: 6141 MiB
+[drm] Initialized nouveau 1.4.2 for 0000:01:00.0 on minor 0
+```
+
+### Then it runtime-suspends and does not come back
+
+The GPU enters D3cold while idle. The next access — any of `lspci` reading config space, a kworker,
+or a write to `power/control` — triggers a resume that times out in the GSP RPC layer:
+
+```
+WARNING: drivers/gpu/drm/nouveau/nvkm/subdev/gsp/rm/r535/rpc.c:164
+         at r535_gsp_msg_recv+0x461/0x550 [nouveau], CPU#4: lspci/2156
+  r535_gsp_rpc_send   -> r535_gsp_rpc_push -> r535_gsp_rpc_rm_ctrl_push
+  -> r570_fbsr_resume -> r535_gsp_init     -> nvkm_subdev_init
+  -> nvkm_device_init -> nouveau_do_resume -> nouveau_pmops_runtime_resume
+nouveau 0000:01:00.0: disp: init failed, -110
+nouveau 0000:01:00.0: drm: Client resume failed with error: -110
+nouveau 0000:01:00.0: timeout
+```
+
+`-110` is `ETIMEDOUT`: the GSP never answers after the power transition. In the worst case the
+device then leaves the PCI bus entirely and no longer appears in `lspci` at all.
+
+**This is the same fault that `NVreg_DynamicPowerManagement=0` works around on the proprietary
+driver** — the workaround avoids D3cold rather than fixing the transition.
+
+Note the mechanism nouveau reports: `detected PR support, will not use DSM` means it reaches D3cold
+through **ACPI `_PR3` Power Resources**, which are defined by the platform firmware, not by the
+driver. The driver requests the transition; BIOS-supplied ACPI methods execute it.
+
+### Mode F reproduces too — GSP fails at probe, attributed to `(udev-worker)`
+
+On one boot the GPU never came up at all, with the fault again attributed to a udev worker exactly
+as in mode F above:
+
+```
+WARNING: .../gsp/rm/r535/rpc.c:164  at r535_gsp_msg_recv, CPU#22: (udev-worker)/815
+         ... r535_gsp_init+0x250/0x990
+WARNING: .../gsp/rm/r535/gsp.c:300  at r535_gsp_init+0x6a0/0x990, CPU#9: (udev-worker)/815
+nouveau 0000:01:00.0: gsp: init failed, -110
+nouveau 0000:01:00.0: sec2(gsp):booter-unload: boot failed: -110
+nouveau 0000:01:00.0: probe with driver nouveau failed with error -110
+```
+
+Only `card1` (i915) registered; nouveau never bound.
+
+### And a third state: bound, but GSP rejecting control calls continuously
+
+```
+nouveau 0000:01:00.0: gsp: cli:0xc1d00001 obj:0x00730000 ctrl cmd:0x00731341 failed: 0x0000ffff
+   (x65 within one second)
+```
+
+### What this establishes
+
+| Variable | Varied across tests | Fault persists |
+|---|---|---|
+| Host driver | NVIDIA 610-open, NVIDIA 580-proprietary, **nouveau** | yes |
+| GSP firmware build | 580.178.04, **570.144** | yes |
+| Kernel | 6.18.37/.42/.52/.55, 7.1.2, **7.2.8** | yes |
+| Distribution | CachyOS, **Omarchy** | yes |
+| VBIOS | 95.07.19.00.25 (unchanged — not alterable from the OS) | — |
+| System BIOS | V1.13, 09/07/2023 (unchanged) | — |
+
+Modes A–D and H were **not** retested here: the live image ships no Vulkan driver and the GPU
+suspended before a load test could be completed, so nothing is claimed about them under nouveau.
+
 ## Other drivers tried
 - **595.71.05 open (DKMS):** cannot initialize AD107M on kernel 7.1 (same 0xbadf5720 flood → "No devices").
 - `pcie_aspm=off`: made initialization worse. (No proprietary build exists for the 610 branch.)
+- **`nouveau` + GSP RM 570.144 on kernel 7.2.8:** reproduces the D3cold resume fault and the
+  init-time GSP halt — see the dedicated section above. No NVIDIA driver code involved.
 
 ## Best known configuration (partial mitigation only — NOT a fix)
 ```
@@ -398,6 +492,19 @@ On kernel 7.1.2 the same step crashes the GSP within seconds, then frequently ca
 4. Within 1–10 min the picture freezes while audio continues. `nvidia-smi` shows 100 % utilization,
    0 % memory utilization, flat idle power, **no Xid, no recovery action**. `kill -9` recovers.
 
+### Reproduction under nouveau (no NVIDIA driver needed)
+Boot any current live Arch image that ships no NVIDIA driver (tested: Omarchy 2026.11.02, kernel
+7.2.8), let the dGPU idle into D3cold, then touch it:
+
+```
+lspci -nn | grep 10de          # or simply wait for any access
+dmesg | grep -iE 'nouveau|gsp'
+```
+
+Expect `r535_gsp_msg_recv` warnings from `rpc.c:164`, `disp: init failed, -110`, and the device
+vanishing from `lspci`. Roughly 1 boot in 2 on this board. `nouveau.runpm=0` avoids it, which is
+the nouveau equivalent of `NVreg_DynamicPowerManagement=0`.
+
 ## Attachments
 - `nvidia-bug-report-healthy.log.gz` — healthy baseline (6.18.37, before any Vulkan)
 - `nvidia-bug-report-vkcube-crash.log.gz` — right after a short (still clean) vkcube run
@@ -427,7 +534,13 @@ Four specific requests, in priority order:
    `uvm_api_register_gpu` piles up in uninterruptible D state, and the in-tree `TODO` explains the
    `kill -9` immunity — `fatal_signal_pending()` is not checked. Bounding the wait and honouring
    fatal signals would turn an unrecoverable system hang into a normal ioctl failure.
-4. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
+4. **The D3cold resume path needs looking at below the driver.** It now reproduces under nouveau
+   with a different GSP build, so it is not a bug in NVIDIA's kernel driver. On this board nouveau
+   reaches D3cold via ACPI `_PR3` Power Resources (`detected PR support, will not use DSM`), so the
+   sequence spans GSP firmware, the VBIOS and BIOS-supplied ACPI — any of which could be at fault,
+   and none of which is reachable from the OS. If this is a known-bad platform/VBIOS combination,
+   saying so publicly would save a lot of people a lot of time.
+5. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
    unresponsive. It is a read failure through dead firmware, not EEPROM damage, and it will send
    users to RMA perfectly healthy boards.
 
