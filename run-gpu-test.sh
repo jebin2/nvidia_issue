@@ -236,6 +236,19 @@ MIRROREOF
 fi
 
 # ------------------------------------------------------------------- tier one
+# The GPU keeps entering D3cold while we set up, then failing to come back —
+# three boots have now died that way before any load was applied. Pin runtime
+# PM on so it cannot suspend, which isolates "does it survive load" from "does
+# it survive a resume". Both are real faults; they need testing separately.
+step "pinning runtime PM on (so RTD3 cannot destroy the load test)"
+for d in /sys/bus/pci/devices/0000:01:00.*; do
+    [ -w "$d/power/control" ] || continue
+    echo on > "$d/power/control" 2>/dev/null \
+        && say "  ${d##*/}  power/control=on  (was auto)" \
+        || say "  ${d##*/}  could not pin"
+done
+say "  to disable it from boot instead, add to the kernel line: nouveau.runpm=0"
+
 step "characterising the GPU"
 LIVETEST="$SELF_DIR/gpu-livetest"
 if [ ! -f "$LIVETEST" ]; then
