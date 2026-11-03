@@ -26,6 +26,16 @@ Any **Vulkan** use of the dGPU (vkcube, Steam client startup probe `d3ddriverque
 
 **With the GSP disabled (`NVreg_EnableGpuFirmware=0`, proprietary 580) Vulkan works, but the PMU fails instead** (Xid 62 / Xid 158). Locking the memory clock (`nvidia-smi -lmc 8001`) initially appeared to fix this completely and was reported as a workaround. **Two further months of use disproved that** — see modes F, G and H below. The PMU also halts *before any clock can be applied* (at driver init, with a byte-identical fault signature across five separate boots), it halts *mid-session with the memory clock verifiably locked at 8001 MHz*, and there is a third failure where a channel hangs forever and **the driver never logs an Xid at all**. Every observed failure remains in power/engine-management firmware on this VBIOS (95.07.19.00.25), but there is **no configuration known to avoid it**. The CUDA/OpenGL exemption noted above holds only while the GPU is healthy: once the PMU has halted, the UVM layer deadlocks in an unbounded spin (mode I).
 
+**UPDATE 2026-11-03 — MOSTLY RESOLVED BY AN ACER BIOS UPDATE. The GSP faults were a platform-firmware
+problem, not an NVIDIA driver bug.** This laptop shipped with BIOS **V1.13 (09/07/2023)** and had never been
+updated. Flashing to **V1.20 (05/15/2026)** — which crosses release 1.16, whose Acer release note reads
+literally *"NVIDIA GPU settings"* — fixes modes A, D and F outright, with the **VBIOS unchanged at
+95.07.19.00.25**. Everything below was observed on the stale BIOS. What the update did NOT fix is the
+D3cold/RTD3 resume fault, which still wedges the GPU. See "What BIOS V1.20 changed" near the end.
+
+Anyone hitting this on a Predator PHN16-71 (or likely other Acer Ada laptops) should check
+`cat /sys/class/dmi/id/bios_version` before anything else.
+
 **UPDATE 2026-11-02 — the two power-transition faults reproduce under `nouveau`, with no NVIDIA
 driver code loaded at all.** Booting a live Arch image (Omarchy 2026.11.02, kernel 7.2.8) that ships
 no NVIDIA driver, the same board fails the same way under nouveau + GSP **RM 570.144** (a different
@@ -449,6 +459,58 @@ nouveau 0000:01:00.0: gsp: cli:0xc1d00001 obj:0x00730000 ctrl cmd:0x00731341 fai
 Modes A–D and H were **not** retested here: the live image ships no Vulkan driver and the GPU
 suspended before a load test could be completed, so nothing is claimed about them under nouveau.
 
+## What BIOS V1.20 changed (tested 2026-11-03)
+
+Updated the system BIOS from the factory **V1.13 (09/07/2023)** to **V1.20 (05/15/2026)**, crossing these
+Acer releases:
+
+| Version | Date | Acer's release note |
+|---|---|---|
+| 1.16 | 2024/04/29 | **"NVIDIA GPU settings"** |
+| 1.18 | 2024/09/20 | boot logo customization |
+| 1.20 | 2026/06/23 | Microsoft 2023 Secure Boot certificates |
+
+**The VBIOS did not change** — still `95.07.19.00.25` before and after. So whatever was fixed lives in the
+platform's ACPI and power tables, not in the graphics BIOS.
+
+Retested on 580.178.04 with **GSP ENABLED** (`EnableGpuFirmware: 18`), the configuration that was unusable
+for four months:
+
+| Mode | On BIOS V1.13 | On BIOS V1.20 |
+|---|---|---|
+| **D** — GSP crash on enumeration | `vulkaninfo` crashed the GSP instantly, Xid 120, every attempt | enumerates clean, exit 0, no Xid |
+| **A** — GSP task watchdog under sustained Vulkan | vkcube died in 1–3 min | **360 s continuous, zero faults**, GPU responsive after |
+| **F** — PMU halt at driver init | ~1 boot in 3, byte-identical signature | 4 consecutive clean boots |
+| **RTD3 / D3cold resume** | GPU fails to resume, falls off the bus | **STILL BROKEN — unchanged** |
+
+### The D3cold resume fault survives the BIOS update
+
+With `NVreg_DynamicPowerManagement` left at its default (`DynamicPowerManagement: 3`), persistence mode off
+and no clock locks, the GPU idles into D3cold and does not come back:
+
+```
+$ nvidia-smi --query-gpu=name,pstate,power.draw --format=csv
+NVIDIA GeForce RTX 4050 Laptop GPU, [GPU requires reset], [N/A]
+```
+
+`nvidia-smi` blocks for over two minutes before returning that. Recovery needs a full power-off.
+
+This is consistent with the nouveau findings above: nouveau reaches D3cold through ACPI `_PR3` Power
+Resources (`detected PR support, will not use DSM`), and that path is still wrong on V1.20.
+
+### Current working configuration — one workaround instead of three
+
+```
+# still required:
+options nvidia NVreg_DynamicPowerManagement=0
+
+# NO LONGER required on BIOS V1.20:
+#   NVreg_EnableGpuFirmware=0      (GSP now works)
+#   nvidia-smi -lmc 8001 / -lgc    (clock locks were for mode E)
+```
+
+Running with GSP enabled is the supported configuration, and it now works on this board.
+
 ## Other drivers tried
 - **595.71.05 open (DKMS):** cannot initialize AD107M on kernel 7.1 (same 0xbadf5720 flood → "No devices").
 - `pcie_aspm=off`: made initialization worse. (No proprietary build exists for the 610 branch.)
@@ -517,9 +579,13 @@ Please investigate the GSP/PMU firmware's engine power-up and memory p-state han
 (VBIOS 95.07.19.00.25). GL and CUDA running flawlessly on the same board shows the silicon is
 fine and localizes the failure to the graphics/power-management firmware paths.
 
-Four specific requests, in priority order:
+**Scope note after the BIOS update:** modes A, D and F were platform-firmware bugs and are fixed by Acer
+BIOS 1.16+. The requests below now concern (a) the D3cold resume fault, which the BIOS update did NOT fix,
+and (b) the driver-side robustness issues, which are independent of any firmware and still stand.
 
-1. **Mode F is the blocker.** The PMU halts during module init with a byte-identical fault
+Requests, in priority order:
+
+1. **~~Mode F is the blocker.~~ FIXED by Acer BIOS 1.16+.** Left here for the record: the PMU halted during module init with a byte-identical fault
    signature across five boots, before any user configuration can be applied. There is no
    workaround available at that point in time, and it costs a full power-off. The determinism of
    the signature should make it tractable.
