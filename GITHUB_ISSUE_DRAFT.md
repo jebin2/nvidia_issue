@@ -1,6 +1,6 @@
 # TITLE (copy into the GitHub title field):
 
-[AD107M / RTX 4050 Laptop] GSP firmware crashes under Vulkan in BOTH 610.43.02-open and 580.173.02 (same task, partition:2#0 task:3); with GSP disabled, PMU halts (Xid 62) at driver init and mid-session, plus silent channel hangs with no Xid at all; once wedged, CUDA/UVM deadlocks unkillably in `uvm_spin_loop` with no timeout; still present in 580.178.04; no reliable workaround
+[AD107M / RTX 4050 Laptop, Acer PHN16-71] VRAM test fails on one repeating data bit; random GSP and PMU faults on Linux (Xid 62/119/120) and nvlddmkm errors with BSOD 0x10E at idle on Windows: can this be anything but a failing board?
 
 ---
 
@@ -9,7 +9,7 @@
 ## System
 | | |
 |---|---|
-| Laptop | Acer Predator Helios Neo 16 (PHN16-71), Insyde BIOS V1.13 (09/2023), Optimus hybrid |
+| Laptop | Acer Predator Helios Neo 16 (PHN16-71), Insyde BIOS V1.13 (09/2023; V1.20 from 2026-11-03), Optimus hybrid |
 | CPU / RAM | Intel Core i7-13700HX / 64 GB |
 | iGPU | Intel UHD 770 (8086:4688) — drives the internal display (Wayland, KDE Plasma) |
 | dGPU | GeForce RTX 4050 Laptop / Max-Q — **AD107M** (10de:28e1 rev a1), VBIOS **95.07.19.00.25** |
@@ -26,12 +26,20 @@ Any **Vulkan** use of the dGPU (vkcube, Steam client startup probe `d3ddriverque
 
 **With the GSP disabled (`NVreg_EnableGpuFirmware=0`, proprietary 580) Vulkan works, but the PMU fails instead** (Xid 62 / Xid 158). Locking the memory clock (`nvidia-smi -lmc 8001`) initially appeared to fix this completely and was reported as a workaround. **Two further months of use disproved that** — see modes F, G and H below. The PMU also halts *before any clock can be applied* (at driver init, with a byte-identical fault signature across five separate boots), it halts *mid-session with the memory clock verifiably locked at 8001 MHz*, and there is a third failure where a channel hangs forever and **the driver never logs an Xid at all**. Every observed failure remains in power/engine-management firmware on this VBIOS (95.07.19.00.25), but there is **no configuration known to avoid it**. The CUDA/OpenGL exemption noted above holds only while the GPU is healthy: once the PMU has halted, the UVM layer deadlocks in an unbounded spin (mode I).
 
-**UPDATE 2026-11-03 — MOSTLY RESOLVED BY AN ACER BIOS UPDATE. The GSP faults were a platform-firmware
-problem, not an NVIDIA driver bug.** This laptop shipped with BIOS **V1.13 (09/07/2023)** and had never been
-updated. Flashing to **V1.20 (05/15/2026)** — which crosses release 1.16, whose Acer release note reads
-literally *"NVIDIA GPU settings"* — fixes modes A, D and F outright, with the **VBIOS unchanged at
-95.07.19.00.25**. Everything below was observed on the stale BIOS. What the update did NOT fix is the
-D3cold/RTD3 resume fault, which still wedges the GPU. See "What BIOS V1.20 changed" near the end.
+**UPDATE 2026-11-03 — THE GPU ALSO FAILS ON WINDOWS, AT IDLE. This may not be a Linux or GSP bug.** On a clean
+Windows 11 install with NVIDIA driver 621.01 and no game or stress test running, Windows logged 353
+`nvlddmkm` Event 14 errors in one second, `UCodeReset TDR occurred on GPUID:100`, and a `0x10E` blue screen.
+`nvidia-smi` on Windows reports `GSP Firmware Version: N/A`. See "The GPU also fails on Windows".
+
+**A VRAM test also fails.** `memtest_vulkan` found 4 single-bit errors at 4 different addresses, at both 8001 and 7001 MHz, and every
+one is bit 23. See "VRAM test".
+
+Updating the BIOS from **V1.13 (09/07/2023)** to **V1.20 (05/15/2026)**, with the **VBIOS unchanged at
+95.07.19.00.25**, did not fix this. Light vkcube runs now survive, but on V1.20 and current drivers the
+Linux side still shows GSP watchdog timeouts, GSP exceptions and panics, GSP RPC timeouts and PMU halts. Everything
+further down was observed on V1.13 unless it says otherwise, and conclusions written there about the
+silicon being fine or the fault lying in GSP firmware predate this evidence. A failing GPU board is now a leading
+suspect, alongside VBIOS or platform firmware. Software testing cannot separate those.
 
 Anyone hitting this on a Predator PHN16-71 (or likely other Acer Ada laptops) should check
 `cat /sys/class/dmi/id/bios_version` before anything else.
@@ -74,7 +82,7 @@ NVRM: GPU 0000:01:00.0: RmInitAdapter failed! (0x62:0x65:2119)
 ```
 → `nvidia-smi: No devices were found`. **The PCIe link stays perfect throughout** (16 GT/s x8, config space readable, BARs mapped) — only the firmware/devinit stage fails. Note the same `0xbadf....` poison-read family as failure mode A. Recovery is **non-deterministic**: one warm reboot cleared it once; a 5-hour power-off plus a 60-second power-button drain did NOT. On 2026-07-02, kernel 7.1.2 failed every boot attempt while kernel 6.18.37 initialized the GPU on the first try (identical driver) — though 6.18 also hit this once when rebooting from a wedged state.
 
-## What works (hardware, thermals, power ruled out)
+## What worked on the old BIOS (this does NOT rule out hardware; see the 2026-11-03 update)
 - **OpenGL is fine:** `prime-run glxgears` rendered continuously for ~10 minutes on the dGPU with zero NVRM/GSP messages — same boot, same session type where vkcube kills the GSP in 1–3 minutes.
 - **CUDA is rock solid:** 90 s full-power burn (PyTorch fp16 8192² matmuls, 100 % util, 73 W, peak 86 °C) with zero faults; CTranslate2/faster-whisper inference works daily. Compute classes fine, graphics classes fatal — consistent with the poison-read/engine-power-up theory above.
 - 14 h desktop session with zero NVRM messages (as long as nothing touches graphics classes on the dGPU).
@@ -415,8 +423,8 @@ nouveau 0000:01:00.0: timeout
 `-110` is `ETIMEDOUT`: the GSP never answers after the power transition. In the worst case the
 device then leaves the PCI bus entirely and no longer appears in `lspci` at all.
 
-**This is the same fault that `NVreg_DynamicPowerManagement=0` works around on the proprietary
-driver** — the workaround avoids D3cold rather than fixing the transition.
+This resembles the resume fault that `NVreg_DynamicPowerManagement=0` works around on the proprietary
+driver, though the shared cause is inferred from the symptom. These nouveau runs were all on BIOS V1.13.
 
 Note the mechanism nouveau reports: `detected PR support, will not use DSM` means it reaches D3cold
 through **ACPI `_PR3` Power Resources**, which are defined by the platform firmware, not by the
@@ -470,46 +478,226 @@ Acer releases:
 | 1.18 | 2024/09/20 | boot logo customization |
 | 1.20 | 2026/06/23 | Microsoft 2023 Secure Boot certificates |
 
-**The VBIOS did not change** — still `95.07.19.00.25` before and after. So whatever was fixed lives in the
-platform's ACPI and power tables, not in the graphics BIOS.
+**The VBIOS did not change** — still `95.07.19.00.25` before and after. Only V1.20 was tested, so this does
+not show which release made the difference. The 1.16 note is suggestive, not proof, and the V1.13 ACPI tables
+were not dumped, so there is no before/after table diff.
 
-Retested on 580.178.04 with **GSP ENABLED** (`EnableGpuFirmware: 18`), the configuration that was unusable
-for four months:
+### Every boot on V1.20, from the kernel journal
 
-| Mode | On BIOS V1.13 | On BIOS V1.20 |
-|---|---|---|
-| **D** — GSP crash on enumeration | `vulkaninfo` crashed the GSP instantly, Xid 120, every attempt | enumerates clean, exit 0, no Xid |
-| **A** — GSP task watchdog under sustained Vulkan | vkcube died in 1–3 min | **360 s continuous, zero faults**, GPU responsive after |
-| **F** — PMU halt at driver init | ~1 boot in 3, byte-identical signature | 4 consecutive clean boots |
-| **RTD3 / D3cold resume** | GPU fails to resume, falls off the bus | **STILL BROKEN — unchanged** |
+| Boot (2026-11-03) | Driver | GSP | RTD3 | Clock locks | Result |
+|---|---|---|---|---|---|
+| 05:03 | 580.178.04 | off | off (`DPM=0`) | on | no Xid |
+| 05:15 | 580.178.04 | **on** | off (`DPM=0`) | on | `vulkaninfo` clean, vkcube 360 s, no Xid |
+| **05:25** | 580.178.04 | **on** | default, D3cold allowed | **off** | **wedged: Xid 119 ×3, Xid 154** |
+| 05:35 | 580.196.07 | on | default, `d3cold_allowed=0` | on | no Xid in 13 min |
+| **05:48** | 615.78.08 | on | default, `d3cold_allowed=0` | never applied | **GSP init failed at probe** |
+| 05:50 | 615.78.08 | on | default, `d3cold_allowed=0` | on | no Xid, Steam and vkcube running, 25 min |
+| **06:15** | 615.78.08 | on | default, `d3cold_allowed=0` | none (fails before they could apply) | **GSP task watchdog at probe, Xid 119 ×2** |
+| **06:17** | 615.78.08 | on | default, `d3cold_allowed=0` | off | clean for about 4 h 45 min including 10 min of vkcube, then **Xid 62 PMU halt 7 s after Steam started** |
+| **11:24** | 615.78.08 | on | default, `d3cold_allowed=0` | off | **Xid 120 GSP exception 34 s after Steam started** |
+| **11:39** | 615.78.08 | on | default, `d3cold_allowed=0` | none (fails before they could apply) | **Xid 120 GSP kernel panic at probe**, after a clean power-off |
+| 12:12 | 615.78.08 | on | default, `d3cold_allowed=0` | off | no Xid in 8 min, no Steam |
+| 12:22 | 615.78.08 | on | default, `d3cold_allowed=0` | off | no Xid in 7 min, no Steam |
+| 12:31 | 615.78.08 | on | default, `d3cold_allowed=0` | off | no Xid in 3 min, no Steam |
+| 12:50 | 615.78.08 | on | default, `d3cold_allowed=0` | on from 12:55 | no Xid in 7 min |
+| 12:58 | 615.78.08 | on | default, `d3cold_allowed=0` | on | no Xid at 3 min, Steam just started |
 
-### The D3cold resume fault survives the BIOS update
+Tallies, all small samples:
 
-With `NVreg_DynamicPowerManagement` left at its default (`DynamicPowerManagement: 3`), persistence mode off
-and no clock locks, the GPU idles into D3cold and does not come back:
+- **Failed at probe:** 615.78.08 on 3 of 11 boots; 580 on 0 of 4.
+- **Faulted after probe:** with clock locks off, 3 of 7 boots, two of them right after Steam started; the four clean ones were short and did not start Steam. With locks on, 0 of 6 boots, all short and none with a game. Clock locks cannot affect a probe failure, because they apply after the driver starts.
+- **Boot type does not separate these:** the 11:24 and 11:39 failures both followed a clean power-off.
+
+Limits of this record:
+
+- **vkcube is a light load** (about 11 W). No game has been run on V1.20, so modes E, G, H and I are untested.
+- **Mode F is barely retested in its own configuration.** It was a PMU halt with GSP off, and only the 05:03
+  boot matches that. A PMU halt did recur at 06:17 with GSP on.
+- **The Steam trigger:** `steam.desktop` sets `PrefersNonDefaultGPU=true`, so the whole client and its Vulkan and D3D12
+  startup probes ran on the dGPU. A local override now keeps Steam on Intel. That is a workaround, and it is not yet tested with a game.
+- The journal rotated during the day, so kernel logs from the earliest boots survive only as the excerpts here.
+
+### The 05:25 failure: GSP stopped answering, and it does not look like a D3cold resume
 
 ```
-$ nvidia-smi --query-gpu=name,pstate,power.draw --format=csv
-NVIDIA GeForce RTX 4050 Laptop GPU, [GPU requires reset], [N/A]
+05:27:10 NVRM: Xid 119, pid=793, name=nvidia-powerd, Timeout after 45s of waiting for RPC response
+         from GPU0 GSP! Expected function 76 (GSP_RM_CONTROL) sequence 2974 ...
+05:27:55 NVRM: Xid 119, Timeout after 45s ... sequence 2975 (0x2080a0d1 0x7e8)
+05:28:40 NVRM: Xid 119, Timeout after 45s ... sequence 2976 (0x2080a0d1 0x7e8)
+05:28:40 NVRM: Xid 154, GPU recovery action changed from 0x0 (None) to 0x1 (GPU Reset Required)
 ```
 
-`nvidia-smi` blocks for over two minutes before returning that. Recovery needs a full power-off.
+`nvidia-smi` then reported `[GPU requires reset]`. The three 45 s timeouts add up to 135 s, which fits the
+two-minute-plus block seen from `nvidia-smi`.
 
-This is consistent with the nouveau findings above: nouveau reaches D3cold through ACPI `_PR3` Power
-Resources (`detected PR support, will not use DSM`), and that path is still wrong on V1.20.
+This was first read as "the GPU idled into D3cold and did not come back". The driver's RPC history in the same
+report points the other way:
 
-### Current working configuration — one workaround instead of three
+- The last good RPC completed normally **0.3 s** before the one that hung.
+- The most recent `GSP_RUN_CPU_SEQUENCER` event was **48 s** earlier, about when the driver first started.
+- So the GSP looks awake and in service when it stopped responding, about 48 s after start, while
+  `nvidia-powerd` was polling it. This assumes a resume would log a newer sequencer event. Nothing directly
+  recorded the PCI power state.
+
+That boot differed from the clean ones in three ways at once: clock locks off, persistence off and D3cold
+allowed. A single run cannot separate them. **So there is currently no confirmed D3cold resume failure on
+BIOS V1.20.** The confirmed D3cold-style failures are the nouveau runs on V1.13. D3cold on V1.20 still needs a
+test in which the GPU is shown to have suspended first.
+
+### Probe failures on 615.78.08
 
 ```
-# still required:
-options nvidia NVreg_DynamicPowerManagement=0
-
-# NO LONGER required on BIOS V1.20:
-#   NVreg_EnableGpuFirmware=0      (GSP now works)
-#   nvidia-smi -lmc 8001 / -lgc    (clock locks were for mode E)
+05:48  GspMsgQueueReceiveStatus: MCTP protocol violation: invalid vendor ID 0xfffe (expected 0x10de)
+       kgspSendInitRpcs_IMPL: GMCAPI_CMD_GSP_INIT failed: 0x25
+       _kgspBootGspRm: unexpected WPR2 already up, cannot proceed with booting GSP
+       RmInitAdapter failed! (0x62:0x40:2130)
+06:15  GSP task watchdog timeout @ pc:0x1905c90, partition:2#0, task:3, gfid: 0
+       Local I/O registers include 0x01281504:0xbadf510c
+       Xid 119, name=nv-probe-0000:0, Timeout after 6s of waiting for RPC response from GPU0 GSP!
+11:39  Xid 120, name=nv-probe-0000:0, GSP kernel panic: unhandled trap (12) @ pc:0xffffffff93004156, partition:2#0
+       RmInitAdapter failed! (0x23:0x62:1284)
 ```
 
-Running with GSP enabled is the supported configuration, and it now works on this board.
+### Faults after probe on 615.78.08
+
+```
+11:03:54  Xid 62, 6251c5ee 20013d2a 00000000 202b8ecc 202b9604 00000000 00000000 00000000
+          _kgspRpcGspEventPmuHalted: Received signal from GSP that PMU has halted.
+          Xid 154, GPU recovery action changed from 0x0 (None) to 0x1 (PF FLR)
+          Xid 45, pid=1943, name=kwin_wayland (6 channels)
+11:26:16  Xid 120, GSP task exception: load address misaligned (cause:0x4) @ pc:0x14148b8, partition:2#0, task:3
+          Xid 154, GPU recovery action changed from 0x0 (None) to 0x1 (PF FLR)
+```
+
+The GSP build here is `bae8003ffd51fd740c5a1e4776d6e52e50582125`, not the older build listed above. Crash type and
+address both vary, which looks unlike a single deterministic code bug, though it does not prove a hardware cause.
+
+## The GPU also fails on Windows
+
+Windows 11 (build 26100) dual-booted on the same machine, BIOS V1.20, VBIOS 95.07.19.00.25, no GPU stress test or game
+running. `nvidia-smi` reported driver 621.01 and `GSP Firmware Version: N/A`. Times are IST, converted because the Windows clock
+was wrong until 12:36.
+
+| Time | Event |
+|---|---|
+| 11:58 | Blue screen `0x1000007E`, access violation (`0xC0000005`) in `ntoskrnl`. Driver probably still 528.25. May be unrelated to the GPU |
+| 12:21:54 | **353 × `nvlddmkm` Event 14**, plus Event 153 `UCodeReset TDR occurred on GPUID:100` |
+| 12:29 | Blue screen `0x10E` `VIDEO_MEMORY_MANAGEMENT_INTERNAL`, parameters `0x17`, `0xC00002B6` (`STATUS_DEVICE_REMOVED`) |
+| 12:38:34 | Event 153 `Error occurred on GPUID: 100` |
+| 12:40–12:46 | Four restarts with the GPU healthy |
+
+The repeated Event 14 data was:
+
+```
+3254d09c 00016080 00000000 202f073c 202f061e 202efc12 2030adc2 202f2c7a
+```
+
+That has the same eight-word shape as the Linux Xid 62 data above, and a shape match is not proof of the same fault.
+
+**What this suggests:** the fault reproduces across Windows, NVIDIA's Linux drivers and (for the startup and resume failures) nouveau, so
+the constants are the board, its VBIOS and the platform firmware. Windows reporting GSP as N/A means GSP cannot be the whole
+explanation. It is also consistent with the PMU halts seen on Linux with GSP disabled.
+
+**What was not tested:**
+
+- FurMark and game tests on Windows were not run. The failures above happened without them.
+- System RAM has not been tested, and could be relevant to the `0x7E` crash.
+- The Linux Btrfs volume reports `corrupt 3473968372` at mount with no checksum failures in retained logs. The counter may be stale or damaged, and has not been checked with a scrub.
+- No manufacturer GPU diagnostic has been run. The next step is Acer service.
+
+## VRAM test: one data bit keeps failing
+
+`memtest_vulkan` v0.5.0 on Linux, driver 615.78.08, core limited to 1500 MHz, GPU core 72–78 °C, memory temperature not reported. 8001 MHz is this
+board's stock maximum, and the board has no ECC. No Xid was logged during either run.
+
+| Memory clock | Duration | Address | Bit | Value read |
+|---|---|---|---|---|
+| 8001 MHz | about 22 min, error at about 4.5 min | `0x11F05D050` | 23 | `0x2BB329F5` |
+| 7001 MHz | about 2 min, all three errors in about the first minute | `0x275810B8` | 23 | `0x05B609E6` |
+| 7001 MHz | | `0xBD988CB0` | 23 | `0x91B7AA10` |
+| 7001 MHz | | `0xA7BBBA28` | 23 | `0x45BFDDF2` |
+
+The tool's verdict at 8001 MHz was `Standard 5-minute test fail - ERRORS FOUND`.
+
+All four errors are a single flipped bit, always bit 23, always read as 1, at four different addresses. By chance, four errors would share one
+of 32 bit positions about 1 time in 32,768. That suggests one weak data line, memory chip or memory-controller path rather than
+one bad cell or an excessive clock. Lowering the clock did not help, though the sample is too small to compare error rates.
+
+The test does not show that these flips cause the GSP and PMU faults, though corrupted VRAM could produce faults that vary in type and
+address. It also cannot separate the memory chips from the GPU's memory controller or the board.
+
+## ACPI analysis of the D3cold path: a real firmware defect, not shown to be the cause
+
+Decompiled from the machine's tables on V1.20 (`iasl -d`, SSDT12, OEM `ACRSYS`/`ACRPRDCT`). `PEG1` exposes one
+power resource, `\_SB.PC00.PEG1.PXP`, as both `_PR0` and `_PR3`. nouveau logs `detected PR support, will not
+use DSM` on this board, which puts this resource on its D3cold path. In `PXP._ON`:
+
+```asl
+PON ()
+L23D ()
+Local0 = Zero
+While ((\_SB.PC00.PEG1.CULS != \_SB.PC00.PEG1.TRLS))
+{
+    If ((Local0 > 0x20))
+    {
+        Break
+    }
+
+    Sleep (0x10)
+    Local0++
+}
+
+\_SB.PC00.PEG1.CMDR = 0x07
+\_SB.PC00.PEG1.D0ST = Zero
+While ((\_SB.PC00.PEG1.PEGP.NVID != 0x10DE))
+{
+    Sleep (One)
+}
+```
+
+and in `PON`, which runs first:
+
+```asl
+While ((\_SB.GGIV (\_SB.PC00.PEG1.PEGP.PWGD) == Zero))
+{
+    If ((Local0 > 0x20))
+    {
+        Debug = "PON: Time Out waiting PWOK ON"
+        Break
+    }
+
+    Sleep (One)
+    Local0++
+}
+```
+
+**What the code establishes:**
+
+- The wait for the GPU's vendor ID has **no bound**. If the GPU never answers, the AML itself never exits.
+- The link-speed wait (about 530 ms) and the power-good wait (about 33 ms at minimum `Sleep`) both `Break` and
+  carry on, with no failure recorded, so a timeout there leads straight into the unbounded wait.
+
+**Why it is not shown to cause the failures here:**
+
+- **Linux bounds the loop anyway.** ACPICA aborts any AML `While` after `ACPI_MAX_LOOP_TIMEOUT` (30 s) with
+  `AE_AML_LOOP_TIMEOUT` (`drivers/acpi/acpica/dscontrol.c`), so a stuck loop should leave that error in the log.
+  **It appears nowhere:** not in the 8 retained journal boots and not in the archived nouveau dmesg captures,
+  which include the resume failures.
+- **The nouveau trace fails later than this code.** It times out in `r570_fbsr_resume` under
+  `nouveau_pmops_runtime_resume`. The PCI core powers the device up before that driver callback, so `_ON` had
+  already returned.
+- **The 05:25 failure** is explained by GSP RPC timeouts, with no ACPI error logged.
+- **The branch taken is unknown.** `_ON` skips this code when `GSTA` reports power-good already up, and takes a
+  GC6 path (`GC6O`) when `TDGC == 1`. Neither value was read at runtime.
+
+The loop is worth fixing as a robustness defect: without ACPICA's limit, it could hang the OS on a GPU that fails
+to return. The evidence so far points at the GSP not answering after a transition, not at this loop.
+
+A patched SSDT12 that bounds the loop and widens both waits compiles with `iasl` (0 errors), but it was **never
+loaded or tested**. The evidence does not justify deploying it. Loading it through the initrd table upgrade is
+also not straightforward: all 18 SSDTs share one OEM ID and table ID, and `acpi_table_initrd_override()` matches
+on those plus a higher `oem_revision`, taking the first candidate. A single override table would therefore go to
+the wrong SSDT or be skipped.
 
 ## Other drivers tried
 - **595.71.05 open (DKMS):** cannot initialize AD107M on kernel 7.1 (same 0xbadf5720 flood → "No devices").
@@ -540,7 +728,7 @@ RTD3 resume crash on this laptop.
 
 Full write-up, scripts and logs: https://github.com/jebin2/nvidia_issue
 
-## Reproduction (100 % reliable)
+## Reproduction (on BIOS V1.13; intermittent on V1.20)
 1. Kernel 6.18.37 + nvidia-open 610.43.02, GPU healthy (nvidia-smi OK, zero NVRM messages).
 2. `prime-run vkcube` — or just start the Steam client.
 3. Within ~0.5–3 min: GSP task 3 watchdog timeout → CrashCat loop → heartbeat timeout.
@@ -575,17 +763,17 @@ the nouveau equivalent of `NVreg_DynamicPowerManagement=0`.
 - `nvidia-bug-report-gsp-crashcat-lts.log.gz` — GSP CrashCat report (6.18-lts)
 
 ## Ask
-Please investigate the GSP/PMU firmware's engine power-up and memory p-state handling for AD107M
-(VBIOS 95.07.19.00.25). GL and CUDA running flawlessly on the same board shows the silicon is
-fine and localizes the failure to the graphics/power-management firmware paths.
+Could someone who can read the fault data tell us whether this is a known firmware problem or points at failing
+hardware? The GPU faults on Linux and at idle on Windows, across driver branches, and the words above may decode that quickly.
 
-**Scope note after the BIOS update:** modes A, D and F were platform-firmware bugs and are fixed by Acer
-BIOS 1.16+. The requests below now concern (a) the D3cold resume fault, which the BIOS update did NOT fix,
-and (b) the driver-side robustness issues, which are independent of any firmware and still stand.
+**Scope note:** this board may turn out to be faulty, in which case the firmware requests below may not apply to it. The driver-side
+robustness requests are independent of the cause and still stand.
 
 Requests, in priority order:
 
-1. **~~Mode F is the blocker.~~ FIXED by Acer BIOS 1.16+.** Left here for the record: the PMU halted during module init with a byte-identical fault
+0. **Decode the fault data, alongside the VRAM test result.** Do Windows Event 14 `3254d09c 00016080 ...` and Linux Xid 62 `6251c5ee 20013d2a ...` report the same PMU fault, and does the pattern point at the board? Is there a diagnostic an owner can run to tell?
+
+1. **Mode F: this exact init-time PMU signature has not recurred on V1.20, in limited testing.** On the old BIOS, the PMU halted during module init with a byte-identical fault
    signature across five boots, before any user configuration can be applied. There is no
    workaround available at that point in time, and it costs a full power-off. The determinism of
    the signature should make it tractable.
@@ -600,16 +788,15 @@ Requests, in priority order:
    `uvm_api_register_gpu` piles up in uninterruptible D state, and the in-tree `TODO` explains the
    `kill -9` immunity — `fatal_signal_pending()` is not checked. Bounding the wait and honouring
    fatal signals would turn an unrecoverable system hang into a normal ioctl failure.
-4. **The D3cold resume path needs looking at below the driver.** It now reproduces under nouveau
-   with a different GSP build, so it is not a bug in NVIDIA's kernel driver. On this board nouveau
-   reaches D3cold via ACPI `_PR3` Power Resources (`detected PR support, will not use DSM`), so the
-   sequence spans GSP firmware, the VBIOS and BIOS-supplied ACPI — any of which could be at fault,
-   and none of which is reachable from the OS. If this is a known-bad platform/VBIOS combination,
-   saying so publicly would save a lot of people a lot of time.
+4. **Why does the GSP stop answering, on V1.13 resume and on V1.20 with clock locks off?** The nouveau resume
+   failure (V1.13, GSP RM 570.144) and the V1.20 Xid 119 wedge (580.178.04) both end with the GSP not answering
+   RPCs, though they may not share a cause. If this is a known-bad platform/VBIOS combination, saying so publicly
+   would save a lot of people a lot of time. Separately, Acer's `PXP._ON` has an unbounded wait, documented above
+   as a firmware robustness defect rather than an established cause.
 5. **The false infoROM-corruption warning** (mode F) should be suppressed when the PMU is
    unresponsive. It is a read failure through dead firmware, not EEPROM damage, and it will send
    users to RMA perfectly healthy boards.
 
 Happy to test debug builds, module parameters (`NVreg_EnableGpuFirmwareLogs`, registry dwords), or
-updated GSP firmware. The vkcube reproduction (GSP enabled) and the mode-H game reproduction (GSP
-disabled) are both reliable, and I can capture whatever traces are useful.
+updated GSP firmware, and I can capture whatever traces are useful. Failures on V1.20 are intermittent rather than
+reliably reproducible, so captures may take several boots.
