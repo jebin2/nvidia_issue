@@ -125,6 +125,26 @@ Killing processes will not help. A full power-off is required - a warm reboot wi
         log "sample: util=${util}% mem-traffic=${mem}% power=${power}W vram=${vram}MiB"
     fi
 
+    # nvidia-smi can return prose instead of numbers — e.g. after a driver
+    # upgrade the userspace library outruns the loaded module and every query
+    # answers "Failed to initialize NVML: Driver/library version mismatch".
+    # Feeding that to [ -ge ] spews "integer expected" three times a second and
+    # the watchdog silently stops watching anything.
+    case "${util}${mem}${power}${vram}" in
+        ''|*[!0-9]*)
+            if [ "$announced" -eq 0 ]; then
+                log "nvidia-smi returned non-numeric output — not a hang:"
+                log "  ${row}"
+                log "  (after a driver upgrade, reboot to load the matching module)"
+                announced=1
+            fi
+            streak=0
+            [ "$ONCE" -eq 1 ] && exit 2
+            sleep $((POLL_SEC * 10))
+            continue
+            ;;
+    esac
+
     hung=0
     if [ "${util:-0}" -ge "$UTIL_MIN" ] && [ "${mem:-99}" -le "$MEMTRAFFIC_MAX" ]; then
         if [ "${power:-999}" -le "$POWER_MAX_W" ] && [ "${vram:-0}" -ge "$VRAM_MIN_MIB" ]; then
