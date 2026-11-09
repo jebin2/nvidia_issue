@@ -26,7 +26,12 @@
 
 set -uo pipefail
 
-MODS="nvidia,nvidia_drm,nvidia_modeset,nvidia_uvm,nvidia_wmi_ec_backlight,nouveau"
+# NOT nvidia_wmi_ec_backlight: despite the name it is not part of the GPU stack.
+# It is a WMI driver that talks to the embedded controller, and on this Predator
+# (PHN16-71) the EC is what drives the eDP panel's backlight. Blacklist it and
+# brightness keys move /sys/class/backlight/intel_backlight while the panel
+# ignores them. Do not add acpi_backlight=native either, for the same reason.
+MODS="nvidia,nvidia_drm,nvidia_modeset,nvidia_uvm,nouveau"
 ROOT_PORT="0000:00:01.0"          # the port the dGPU sits behind on this board
 MODPROBE_CONF="/etc/modprobe.d/99-nvidia-blackout.conf"
 UDEV_RULE="/etc/udev/rules.d/99-nvidia-blackout.rules"
@@ -101,6 +106,15 @@ cmd_status() {
     fi
 
     say ""
+    say "Backlight"
+    if [ -e /sys/class/backlight/nvidia_wmi_ec_backlight ]; then
+        say "         nvidia_wmi_ec_backlight (EC) — brightness keys work"
+    else
+        say "         $(ls /sys/class/backlight 2>/dev/null | tr '\n' ' ')— EC backlight missing,"
+        say "         brightness will not change the panel. Is nvidia_wmi_ec_backlight blacklisted?"
+    fi
+
+    say ""
     say "Modules loaded:"
     local mods
     mods=$(lsmod | awk '/^(nvidia|nouveau)/ {print $1}')
@@ -155,8 +169,10 @@ cmd_off() {
     [ -f "$LIMINE" ] || die "$LIMINE not found — is this still a limine system?"
     cp -a "$LIMINE" "$LIMINE.bak.$(date +%Y%m%d%H%M%S)"
     sed -i '/NVreg_DynamicPowerManagement/d' "$LIMINE"
-    grep -q 'modprobe.blacklist=nvidia' "$LIMINE" || \
-        printf 'KERNEL_CMDLINE[default]+=" modprobe.blacklist=%s"\n' "$MODS" >> "$LIMINE"
+    # Drop any blacklist line from an older run (it also blocked the backlight
+    # driver) and the acpi_backlight=native override, then write the current one.
+    sed -i -e '/modprobe.blacklist=nvidia/d' -e '/acpi_backlight=native/d' "$LIMINE"
+    printf 'KERNEL_CMDLINE[default]+=" modprobe.blacklist=%s"\n' "$MODS" >> "$LIMINE"
     limine-update || die "limine-update failed — do not reboot until this is fixed"
     say "  --- $LIMINE now:"; sed 's/^/      /' "$LIMINE"
 
